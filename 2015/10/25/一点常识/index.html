@@ -4,22 +4,35 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>0BYJWZSF</title>
+    <title>一些常识 | 0BYJWZSF</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="0BYJWZSF">
     
 
     
-    <meta name="description" content="yeah">
-<meta property="og:type" content="website">
-<meta property="og:title" content="0BYJWZSF">
-<meta property="og:url" content="http://0byjwzsf.com/index.html">
+    <meta name="description" content="NATNAT技术很常见，都会对类似于 192.168.x.x，10.211.x.x 这样的IP不陌生吧
+这些IP是在Internet中预留的，在局域网（LAN）内使用的私有IP地址
+但是试想处于校园网这个局域网内的我们是如何访问Internet的呢，其实就是通过NAT技术
+首先在我们的局域网内首先要有一台Internet上的主机，然后在上面配置NAT服务
+这时当我们需要访问Internet（外网）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些常识">
+<meta property="og:url" content="http://0byjwzsf.com/2015/10/25/一点常识/index.html">
 <meta property="og:site_name" content="0BYJWZSF">
-<meta property="og:description" content="yeah">
+<meta property="og:description" content="NATNAT技术很常见，都会对类似于 192.168.x.x，10.211.x.x 这样的IP不陌生吧
+这些IP是在Internet中预留的，在局域网（LAN）内使用的私有IP地址
+但是试想处于校园网这个局域网内的我们是如何访问Internet的呢，其实就是通过NAT技术
+首先在我们的局域网内首先要有一台Internet上的主机，然后在上面配置NAT服务
+这时当我们需要访问Internet（外网）">
+<meta property="og:updated_time" content="2015-11-01T08:40:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="0BYJWZSF">
-<meta name="twitter:description" content="yeah">
+<meta name="twitter:title" content="一些常识">
+<meta name="twitter:description" content="NATNAT技术很常见，都会对类似于 192.168.x.x，10.211.x.x 这样的IP不陌生吧
+这些IP是在Internet中预留的，在局域网（LAN）内使用的私有IP地址
+但是试想处于校园网这个局域网内的我们是如何访问Internet的呢，其实就是通过NAT技术
+首先在我们的局域网内首先要有一台Internet上的主机，然后在上面配置NAT服务
+这时当我们需要访问Internet（外网）">
 
     
     <link rel="alternative" href="/atom.xml" title="0BYJWZSF" type="application/atom+xml">
@@ -73,12 +86,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2015/10/25/一点常识/" title="一些常识" itemprop="url">一些常识</a>
@@ -92,9 +103,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <h1 id="NAT"><strong>NAT</strong></h1><p>NAT技术很常见，都会对类似于 192.168.x.x，10.211.x.x 这样的IP不陌生吧</p>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NAT"><span class="toc-number">1.</span> <span class="toc-text">NAT</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DNS"><span class="toc-number">2.</span> <span class="toc-text">DNS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS欺骗"><span class="toc-number">2.1.</span> <span class="toc-text">DNS欺骗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS污染"><span class="toc-number">2.2.</span> <span class="toc-text">DNS污染</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#直接污染"><span class="toc-number">2.2.1.</span> <span class="toc-text">直接污染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#间接污染"><span class="toc-number">2.2.2.</span> <span class="toc-text">间接污染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IP封锁（题外话）"><span class="toc-number">2.2.3.</span> <span class="toc-text">IP封锁（题外话）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正向代理和反向代理"><span class="toc-number">3.</span> <span class="toc-text">正向代理和反向代理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#正向代理"><span class="toc-number">3.1.</span> <span class="toc-text">正向代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反向代理"><span class="toc-number">3.2.</span> <span class="toc-text">反向代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正向代理和反向代理的区别"><span class="toc-number">3.3.</span> <span class="toc-text">正向代理和反向代理的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#用处上"><span class="toc-number">3.3.1.</span> <span class="toc-text">用处上</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VPN"><span class="toc-number">4.</span> <span class="toc-text">VPN</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#VPN翻墙"><span class="toc-number">4.1.</span> <span class="toc-text">VPN翻墙</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h1 id="NAT"><strong>NAT</strong></h1><p>NAT技术很常见，都会对类似于 192.168.x.x，10.211.x.x 这样的IP不陌生吧</p>
 <p>这些IP是在Internet中预留的，在局域网（LAN）内使用的私有IP地址</p>
 <p>但是试想处于校园网这个局域网内的我们是如何访问Internet的呢，其实就是通过NAT技术</p>
 <p>首先在我们的局域网内首先要有一台Internet上的主机，然后在上面配置NAT服务</p>
@@ -146,14 +164,9 @@
 <h1 id="VPN"><strong>VPN</strong></h1><p>VPN，中文名<em>虚拟专用网络</em>，所谓的专用，其实就是在两个计算机之间建立了一条专属的通道，这条通道的特点是 <strong>安全</strong> 和 <strong>高效</strong></p>
 <h2 id="VPN翻墙">VPN翻墙</h2><p>通过VPN翻墙与通过代理服务器翻墙，不同的是，VPN的客户端软件会在系统中虚拟出一个网卡来，之后无需任何设置，所有的流量都会通过这个虚拟网卡来和VPN服务端进行数据传输。</p>
 <p>天朝封锁VPN其实就是通过封锁那些有名的VPN的IP来实现</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
@@ -171,27 +184,34 @@
 
 
 
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://0byjwzsf.com/2015/10/25/一点常识/" data-title="一些常识 | 0BYJWZSF" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
 
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/25/一点常识/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/25/一点常识/" data-count-type="comments">&nbsp;</a>
-	
-</div>
 
 </footer>
 
+   	       
+	</article>
+	
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/10/25/一点常识/" data-title="一些常识" data-url="http://0byjwzsf.com/2015/10/25/一点常识/"></div>
+</section>
 
-    </article>
 
-
-
-
-
-
-
-</div>
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NAT"><span class="toc-number">1.</span> <span class="toc-text">NAT</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DNS"><span class="toc-number">2.</span> <span class="toc-text">DNS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS欺骗"><span class="toc-number">2.1.</span> <span class="toc-text">DNS欺骗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS污染"><span class="toc-number">2.2.</span> <span class="toc-text">DNS污染</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#直接污染"><span class="toc-number">2.2.1.</span> <span class="toc-text">直接污染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#间接污染"><span class="toc-number">2.2.2.</span> <span class="toc-text">间接污染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IP封锁（题外话）"><span class="toc-number">2.2.3.</span> <span class="toc-text">IP封锁（题外话）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正向代理和反向代理"><span class="toc-number">3.</span> <span class="toc-text">正向代理和反向代理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#正向代理"><span class="toc-number">3.1.</span> <span class="toc-text">正向代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反向代理"><span class="toc-number">3.2.</span> <span class="toc-text">反向代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正向代理和反向代理的区别"><span class="toc-number">3.3.</span> <span class="toc-text">正向代理和反向代理的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#用处上"><span class="toc-number">3.3.1.</span> <span class="toc-text">用处上</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VPN"><span class="toc-number">4.</span> <span class="toc-text">VPN</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#VPN翻墙"><span class="toc-number">4.1.</span> <span class="toc-text">VPN翻墙</span></a></li></ol></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -348,12 +368,89 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
 
 
 
@@ -426,4 +523,4 @@ $(document).ready(function(){
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
