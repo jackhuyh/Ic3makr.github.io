@@ -43,7 +43,7 @@
 <link href="/css/main.css?v=5.0.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="github,常识," />
 
 
 
@@ -59,15 +59,19 @@
 
 
 
-<meta name="description" content="The star will be your eyes ...">
-<meta property="og:type" content="website">
-<meta property="og:title" content="0byjwzsf's time">
-<meta property="og:url" content="http://0byjwzsf.com/index.html">
+<meta name="description" content="之前一直很困惑，当我用github的时候，每次push到github上后，github是如何判断是哪个用户push的
+于是今天测试了一番。结果发现它会去检查主目录下的.gitconfig文件，直接获取里面的email对应的键值，然后github会去寻找是否存在这个账户，如果存在这个邮箱注册的账户，则会用这个账户的名义push，如果这个邮箱没有注册过，那么github会直接使用name字段对应的键值">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mark一下关于（github）">
+<meta property="og:url" content="http://0byjwzsf.com/2015/11/02/About-Github/index.html">
 <meta property="og:site_name" content="0byjwzsf's time">
-<meta property="og:description" content="The star will be your eyes ...">
+<meta property="og:description" content="之前一直很困惑，当我用github的时候，每次push到github上后，github是如何判断是哪个用户push的
+于是今天测试了一番。结果发现它会去检查主目录下的.gitconfig文件，直接获取里面的email对应的键值，然后github会去寻找是否存在这个账户，如果存在这个邮箱注册的账户，则会用这个账户的名义push，如果这个邮箱没有注册过，那么github会直接使用name字段对应的键值">
+<meta property="og:updated_time" content="2015-11-02T08:43:07.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="0byjwzsf's time">
-<meta name="twitter:description" content="The star will be your eyes ...">
+<meta name="twitter:title" content="mark一下关于（github）">
+<meta name="twitter:description" content="之前一直很困惑，当我用github的时候，每次push到github上后，github是如何判断是哪个用户push的
+于是今天测试了一番。结果发现它会去检查主目录下的.gitconfig文件，直接获取里面的email对应的键值，然后github会去寻找是否存在这个账户，如果存在这个邮箱注册的账户，则会用这个账户的名义push，如果这个邮箱没有注册过，那么github会直接使用name字段对应的键值">
 
 
 
@@ -80,7 +84,7 @@
   };
 </script>
 
-  <title> 0byjwzsf's time </title>
+  <title> mark一下关于（github） | 0byjwzsf's time </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -106,9 +110,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -217,24 +219,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
 
+  <div id="posts" class="posts-expand">
     
-
-    
-    
-      
-      
-        
-        
-        
-      
-
-      
-    
-
-    
-      
 
   
   
@@ -254,10 +241,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2015/11/02/About-Github/" itemprop="url">
-                  mark一下关于（github）
-                </a>
+                mark一下关于（github）
               
             
           </h1>
@@ -312,38 +296,52 @@
       
 
       
-        
-          <span itemprop="articleBody">
-            
-              <p>之前一直很困惑，当我用github的时候，每次push到github上后，github是如何判断是哪个用户push的</p>
+        <span itemprop="articleBody"><p>之前一直很困惑，当我用github的时候，每次push到github上后，github是如何判断是哪个用户push的</p>
 <p>于是今天测试了一番。结果发现它会去检查主目录下的.gitconfig文件，直接获取里面的email对应的键值，然后github会去寻找是否存在这个账户，如果存在这个邮箱注册的账户，则会用这个账户的名义push，如果这个邮箱没有注册过，那么github会直接使用name字段对应的键值直接当做用户的用户名（即使这个用户是不存在的）… </p>
 <p>我晕。。原来根本不是根据生成ssh的时候填的邮箱。。ssh的key只是用来验证一下你的身份的合法性（也就是决定你能否push到这个账户）。。</p>
 <p>感觉好奇葩（原来我一直理解错了github的工作模式）。。mark一下。。</p>
-
-            
-          </span>
-        
+</span>
       
     </div>
 
     <footer class="post-footer">
       
-
+        <div class="post-tags">
+          
+            <a href="/tags/github/" rel="tag">#github</a>
+          
+            <a href="/tags/常识/" rel="tag">#常识</a>
+          
+        </div>
       
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/25/一点常识/" rel="next" title="一些常识">
+                <i class="fa fa-chevron-left"></i> 一些常识
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
-        <div class="post-eof"></div>
+
+      
       
     </footer>
   </article>
 
 
-    
 
-  </section>
-
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -351,6 +349,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/11/02/About-Github/"
+           data-title="mark一下关于（github）" data-url="http://0byjwzsf.com/2015/11/02/About-Github/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -370,8 +376,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/author.jpg"
@@ -444,6 +459,23 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
       
 
     </div>
@@ -525,6 +557,166 @@
 
 
   
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
 
   
 
