@@ -73,7 +73,7 @@
 但是试想处于校园网这个局域网内的我们是如何访问Internet的呢，其实就是通过NAT技术
 首先在我们的局域网内首先要有一台Internet上的主机，然后在上面配置NAT服务
 这时当我们需要访问Internet（外网）">
-<meta property="og:updated_time" content="2015-11-02T08:44:43.000Z">
+<meta property="og:updated_time" content="2015-12-02T07:39:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一些常识">
 <meta name="twitter:description" content="NATNAT技术很常见，都会对类似于 192.168.x.x，10.211.x.x 这样的IP不陌生吧
@@ -352,6 +352,7 @@
 <h1 id="DNS"><strong>DNS</strong></h1><p>首先一点，例如我们访问www.baidu.com时，首先计算机会做的是去host文件里查找www.baidu.com域名对应的IP地址，如果找到，那么就会直接去访问这个IP，否则就会去访问DNS服务器</p>
 <p>如果不去手动设置DNS服务器，我们计算机的DNS服务器会被设置成默认的电信的DNS服务器（ISP），然后通过请求DNS服务器来对访问的域名进行解析</p>
 <p>这里就要说到两个概念，DNS欺骗和DNS污染</p>
+<a id="more"></a>
 <h2 id="DNS欺骗">DNS欺骗</h2><p>举个例子就能理解了，比如曾经某地某信服务商和某度勾结，将DNS服务器的google的域名指向了某度的IP，这便是典型的DNS欺骗</p>
 <h2 id="DNS污染">DNS污染</h2><p>从小的方面讲，DNS污染是许多大黑阔们经常使用的，原理差不多就是我们的DNS服务器在收到请求和返回请求的中间是有一段时间间隔的，若是在这段间隔内，某个大黑阔抢先发送REPLY包给Client，其中的IP是某个不明IP，那末就实现了DNS污染</p>
 <h3 id="直接污染">直接污染</h3><p>从大的方面讲，这是GFW的杀手锏之一，首先我们想要访问GOOGLE之类的网站，会把DNS服务器设置成类似于GOOGLE提供的8.8.8.8，但是要知道，我们天朝的网络也是一个局域网（中国网），流量在去往8.8.8.8的过程中会通过我们国家的国际出口（这个出口有北京，上海，广州等），当我们的GFW发现我们的目标是类似于8.8.8.8的知名DNS服务器时，就会有机会做手脚了</p>

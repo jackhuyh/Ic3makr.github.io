@@ -351,15 +351,15 @@
 
       
         
-          <span itemprop="articleBody">
-            
-              <p>之前一直很困惑，当我用github的时候，每次push到github上后，github是如何判断是哪个用户push的</p>
+          <p>之前一直很困惑，当我用github的时候，每次push到github上后，github是如何判断是哪个用户push的</p>
 <p>于是今天测试了一番。结果发现它会去检查主目录下的.gitconfig文件，直接获取里面的email对应的键值，然后github会去寻找是否存在这个账户，如果存在这个邮箱注册的账户，则会用这个账户的名义push，如果这个邮箱没有注册过，那么github会直接使用name字段对应的键值直接当做用户的用户名（即使这个用户是不存在的）… </p>
 <p>我晕。。原来根本不是根据生成ssh的时候填的邮箱。。ssh的key只是用来验证一下你的身份的合法性（也就是决定你能否push到这个账户）。。</p>
-<p>感觉好奇葩（原来我一直理解错了github的工作模式）。。mark一下。。</p>
-
-            
-          </span>
+<p>感觉好奇葩（原来我一直理解错了github的工作模式）。。mark一下。。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/11/02/About-Github/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -457,9 +457,7 @@
 
       
         
-          <span itemprop="articleBody">
-            
-              <h1 id="NAT"><strong>NAT</strong></h1><p>NAT技术很常见，都会对类似于 192.168.x.x，10.211.x.x 这样的IP不陌生吧</p>
+          <h1 id="NAT"><strong>NAT</strong></h1><p>NAT技术很常见，都会对类似于 192.168.x.x，10.211.x.x 这样的IP不陌生吧</p>
 <p>这些IP是在Internet中预留的，在局域网（LAN）内使用的私有IP地址</p>
 <p>但是试想处于校园网这个局域网内的我们是如何访问Internet的呢，其实就是通过NAT技术</p>
 <p>首先在我们的局域网内首先要有一台Internet上的主机，然后在上面配置NAT服务</p>
@@ -468,52 +466,11 @@
 <h1 id="DNS"><strong>DNS</strong></h1><p>首先一点，例如我们访问www.baidu.com时，首先计算机会做的是去host文件里查找www.baidu.com域名对应的IP地址，如果找到，那么就会直接去访问这个IP，否则就会去访问DNS服务器</p>
 <p>如果不去手动设置DNS服务器，我们计算机的DNS服务器会被设置成默认的电信的DNS服务器（ISP），然后通过请求DNS服务器来对访问的域名进行解析</p>
 <p>这里就要说到两个概念，DNS欺骗和DNS污染</p>
-<h2 id="DNS欺骗">DNS欺骗</h2><p>举个例子就能理解了，比如曾经某地某信服务商和某度勾结，将DNS服务器的google的域名指向了某度的IP，这便是典型的DNS欺骗</p>
-<h2 id="DNS污染">DNS污染</h2><p>从小的方面讲，DNS污染是许多大黑阔们经常使用的，原理差不多就是我们的DNS服务器在收到请求和返回请求的中间是有一段时间间隔的，若是在这段间隔内，某个大黑阔抢先发送REPLY包给Client，其中的IP是某个不明IP，那末就实现了DNS污染</p>
-<h3 id="直接污染">直接污染</h3><p>从大的方面讲，这是GFW的杀手锏之一，首先我们想要访问GOOGLE之类的网站，会把DNS服务器设置成类似于GOOGLE提供的8.8.8.8，但是要知道，我们天朝的网络也是一个局域网（中国网），流量在去往8.8.8.8的过程中会通过我们国家的国际出口（这个出口有北京，上海，广州等），当我们的GFW发现我们的目标是类似于8.8.8.8的知名DNS服务器时，就会有机会做手脚了</p>
-<p>另外一提，DNS服务器是有缓存机制的，很显然，这么大的IO量，如果每次访问都要去经过那么多次的解析然后返回给Client，是一件多么浪费资源的事情，所以DNS服务器上会缓存很多解析的记录</p>
-<h3 id="间接污染">间接污染</h3><p>如果我们设置的DNS服务器是国内的呢？</p>
-<p>其实道理一样，要解析这个国外的域名，流量包就最终还是要被发到国外的DNS服务器上去解析，还是会通过国际出口，还是要被污染</p>
-<h3 id="IP封锁（题外话）">IP封锁（题外话）</h3><p>GFW其实是有在人工手动封锁IP，呵呵哒，这是最无耻的手段了</p>
-<h1 id="正向代理和反向代理"><strong>正向代理和反向代理</strong></h1><h2 id="正向代理">正向代理</h2><p>假设处于某<em>Client</em>想要访问无法访问到的<em>Servers</em>，那么可以买一台这样的<em>Agent-Server</em>，这台<em>Agent-Server</em>需要能够访问<em>Servers</em>，并且<em>Client</em>能够连接<em>Agent-Server</em>，这时只要配置好<em>Agent-Server</em>，<em>Client</em>再想访问<em>Servers</em>，此时流量包就会通过<em>Agent-Server</em>，然后再通过<em>Agent—Server</em>到达<em>Servers</em>（当然这一步不是我们需要关心的）</p>
-<p>此时有点类似于NAT的功能，能够通过配置一台服务器，帮助我们访问到不能访问的资源</p>
-<p>在这个过程中还有几个特点</p>
-<blockquote>
-<ul>
-<li><em>Agent-Server</em>是属于<em>Client</em>的，<strong>相当于他们是一伙儿的，Servers并不知情</strong></li>
-<li><em>Client</em>能够隐藏自己访问<em>Servers</em>的这个行为，<em>Servers</em>就以为是<em>Agent-Server</em>来访问的</li>
-</ul>
-</blockquote>
-<h2 id="反向代理">反向代理</h2><p>假设现在我在国外，我想访问国内的自己的某台指定的<em>Server</em>，但是显然是无法访问的，因为<em>Server</em>对于我来说是墙内的，不可见的，于是此时我又购买了一台<em>Agent-Server</em>，并在这台<em>Agent-Server</em>上做了一些配置，只要访问<em>Agent-Server</em>，它就会自动帮我们把请求转发到<em>Server</em>上</p>
-<p>注意：这个过程中我们访问的是<em>Agent-Server</em>，无需去了解<em>Server</em>的信息，<em>Agent-Server</em>会自动帮我们转发到<em>Server</em></p>
-<p>反向代理的特点如下：</p>
-<blockquote>
-<ul>
-<li>这个过程中<em>Agent-Server</em>和<em>Server</em>是一伙的，<em>Client</em>看不到关于<em>Server</em>的信息（应该说是不需要知道）</li>
-</ul>
-</blockquote>
-<h2 id="正向代理和反向代理的区别">正向代理和反向代理的区别</h2><p>通俗地说：正向代理的过程中，<em>Agent-Server</em>和<em>Client</em>是一伙的，并且包庇<em>Client</em>，反向代理的过程中，<em>Agent-Server</em>和<em>Server</em>是一伙的，并且它喜欢包庇<em>Server</em></p>
-<h3 id="-_用处上">- 用处上</h3><p>正向代理</p>
-<blockquote>
-<ul>
-<li>1、翻墙，租一台国外的VPS作为代理服务器，然后通过这台代理服务器访问墙外</li>
-<li>2、干坏事，因为此时我们的<em>Agent-Server</em>会无条件包庇我们的</li>
-</ul>
-</blockquote>
-<p>反向代理</p>
-<blockquote>
-<ul>
-<li>1、钓鱼，这个不用多说</li>
-<li>2、比如我们上不了Google，此时可以买一台<em>Agent-Server</em>，通过反向代理，然后所有人只要访问<em>Agent-Server</em>，就能实现访问Google了，可以讨妹子开心哈哈（特指<strong>某毛</strong>）</li>
-<li>3、可以减缓服务器的压力，比如如果公司内有很多服务器，这时就能通过配置一台反向代理的服务器，每次只要访问这台服务器，就会自动帮我们请求公司内的其他服务器</li>
-</ul>
-</blockquote>
-<h1 id="VPN"><strong>VPN</strong></h1><p>VPN，中文名<em>虚拟专用网络</em>，所谓的专用，其实就是在两个计算机之间建立了一条专属的通道，这条通道的特点是 <strong>安全</strong> 和 <strong>高效</strong></p>
-<h2 id="VPN翻墙">VPN翻墙</h2><p>通过VPN翻墙与通过代理服务器翻墙，不同的是，VPN的客户端软件会在系统中虚拟出一个网卡来，之后无需任何设置，所有的流量都会通过这个虚拟网卡来和VPN服务端进行数据传输。</p>
-<p>天朝封锁VPN其实就是通过封锁那些有名的VPN的IP来实现</p>
-
-            
-          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/10/25/一点常识/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>

@@ -67,7 +67,7 @@
 <meta property="og:site_name" content="0byjwzsf's time">
 <meta property="og:description" content="之前一直很困惑，当我用github的时候，每次push到github上后，github是如何判断是哪个用户push的
 于是今天测试了一番。结果发现它会去检查主目录下的.gitconfig文件，直接获取里面的email对应的键值，然后github会去寻找是否存在这个账户，如果存在这个邮箱注册的账户，则会用这个账户的名义push，如果这个邮箱没有注册过，那么github会直接使用name字段对应的键值">
-<meta property="og:updated_time" content="2015-11-02T09:24:43.000Z">
+<meta property="og:updated_time" content="2015-12-02T07:39:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mark一下（关于github）">
 <meta name="twitter:description" content="之前一直很困惑，当我用github的时候，每次push到github上后，github是如何判断是哪个用户push的
@@ -337,7 +337,7 @@
         <span itemprop="articleBody"><p>之前一直很困惑，当我用github的时候，每次push到github上后，github是如何判断是哪个用户push的</p>
 <p>于是今天测试了一番。结果发现它会去检查主目录下的.gitconfig文件，直接获取里面的email对应的键值，然后github会去寻找是否存在这个账户，如果存在这个邮箱注册的账户，则会用这个账户的名义push，如果这个邮箱没有注册过，那么github会直接使用name字段对应的键值直接当做用户的用户名（即使这个用户是不存在的）… </p>
 <p>我晕。。原来根本不是根据生成ssh的时候填的邮箱。。ssh的key只是用来验证一下你的身份的合法性（也就是决定你能否push到这个账户）。。</p>
-<p>感觉好奇葩（原来我一直理解错了github的工作模式）。。mark一下。。</p>
+<p>感觉好奇葩（原来我一直理解错了github的工作模式）。。mark一下。。<br><a id="more"></a></p>
 </span>
       
     </div>
