@@ -71,7 +71,7 @@ ls -l
 解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行
 ls -l
 解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结果通过管道传到xargs的标准输入，">
-<meta property="og:updated_time" content="2015-12-04T18:03:08.000Z">
+<meta property="og:updated_time" content="2015-12-04T18:04:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Shell Script">
 <meta name="twitter:description" content="12find ~ -type f -name &apos;foo*&apos; -exec ls -l &apos;&amp;#123;&amp;#125;&apos; + find ~ -type f -name &apos;foo*&apos; -print | xargs ls -l
@@ -344,8 +344,7 @@ ls -l
 <p>解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行</p>
 <pre><code><span class="keyword">ls</span> -<span class="keyword">l</span>
 </code></pre><p>解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结果通过管道传到xargs的标准输入，<br><a id="more"></a></p>
-<p>###实例</p>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  md playground/dir-&#123;<span class="number">00</span>&#123;<span class="number">1</span>..<span class="number">9</span>&#125;,<span class="number">0</span>&#123;<span class="number">10</span>..<span class="number">99</span>&#125;,<span class="number">100</span>&#125;</span><br><span class="line">➜  ~  touch playground/dir-&#123;<span class="number">00</span>&#123;<span class="number">1</span>..<span class="number">9</span>&#125;,<span class="number">0</span>&#123;<span class="number">10</span>..<span class="number">99</span>&#125;,<span class="number">100</span>&#125;/file-&#123;A..Z&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="实例">实例</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  md playground/dir-&#123;<span class="number">00</span>&#123;<span class="number">1</span>..<span class="number">9</span>&#125;,<span class="number">0</span>&#123;<span class="number">10</span>..<span class="number">99</span>&#125;,<span class="number">100</span>&#125;</span><br><span class="line">➜  ~  touch playground/dir-&#123;<span class="number">00</span>&#123;<span class="number">1</span>..<span class="number">9</span>&#125;,<span class="number">0</span>&#123;<span class="number">10</span>..<span class="number">99</span>&#125;,<span class="number">100</span>&#125;/file-&#123;A..Z&#125;</span><br></pre></td></tr></table></figure>
 <p>搭建实验环境</p>
 <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find playground -type f -name <span class="string">'file-A'</span></span><br></pre></td></tr></table></figure>
 <p>寻找playground目录下所有的文件名为 file-A 的文件</p>
@@ -521,7 +520,7 @@ ls -l
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#实例"><span class="nav-number">1.</span> <span class="nav-text">实例</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
