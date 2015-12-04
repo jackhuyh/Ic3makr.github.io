@@ -65,7 +65,7 @@
 <meta property="og:url" content="http://0byjwzsf.com/2015/12/05/shell-script/index.html">
 <meta property="og:site_name" content="0byjwzsf's Time">
 <meta property="og:description" content="学习shell script的一部分知识点整理">
-<meta property="og:updated_time" content="2015-12-04T18:29:51.000Z">
+<meta property="og:updated_time" content="2015-12-04T18:31:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Shell Script">
 <meta name="twitter:description" content="学习shell script的一部分知识点整理">
@@ -331,7 +331,8 @@
       
 
       
-        <span itemprop="articleBody"><h1 id="find">find</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find ~ -type f -name <span class="string">'foo*'</span> -exec ls <span class="operator">-l</span> <span class="string">'&#123;&#125;'</span> + </span><br><span class="line">find ~ -type f -name <span class="string">'foo*'</span> -print | xargs ls <span class="operator">-l</span></span><br></pre></td></tr></table></figure>
+        <span itemprop="articleBody"><p>学习shell script的过程中的一部分知识点整理</p>
+<h1 id="find">find</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find ~ -type f -name <span class="string">'foo*'</span> -exec ls <span class="operator">-l</span> <span class="string">'&#123;&#125;'</span> + </span><br><span class="line">find ~ -type f -name <span class="string">'foo*'</span> -print | xargs ls <span class="operator">-l</span></span><br></pre></td></tr></table></figure>
 <p>解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行</p>
 <pre><code><span class="keyword">ls</span> -<span class="keyword">l</span>
 </code></pre><p>解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结果通过管道传到xargs的标准输入<br><a id="more"></a></p>
