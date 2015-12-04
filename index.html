@@ -342,12 +342,9 @@
 
       
         
-          <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find ~ -type f -name <span class="string">'foo*'</span> -exec ls <span class="operator">-l</span> <span class="string">'&#123;&#125;'</span> + </span><br><span class="line">find ~ -type f -name <span class="string">'foo*'</span> -print | xargs ls <span class="operator">-l</span></span><br></pre></td></tr></table></figure>
-<p>解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行</p>
-<pre><code><span class="keyword">ls</span> -<span class="keyword">l</span>
-</code></pre><p>解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结果通过管道传到xargs的标准输入，<br>
+          <span itemprop="description">学习shell script的一部分知识点整理</span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/12/05/shell-script/#more" rel="contents">
+            <a class="btn" href="/2015/12/05/shell-script/">
               阅读全文 &raquo;
             </a>
           </div>

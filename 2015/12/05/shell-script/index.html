@@ -59,25 +59,16 @@
 
 
 
-<meta name="description" content="12find ~ -type f -name &apos;foo*&apos; -exec ls -l &apos;&amp;#123;&amp;#125;&apos; + find ~ -type f -name &apos;foo*&apos; -print | xargs ls -l
-解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行
-ls -l
-解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结果通过管道传到xargs的标准输入，">
+<meta name="description" content="学习shell script的一部分知识点整理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Shell Script">
 <meta property="og:url" content="http://0byjwzsf.com/2015/12/05/shell-script/index.html">
 <meta property="og:site_name" content="0byjwzsf's Time">
-<meta property="og:description" content="12find ~ -type f -name &apos;foo*&apos; -exec ls -l &apos;&amp;#123;&amp;#125;&apos; + find ~ -type f -name &apos;foo*&apos; -print | xargs ls -l
-解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行
-ls -l
-解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结果通过管道传到xargs的标准输入，">
-<meta property="og:updated_time" content="2015-12-04T18:04:13.000Z">
+<meta property="og:description" content="学习shell script的一部分知识点整理">
+<meta property="og:updated_time" content="2015-12-04T18:29:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Shell Script">
-<meta name="twitter:description" content="12find ~ -type f -name &apos;foo*&apos; -exec ls -l &apos;&amp;#123;&amp;#125;&apos; + find ~ -type f -name &apos;foo*&apos; -print | xargs ls -l
-解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行
-ls -l
-解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结果通过管道传到xargs的标准输入，">
+<meta name="twitter:description" content="学习shell script的一部分知识点整理">
 
 
 
@@ -340,11 +331,22 @@ ls -l
       
 
       
-        <span itemprop="articleBody"><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find ~ -type f -name <span class="string">'foo*'</span> -exec ls <span class="operator">-l</span> <span class="string">'&#123;&#125;'</span> + </span><br><span class="line">find ~ -type f -name <span class="string">'foo*'</span> -print | xargs ls <span class="operator">-l</span></span><br></pre></td></tr></table></figure>
+        <span itemprop="articleBody"><h1 id="find">find</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find ~ -type f -name <span class="string">'foo*'</span> -exec ls <span class="operator">-l</span> <span class="string">'&#123;&#125;'</span> + </span><br><span class="line">find ~ -type f -name <span class="string">'foo*'</span> -print | xargs ls <span class="operator">-l</span></span><br></pre></td></tr></table></figure>
 <p>解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行</p>
 <pre><code><span class="keyword">ls</span> -<span class="keyword">l</span>
-</code></pre><p>解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结果通过管道传到xargs的标准输入，<br><a id="more"></a></p>
-<h3 id="实例">实例</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  md playground/dir-&#123;<span class="number">00</span>&#123;<span class="number">1</span>..<span class="number">9</span>&#125;,<span class="number">0</span>&#123;<span class="number">10</span>..<span class="number">99</span>&#125;,<span class="number">100</span>&#125;</span><br><span class="line">➜  ~  touch playground/dir-&#123;<span class="number">00</span>&#123;<span class="number">1</span>..<span class="number">9</span>&#125;,<span class="number">0</span>&#123;<span class="number">10</span>..<span class="number">99</span>&#125;,<span class="number">100</span>&#125;/file-&#123;A..Z&#125;</span><br></pre></td></tr></table></figure>
+</code></pre><p>解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结果通过管道传到xargs的标准输入<br><a id="more"></a></p>
+<h1 id="xargs">xargs</h1><p>xargs 命令能够将标准输入进行分割生成一个参数列表，例如：</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  xargs</span><br><span class="line">a b c</span><br><span class="line">a b</span><br><span class="line">c</span><br><span class="line">a b c a b c</span><br></pre></td></tr></table></figure>
+<p>xargs 在读取标准输入的资料时，会自动忽略空白行，多余的空白或者是tab也会自动忽略，想要xargs执行一个指令，只需将其跟在后面即可</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  xargs cat</span><br><span class="line">arg1 arg2</span><br><span class="line">arg3</span><br></pre></td></tr></table></figure>
+<p>相当于是</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  cat arg1 arg2 arg3</span><br></pre></td></tr></table></figure>
+<p>通过-n选项可指定接收的参数上限，-p选项进行命令执行前的确认</p>
+<h2 id="xargs与find结合">xargs与find结合</h2><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">'*.c'</span> | xargs grep <span class="string">'stdio.h'</span></span><br></pre></td></tr></table></figure>
+<p>表示寻找到当前目下的所有.c文件，并将这些文件处理为参数列表，作为rm命令的参数</p>
+<h2 id="xargs与grep结合">xargs与grep结合</h2><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">➜  alice git:(master)find . -name <span class="string">"*.c"</span> | xargs -p rm <span class="operator">-f</span></span><br><span class="line">./alice.c:<span class="comment">#include &lt;stdlib.h&gt;</span></span><br><span class="line">./linkcap.c:<span class="comment">#include &lt;stdlib.h&gt;</span></span><br><span class="line"></span><br><span class="line">➜  alice git:(master)grep <span class="string">'stdlib.h'</span> alice.c linkcap.c</span><br><span class="line">./alice.c:<span class="comment">#include &lt;stdlib.h&gt;</span></span><br><span class="line">./linkcap.c:<span class="comment">#include &lt;stdlib.h&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面两条命令等效，意思很简单，不解释了</p>
+<h1 id="实例">实例</h1><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  md playground/dir-&#123;<span class="number">00</span>&#123;<span class="number">1</span>..<span class="number">9</span>&#125;,<span class="number">0</span>&#123;<span class="number">10</span>..<span class="number">99</span>&#125;,<span class="number">100</span>&#125;</span><br><span class="line">➜  ~  touch playground/dir-&#123;<span class="number">00</span>&#123;<span class="number">1</span>..<span class="number">9</span>&#125;,<span class="number">0</span>&#123;<span class="number">10</span>..<span class="number">99</span>&#125;,<span class="number">100</span>&#125;/file-&#123;A..Z&#125;</span><br></pre></td></tr></table></figure>
 <p>搭建实验环境</p>
 <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find playground -type f -name <span class="string">'file-A'</span></span><br></pre></td></tr></table></figure>
 <p>寻找playground目录下所有的文件名为 file-A 的文件</p>
@@ -520,7 +522,7 @@ ls -l
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#实例"><span class="nav-number">1.</span> <span class="nav-text">实例</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#find"><span class="nav-number">1.</span> <span class="nav-text">find</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#xargs"><span class="nav-number">2.</span> <span class="nav-text">xargs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#xargs与find结合"><span class="nav-number">2.1.</span> <span class="nav-text">xargs与find结合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xargs与grep结合"><span class="nav-number">2.2.</span> <span class="nav-text">xargs与grep结合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例"><span class="nav-number">3.</span> <span class="nav-text">实例</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
