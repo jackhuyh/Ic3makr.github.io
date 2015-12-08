@@ -43,7 +43,7 @@
 <link href="/css/main.css?v=5.0.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Bash,Linux," />
+  <meta name="keywords" content="ASM,Reverse," />
 
 
 
@@ -59,31 +59,52 @@
 
 
 
-<meta name="description" content="学习shell script的过程中的一部分知识点整理
-findfind ~ -type f -name &apos;foo*&apos; -exec ls -l &apos;{}&apos; + 
-find ~ -type f -name &apos;foo*&apos; -print | xargs ls -l
-解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行
-ls -l
-解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结">
+<meta name="description" content="main函数push EBP
+mov  EBP, ESP
+...
+push EAX
+push ECX
+call add
+add函数push EBP
+mov EBP, ESP
+mov EAX, EBP+4
+add EAX, EBP+8
+mov ESP, EBP
+pop EBP
+retn">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Shell Script">
-<meta property="og:url" content="http://0byjwzsf.com/2015/12/05/shell-script/index.html">
+<meta property="og:title" content="栈帧">
+<meta property="og:url" content="http://0byjwzsf.com/2015/12/08/stack-frame/index.html">
 <meta property="og:site_name" content="0byjwzsf's Time">
-<meta property="og:description" content="学习shell script的过程中的一部分知识点整理
-findfind ~ -type f -name &apos;foo*&apos; -exec ls -l &apos;{}&apos; + 
-find ~ -type f -name &apos;foo*&apos; -print | xargs ls -l
-解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行
-ls -l
-解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结">
-<meta property="og:updated_time" content="2015-12-08T14:14:36.000Z">
+<meta property="og:description" content="main函数push EBP
+mov  EBP, ESP
+...
+push EAX
+push ECX
+call add
+add函数push EBP
+mov EBP, ESP
+mov EAX, EBP+4
+add EAX, EBP+8
+mov ESP, EBP
+pop EBP
+retn">
+<meta property="og:updated_time" content="2015-12-08T14:13:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Shell Script">
-<meta name="twitter:description" content="学习shell script的过程中的一部分知识点整理
-findfind ~ -type f -name &apos;foo*&apos; -exec ls -l &apos;{}&apos; + 
-find ~ -type f -name &apos;foo*&apos; -print | xargs ls -l
-解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行
-ls -l
-解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结">
+<meta name="twitter:title" content="栈帧">
+<meta name="twitter:description" content="main函数push EBP
+mov  EBP, ESP
+...
+push EAX
+push ECX
+call add
+add函数push EBP
+mov EBP, ESP
+mov EAX, EBP+4
+add EAX, EBP+8
+mov ESP, EBP
+pop EBP
+retn">
 
 
 
@@ -96,7 +117,7 @@ ls -l
   };
 </script>
 
-  <title> Shell Script | 0byjwzsf's Time </title>
+  <title> 栈帧 | 0byjwzsf's Time </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -291,7 +312,7 @@ ls -l
             
             
               
-                Shell Script
+                栈帧
               
             
           </h1>
@@ -300,8 +321,8 @@ ls -l
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-12-05T01:37:21+08:00" content="2015-12-05">
-              2015-12-05
+            <time itemprop="dateCreated" datetime="2015-12-08T21:35:21+08:00" content="2015-12-08">
+              2015-12-08
             </time>
           </span>
 
@@ -310,8 +331,8 @@ ls -l
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
+                  <a href="/categories/Reverse/" itemprop="url" rel="index">
+                    <span itemprop="name">Reverse</span>
                   </a>
                 </span>
 
@@ -326,8 +347,8 @@ ls -l
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/12/05/shell-script/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/05/shell-script/" itemprop="commentsCount"></span>
+              <a href="/2015/12/08/stack-frame/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/08/stack-frame/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -346,43 +367,37 @@ ls -l
       
 
       
-        <span itemprop="articleBody"><p>学习shell script的过程中的一部分知识点整理</p>
-<h1 id="find">find</h1><pre><code><span class="keyword">find</span> ~ -<span class="built_in">type</span> <span class="keyword">f</span> -name <span class="string">'foo*'</span> -exec <span class="keyword">ls</span> -<span class="keyword">l</span> <span class="string">'{}'</span> + 
-<span class="keyword">find</span> ~ -<span class="built_in">type</span> <span class="keyword">f</span> -name <span class="string">'foo*'</span> -<span class="keyword">print</span> | xargs <span class="keyword">ls</span> -<span class="keyword">l</span>
-</code></pre><p>解释1：寻找主目录下文件名为 foo 开头的文件，在全部找到后执行</p>
-<pre><code><span class="keyword">ls</span> -<span class="keyword">l</span>
-</code></pre><p>解释2：寻找主目录下文件名为 foo 开头的文件，然后将输出结果通过管道传到xargs的标准输入</p>
-<a id="more"></a>
-<h1 id="xargs">xargs</h1><p>xargs 命令能够将标准输入进行分割生成一个参数列表，例如：</p>
-<pre><code>➜  ~  xargs
-<span class="tag">a</span> <span class="tag">b</span> c
-<span class="tag">a</span> <span class="tag">b</span>
-c
-<span class="tag">a</span> <span class="tag">b</span> c <span class="tag">a</span> <span class="tag">b</span> c
-</code></pre><p>xargs 在读取标准输入的资料时，会自动忽略空白行，多余的空白或者是tab也会自动忽略，想要xargs执行一个指令，只需将其跟在后面即可</p>
-<pre><code>➜  ~  xargs cat
-ar<span class="keyword">g1</span> ar<span class="keyword">g2</span>
-ar<span class="keyword">g3</span>
-</code></pre><p>相当于是</p>
-<pre><code>➜  ~  cat ar<span class="keyword">g1</span> ar<span class="keyword">g2</span> ar<span class="keyword">g3</span>
-</code></pre><p>通过-n选项可指定接收的参数上限，-p选项进行命令执行前的确认</p>
-<h2 id="xargs与find结合">xargs与find结合</h2><pre><code><span class="keyword">find</span> . -name <span class="string">'*.c'</span> | xargs <span class="keyword">grep</span> <span class="string">'stdio.h'</span>
-</code></pre><p>表示寻找到当前目下的所有.c文件，并将这些文件处理为参数列表，作为rm命令的参数</p>
-<h2 id="xargs与grep结合">xargs与grep结合</h2><pre><code>➜  alice git:(master)find . -name <span class="string">"*.c"</span> | xargs -p rm -f
-./alice.c:<span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span>
-./linkcap.c:<span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span>
-
-➜  alice git:(master)grep <span class="string">'stdlib.h'</span> alice.c linkcap.c
-./alice.c:<span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span>
-./linkcap.c:<span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span>
-</code></pre><p>上面两条命令等效，意思很简单，不解释了</p>
-<h1 id="实例">实例</h1><pre><code>➜  ~  md playground/dir-{<span class="number">00</span>{<span class="number">1.</span><span class="number">.9</span>},<span class="number">0</span>{<span class="number">10.</span><span class="number">.99</span>},<span class="number">100</span>}
-➜  ~  touch playground/dir-{<span class="number">00</span>{<span class="number">1.</span><span class="number">.9</span>},<span class="number">0</span>{<span class="number">10.</span><span class="number">.99</span>},<span class="number">100</span>}/    file-{A..Z}
-➜  ~  find ~/playground -name <span class="string">"file-E"</span> -type f| xargs -I {} mv {} {}/../FILE-E
-</code></pre><p>搭建实验环境</p>
-<pre><code><span class="built_in">find</span> playground -<span class="built_in">type</span> f -<span class="built_in">name</span> <span class="string">'file-A'</span>
-</code></pre><p>寻找playground目录下所有的文件名为 file-A 的文件</p>
-</span>
+        <span itemprop="articleBody"><h4 id="main函数">main函数</h4><pre><code><span class="keyword">push</span> <span class="literal">EBP</span>
+<span class="keyword">mov</span>  <span class="literal">EBP</span>, <span class="literal">ESP</span>
+...
+<span class="keyword">push</span> <span class="literal">EAX</span>
+<span class="keyword">push</span> <span class="literal">ECX</span>
+<span class="keyword">call</span> <span class="keyword">add</span>
+</code></pre><h4 id="add函数">add函数</h4><pre><code><span class="keyword">push</span> <span class="literal">EBP</span>
+<span class="keyword">mov</span> <span class="literal">EBP</span>, <span class="literal">ESP</span>
+<span class="keyword">mov</span> <span class="literal">EAX</span>, <span class="literal">EBP</span>+<span class="number">4</span>
+<span class="keyword">add</span> <span class="literal">EAX</span>, <span class="literal">EBP</span>+<span class="number">8</span>
+<span class="keyword">mov</span> <span class="literal">ESP</span>, <span class="literal">EBP</span>
+<span class="keyword">pop</span> <span class="literal">EBP</span>
+<span class="keyword">retn</span>
+</code></pre><a id="more"></a>
+<h3 id="Call_Convention">Call Convention</h3><h4 id="cdecl">cdecl</h4><p>main函数</p>
+<pre><code><span class="keyword">push</span> <span class="literal">EBP</span>
+<span class="keyword">mov</span>  <span class="literal">EBP</span>, <span class="literal">ESP</span>
+...
+<span class="keyword">push</span> <span class="literal">EAX</span>
+<span class="keyword">push</span> <span class="literal">ECX</span>
+<span class="keyword">call</span> <span class="keyword">add</span>
+<span class="keyword">add</span>  <span class="literal">ESP</span>, <span class="number">8</span>
+</code></pre><h4 id="stdcall">stdcall</h4><p>add函数</p>
+<pre><code><span class="keyword">push</span> <span class="literal">EBP</span>
+<span class="keyword">mov</span> <span class="literal">EBP</span>, <span class="literal">ESP</span>
+<span class="keyword">mov</span> <span class="literal">EAX</span>, <span class="literal">EBP</span>+<span class="number">4</span>
+<span class="keyword">add</span> <span class="literal">EAX</span>, <span class="literal">EBP</span>+<span class="number">8</span>
+<span class="keyword">mov</span> <span class="literal">ESP</span>, <span class="literal">EBP</span>
+<span class="keyword">pop</span> <span class="literal">EBP</span>
+<span class="keyword">retn</span> <span class="number">8</span>
+</code></pre></span>
       
     </div>
 
@@ -390,9 +405,9 @@ ar<span class="keyword">g3</span>
       
         <div class="post-tags">
           
-            <a href="/tags/Bash/" rel="tag">#Bash</a>
+            <a href="/tags/ASM/" rel="tag">#ASM</a>
           
-            <a href="/tags/Linux/" rel="tag">#Linux</a>
+            <a href="/tags/Reverse/" rel="tag">#Reverse</a>
           
         </div>
       
@@ -401,17 +416,13 @@ ar<span class="keyword">g3</span>
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/02/About-Github/" rel="next" title="关于Github">
-                <i class="fa fa-chevron-left"></i> 关于Github
+              <a href="/2015/12/05/shell-script/" rel="next" title="Shell Script">
+                <i class="fa fa-chevron-left"></i> Shell Script
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/08/stack-frame/" rel="prev" title="栈帧">
-                栈帧 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -558,7 +569,7 @@ ar<span class="keyword">g3</span>
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#find"><span class="nav-number">1.</span> <span class="nav-text">find</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#xargs"><span class="nav-number">2.</span> <span class="nav-text">xargs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#xargs与find结合"><span class="nav-number">2.1.</span> <span class="nav-text">xargs与find结合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xargs与grep结合"><span class="nav-number">2.2.</span> <span class="nav-text">xargs与grep结合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例"><span class="nav-number">3.</span> <span class="nav-text">实例</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#main函数"><span class="nav-number">1.</span> <span class="nav-text">main函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#add函数"><span class="nav-number">2.</span> <span class="nav-text">add函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Call_Convention"><span class="nav-number"></span> <span class="nav-text">Call Convention</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cdecl"><span class="nav-number">1.</span> <span class="nav-text">cdecl</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stdcall"><span class="nav-number">2.</span> <span class="nav-text">stdcall</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -822,9 +833,9 @@ ar<span class="keyword">g3</span>
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2015/12/05/shell-script/';
-      var disqus_title = 'Shell Script';
-      var disqus_url = 'http://0byjwzsf.com/2015/12/05/shell-script/';
+      var disqus_identifier = '2015/12/08/stack-frame/';
+      var disqus_title = '栈帧';
+      var disqus_url = 'http://0byjwzsf.com/2015/12/08/stack-frame/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
