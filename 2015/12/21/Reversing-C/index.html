@@ -65,7 +65,7 @@
 <meta property="og:url" content="http://0byjwzsf.me/2015/12/21/Reversing-C/index.html">
 <meta property="og:site_name" content="0byjwzsf's Time">
 <meta property="og:description" content="123456789101112131415161718192021222324252627282930313233#include &amp;lt;iostream&amp;gt;class Person&amp;#123;public:	Person()&amp;#123;		showSpeak();	&amp;#125;	virtual ~Person()&amp;#123;		showSpeak();	&amp;#125;	virtual voi">
-<meta property="og:updated_time" content="2015-12-21T09:28:13.000Z">
+<meta property="og:updated_time" content="2015-12-21T15:12:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Reversing C++ (继承,虚函数）">
 <meta name="twitter:description" content="123456789101112131415161718192021222324252627282930313233#include &amp;lt;iostream&amp;gt;class Person&amp;#123;public:	Person()&amp;#123;		showSpeak();	&amp;#125;	virtual ~Person()&amp;#123;		showSpeak();	&amp;#125;	virtual voi">
@@ -345,19 +345,19 @@ Person <span class="keyword">Speak</span>
 <p>这段程序执行的顺序可以简要概括如下</p>
 <blockquote>
 <ul>
-<li>调用Person类的构造函数（传入this指针，即传入虚表指针）</li>
+<li>调用Person类的构造函数（传入this指针，即可通过this指针得到虚表指针的存放位置）</li>
 <li>设置虚表指针指向Person类的虚表</li>
 <li>执行Person类的构造函数的代码</li>
-<li>调用Chinise类的构造函数（传入this指针，即传入虚表指针）</li>
+<li>调用Chinise类的构造函数（传入this指针）</li>
 <li>设置虚表指针指向Chinese类的虚表</li>
 <li>执行Chinese类的构造函数的代码</li>
 <li><p>返回this指针</p>
 </li>
-<li><p>调用Chinese类的析构函数（传入this指针，即传入虚表指针）</p>
+<li><p>调用Chinese类的析构函数（传入this指针）</p>
 </li>
 <li>设置虚表指针指向Chinese类的虚表</li>
 <li>执行Chinese类的析构函数的代码</li>
-<li>调用Person类的析构函数（传入this指针，即传入虚表指针）</li>
+<li>调用Person类的析构函数（传入this指针）</li>
 <li>设置虚表指针指向Person类的虚表</li>
 <li>执行Person类的构造函数的代码</li>
 <li>返回this指针</li>
@@ -384,6 +384,33 @@ Person <span class="keyword">Speak</span>
 Chinese <span class="keyword">Speak</span>
 Person <span class="keyword">Speak</span> 
 </code></pre><p>理解了上面那个后再来理解这个就很容易了</p>
+<p>如果是多重继承，则为如下流程</p>
+<blockquote>
+<ul>
+<li>调用Person1类的构造函数（传入this指针，即可通过this指针获得虚表指针存放的位置）</li>
+<li>设置虚表指针指向Person1类的虚表</li>
+<li>执行Person1类的构造函数的代码</li>
+<li>调用Person2类的构造函数（传入this指针，此时调整this指针指向Person2类的虚表指针存放处）</li>
+<li>设置虚表指针指向Person2类的虚表</li>
+<li>执行Person2类的构造函数的代码</li>
+<li>调用Chinise类的构造函数（传入this指针，此时调整this指针指向Person1类的虚表指针存放处，因为Person1是先声明的，所以分配内存时在Person2类的上面）</li>
+<li>设置虚表指针指向Chinese类的虚表</li>
+<li>执行Chinese类的构造函数的代码</li>
+<li><p>返回this指针</p>
+</li>
+<li><p>调用Chinese类的析构函数（传入this指针）</p>
+</li>
+<li>设置虚表指针指向Chinese类的虚表</li>
+<li>执行Chinese类的析构函数的代码</li>
+<li>调用Person1类的析构函数（传入this指针）</li>
+<li>设置虚表指针指向Person1类的虚表</li>
+<li>执行Person1类的构造函数的代码</li>
+<li>调用Person2类的析构函数（传入this指针，此时调整this指针指向Person2类的虚表指针存放处，即传入虚表指针）</li>
+<li>设置虚表指针指向Person2类的虚表</li>
+<li>执行Person2类的构造函数的代码</li>
+<li>返回this指针</li>
+</ul>
+</blockquote>
 </span>
       
     </div>
