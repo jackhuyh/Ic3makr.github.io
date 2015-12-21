@@ -43,7 +43,7 @@
 <link href="/css/main.css?v=5.0.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="CPU," />
+  <meta name="keywords" content="C++,Reverse," />
 
 
 
@@ -59,22 +59,16 @@
 
 
 
-<meta name="description" content="32位CPU时代，Intel的 x86 占主导地位，而AMD生产 x86 兼容芯片
-在64位CPU出现之后，Intel为了抢占市场，发出了64位CPU IA-64，但是IA-64（IA即Intel Architecture，Intel系列）不兼容32位CPU
-后来AMD推出了 AMD64 兼容了 IA-32 ，其更受市场欢迎，Intel迫于无奈又发布了与 AMD64 兼容的 EM64T ，后来更名">
+<meta name="description" content="123456789101112131415161718192021222324252627282930313233#include &amp;lt;iostream&amp;gt;class Person&amp;#123;public:	Person()&amp;#123;		showSpeak();	&amp;#125;	virtual ~Person()&amp;#123;		showSpeak();	&amp;#125;	virtual voi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="了解CPU">
-<meta property="og:url" content="http://0byjwzsf.me/2015/12/14/cpu-os/index.html">
+<meta property="og:title" content="Reversing C++ (继承,虚函数）">
+<meta property="og:url" content="http://0byjwzsf.me/2015/12/21/Reversing-C/index.html">
 <meta property="og:site_name" content="0byjwzsf's Time">
-<meta property="og:description" content="32位CPU时代，Intel的 x86 占主导地位，而AMD生产 x86 兼容芯片
-在64位CPU出现之后，Intel为了抢占市场，发出了64位CPU IA-64，但是IA-64（IA即Intel Architecture，Intel系列）不兼容32位CPU
-后来AMD推出了 AMD64 兼容了 IA-32 ，其更受市场欢迎，Intel迫于无奈又发布了与 AMD64 兼容的 EM64T ，后来更名">
-<meta property="og:updated_time" content="2015-12-14T06:39:00.000Z">
+<meta property="og:description" content="123456789101112131415161718192021222324252627282930313233#include &amp;lt;iostream&amp;gt;class Person&amp;#123;public:	Person()&amp;#123;		showSpeak();	&amp;#125;	virtual ~Person()&amp;#123;		showSpeak();	&amp;#125;	virtual voi">
+<meta property="og:updated_time" content="2015-12-21T09:28:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="了解CPU">
-<meta name="twitter:description" content="32位CPU时代，Intel的 x86 占主导地位，而AMD生产 x86 兼容芯片
-在64位CPU出现之后，Intel为了抢占市场，发出了64位CPU IA-64，但是IA-64（IA即Intel Architecture，Intel系列）不兼容32位CPU
-后来AMD推出了 AMD64 兼容了 IA-32 ，其更受市场欢迎，Intel迫于无奈又发布了与 AMD64 兼容的 EM64T ，后来更名">
+<meta name="twitter:title" content="Reversing C++ (继承,虚函数）">
+<meta name="twitter:description" content="123456789101112131415161718192021222324252627282930313233#include &amp;lt;iostream&amp;gt;class Person&amp;#123;public:	Person()&amp;#123;		showSpeak();	&amp;#125;	virtual ~Person()&amp;#123;		showSpeak();	&amp;#125;	virtual voi">
 
 
 
@@ -87,7 +81,7 @@
   };
 </script>
 
-  <title> 了解CPU | 0byjwzsf's Time </title>
+  <title> Reversing C++ (继承,虚函数） | 0byjwzsf's Time </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -282,7 +276,7 @@
             
             
               
-                了解CPU
+                Reversing C++ (继承,虚函数）
               
             
           </h1>
@@ -291,8 +285,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-12-14T14:12:16+08:00" content="2015-12-14">
-              2015-12-14
+            <time itemprop="dateCreated" datetime="2015-12-21T17:00:56+08:00" content="2015-12-21">
+              2015-12-21
             </time>
           </span>
 
@@ -301,8 +295,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Reverse/" itemprop="url" rel="index">
-                    <span itemprop="name">Reverse</span>
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
                   </a>
                 </span>
 
@@ -317,8 +311,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/12/14/cpu-os/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/14/cpu-os/" itemprop="commentsCount"></span>
+              <a href="/2015/12/21/Reversing-C/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/21/Reversing-C/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -337,47 +331,59 @@
       
 
       
-        <span itemprop="articleBody"><p>32位CPU时代，<strong>Intel</strong>的 <em>x86</em> 占主导地位，而<strong>AMD</strong>生产 <em>x86</em> 兼容芯片</p>
-<p>在64位CPU出现之后，<strong>Intel</strong>为了抢占市场，发出了64位CPU <em>IA-64</em>，但是<em>IA-64</em>（<em>IA</em>即<strong>Intel Architecture</strong>，<strong>Intel系列</strong>）不兼容32位CPU</p>
-<p>后来<strong>AMD</strong>推出了 <em>AMD64</em> 兼容了 <em>IA-32</em> ，其更受市场欢迎，Intel迫于无奈又发布了与 <em>AMD64</em> 兼容的 <em>EM64T</em> ，后来更名为 <em>Intel64</em></p>
-<a id="more"></a>
-<p>现在<strong>Intel</strong>推出的 <em>Core 2 Duo</em> 、<em>i7/i5/i3</em> 等CPU就是 <em>Intel64</em> 系列的。</p>
-<p>而通常说的 <em>x64</em> 是 <em>AMD64</em> 与 <em>Intel64</em> 的合称，指的是与现有 <em>x86</em>（ <em>IA-32</em> ）兼容的64位CPU，主要用于普通PC和Server</p>
-<p>如上文所述， <em>IA-64</em> 是和 <em>x64</em> 形态完全不同，主要用于大型服务器和超级计算机</p>
-<table>
-<thead>
-<tr>
-<th>术语</th>
-<th style="text-align:center">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><em>AMD64</em></td>
-<td style="text-align:center">AMD研制的64位芯片，向下兼容x86</td>
-</tr>
-<tr>
-<td><em>EM64T</em></td>
-<td style="text-align:center">Intel研制的兼容AMD64的CPU</td>
-</tr>
-<tr>
-<td><em>Intel64</em></td>
-<td style="text-align:center">EM64T的新名称</td>
-</tr>
-<tr>
-<td><em>IA-64</em></td>
-<td style="text-align:center">INtel研制的64位CPU，不向下兼容</td>
-</tr>
-<tr>
-<td><em>x86</em></td>
-<td style="text-align:center">Intel的IA-32、IA-16、IA-8系列的CPU</td>
-</tr>
-<tr>
-<td><em>x64</em></td>
-<td style="text-align:center">AMD64 &amp; Intel64</td>
-</tr>
-</tbody>
-</table>
+        <span itemprop="articleBody"><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Person()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~Person()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">showSpeak</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Person Speak \n"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Chinese : <span class="keyword">public</span> Person&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Chinese()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~Chinese()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">showSpeak</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Chinese Speak\n"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	Chinese chinese;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码的输出效果是</p>
+<pre><code>Person <span class="keyword">Speak</span> 
+Chinese <span class="keyword">Speak</span>
+Chinese <span class="keyword">Speak</span>
+Person <span class="keyword">Speak</span> 
+</code></pre><a id="more"></a>
+<p>首先，从成员变量的内存分配角度，可以把Chinese类的声明等效为如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Chinese&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Chinese()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~Chinese()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">showSpeak</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Chinese Speak\n"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Person person;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>由于分配成员变量的内存时按照声明的顺序分配，因此person理所当然的被分配到了所有成员变量的最前面</p>
+<p>现在分析这段代码输出结果的原因</p>
+<p>这段程序执行的顺序可以简要概括如下</p>
+<blockquote>
+<ul>
+<li>调用Person类的构造函数（传入this指针，即传入虚表指针）</li>
+<li>设置虚表指针指向Person类的虚表</li>
+<li>执行Person类的构造函数的代码</li>
+<li>调用Chinise类的构造函数（传入this指针，即传入虚表指针）</li>
+<li>设置虚表指针指向Chinese类的虚表</li>
+<li>执行Chinese类的构造函数的代码</li>
+<li><p>返回this指针</p>
+</li>
+<li><p>调用Chinese类的析构函数（传入this指针，即传入虚表指针）</p>
+</li>
+<li>设置虚表指针指向Chinese类的虚表</li>
+<li>执行Chinese类的析构函数的代码</li>
+<li>调用Person类的析构函数（传入this指针，即传入虚表指针）</li>
+<li>设置虚表指针指向Person类的虚表</li>
+<li>执行Person类的构造函数的代码</li>
+<li>返回this指针</li>
+</ul>
+</blockquote>
+<p>了解了这个过程后就知道这个输出的结果的原因了，在调用构造函数时首先进入Person构造函数，此时虚表指针被设置为指向父类Person的虚表，因此调用的是父类的showSpeak()，当进入Chinese类的构造函数时，虚表指针被设置为指向Chinese类的虚表，因此调用了Chinese类的showSpeak()</p>
+<p>析构时同理</p>
+<p>另外，关于虚函数的用途，可以试试下面的代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Person&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Person()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~Person()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">showSpeak</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Person Speak \n"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Chinese : <span class="keyword">public</span> Person&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Chinese()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~Chinese()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">showSpeak</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Chinese Speak\n"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Russian : <span class="keyword">public</span> Person&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Russian()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~Russian()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">showSpeak</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Russion Speak\n"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Japanese : <span class="keyword">public</span> Person&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	Japanese()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~Japanese()&#123;</span><br><span class="line">		showSpeak();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">showSpeak</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Japanese Speak\n"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">speak</span><span class="params">(Person *person)</span></span>&#123;</span><br><span class="line">	person -&gt; showSpeak();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	Chinese chinese;</span><br><span class="line">	Japanese japanese;</span><br><span class="line">	Russian russian;</span><br><span class="line">	speak(&amp;chinese);</span><br><span class="line">	speak(&amp;japanese);</span><br><span class="line">	speak(&amp;russian);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出效果如下</p>
+<pre><code>Person <span class="keyword">Speak</span> 
+Chinese <span class="keyword">Speak</span>
+Person <span class="keyword">Speak</span> 
+Japanese <span class="keyword">Speak</span>
+Person <span class="keyword">Speak</span> 
+Russion <span class="keyword">Speak</span>
+Chinese <span class="keyword">Speak</span>
+Japanese <span class="keyword">Speak</span>
+Russion <span class="keyword">Speak</span>
+Russion <span class="keyword">Speak</span>
+Person <span class="keyword">Speak</span> 
+Japanese <span class="keyword">Speak</span>
+Person <span class="keyword">Speak</span> 
+Chinese <span class="keyword">Speak</span>
+Person <span class="keyword">Speak</span> 
+</code></pre><p>理解了上面那个后再来理解这个就很容易了</p>
 </span>
       
     </div>
@@ -386,7 +392,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/CPU/" rel="tag">#CPU</a>
+            <a href="/tags/C/" rel="tag">#C++</a>
+          
+            <a href="/tags/Reverse/" rel="tag">#Reverse</a>
           
         </div>
       
@@ -395,17 +403,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/12/08/stack-frame/" rel="next" title="栈帧（Win32）">
-                <i class="fa fa-chevron-left"></i> 栈帧（Win32）
+              <a href="/2015/12/21/Matplotlib/" rel="next" title="Matplotlib初学">
+                <i class="fa fa-chevron-left"></i> Matplotlib初学
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/21/Matplotlib/" rel="prev" title="Matplotlib初学">
-                Matplotlib初学 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -816,9 +820,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2015/12/14/cpu-os/';
-      var disqus_title = '了解CPU';
-      var disqus_url = 'http://0byjwzsf.me/2015/12/14/cpu-os/';
+      var disqus_identifier = '2015/12/21/Reversing-C/';
+      var disqus_title = 'Reversing C++ (继承,虚函数）';
+      var disqus_url = 'http://0byjwzsf.me/2015/12/21/Reversing-C/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
