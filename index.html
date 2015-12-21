@@ -62,7 +62,7 @@
 <meta name="description" content="如果不曾见过太阳，或许我还能忍受黑暗">
 <meta property="og:type" content="website">
 <meta property="og:title" content="0byjwzsf's Time">
-<meta property="og:url" content="http://0byjwzsf.com/index.html">
+<meta property="og:url" content="http://0byjwzsf.me/index.html">
 <meta property="og:site_name" content="0byjwzsf's Time">
 <meta property="og:description" content="如果不曾见过太阳，或许我还能忍受黑暗">
 <meta name="twitter:card" content="summary">
@@ -261,6 +261,119 @@
 
     
     
+      
+      
+        
+        
+        
+      
+
+      
+    
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/12/21/Matplotlib/" itemprop="url">
+                  Matplotlib初学
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-12-21T13:19:02+08:00" content="2015-12-21">
+              2015-12-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/12/21/Matplotlib/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/21/Matplotlib/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+		  
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p><img src="/images/Matplotlib初学_1.jpg" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> matplotlib.font_manager <span class="keyword">import</span> FontProperties</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置字体（显示中文）</span></span><br><span class="line">font = FontProperties(fname=<span class="string">u"\Library\Fonts\华文黑体.ttf"</span>, size=<span class="number">14</span>) </span><br><span class="line">matplotlib.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'Arial Unicode MS'</span>]</span><br><span class="line">matplotlib.rcParams[<span class="string">'axes.unicode_minus'</span>] = <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line">x = np.linspace(<span class="number">0</span>, <span class="number">10</span>, <span class="number">1000</span>)</span><br><span class="line">y = np.sin(x)</span><br><span class="line">z = np.cos(x**<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#当前的画图对象 figure</span></span><br><span class="line">plt.figure(figsize=(<span class="number">8</span>,<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">#调用plot在当前的画图对象figure中画图</span></span><br><span class="line">plt.plot(x,y,label=<span class="string">u"$sin(x)$"</span>,color=<span class="string">u"red"</span>,linewidth=<span class="number">2</span>)</span><br><span class="line">plt.plot(x,z,<span class="string">u"b--"</span>,label=<span class="string">u"$cos(x^2)$"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置绘图对象的属性</span></span><br><span class="line">plt.xlabel(<span class="string">u"Time(s)"</span>)</span><br><span class="line">plt.ylabel(<span class="string">u"Volt"</span>)</span><br><span class="line">plt.title(<span class="string">u"第一个pyplot"</span>)</span><br><span class="line">plt.ylim(-<span class="number">1.2</span>,<span class="number">1.2</span>) <span class="comment">#设置y轴上下限</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#显示图示</span></span><br><span class="line">plt.legend() </span><br><span class="line"></span><br><span class="line"><span class="comment">#保存图片</span></span><br><span class="line">plt.savefig(<span class="string">u"test.png"</span>,dpi = <span class="number">200</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#显示图片</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/12/21/Matplotlib/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
 
     
       
@@ -851,21 +964,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
