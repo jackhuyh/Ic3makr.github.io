@@ -43,7 +43,7 @@
 <link href="/css/main.css?v=5.0.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="CPU," />
+  <meta name="keywords" content="UNIX,系统,读书," />
 
 
 
@@ -59,22 +59,25 @@
 
 
 
-<meta name="description" content="32位CPU时代，Intel的 x86 占主导地位，而AMD生产 x86 兼容芯片
-在64位CPU出现之后，Intel为了抢占市场，发出了64位CPU IA-64，但是IA-64（IA即Intel Architecture，Intel系列）不兼容32位CPU
-后来AMD推出了 AMD64 兼容了 IA-32 ，其更受市场欢迎，Intel迫于无奈又发布了与 AMD64 兼容的 EM64T ，后来更名">
+<meta name="description" content="Chapter8 Process ControlProcess IdentifiersPID会唯一的标识一个进程
+但是假设当一个进程突然退出了，如果另一个进程刚好打开，然后用了那个之前退出的进程的PID，这时一个不知情的用户仍然傻呆呆的使用这个PID会怎么样呢？
+设计者们早就考虑过这个问题，他们通过一个自己设计的“PID的延迟重用的算法”来预防这种情况的出现
+PID=0，是一个scheduler">
 <meta property="og:type" content="article">
-<meta property="og:title" content="了解CPU">
-<meta property="og:url" content="http://0byjwzsf.me/2015/12/14/cpu-os/index.html">
+<meta property="og:title" content="《APUE》读书笔记（八）">
+<meta property="og:url" content="http://0byjwzsf.me/2016/03/20/Chap8-Process-Control/index.html">
 <meta property="og:site_name" content="0byjwzsf's Space">
-<meta property="og:description" content="32位CPU时代，Intel的 x86 占主导地位，而AMD生产 x86 兼容芯片
-在64位CPU出现之后，Intel为了抢占市场，发出了64位CPU IA-64，但是IA-64（IA即Intel Architecture，Intel系列）不兼容32位CPU
-后来AMD推出了 AMD64 兼容了 IA-32 ，其更受市场欢迎，Intel迫于无奈又发布了与 AMD64 兼容的 EM64T ，后来更名">
-<meta property="og:updated_time" content="2015-12-14T06:39:00.000Z">
+<meta property="og:description" content="Chapter8 Process ControlProcess IdentifiersPID会唯一的标识一个进程
+但是假设当一个进程突然退出了，如果另一个进程刚好打开，然后用了那个之前退出的进程的PID，这时一个不知情的用户仍然傻呆呆的使用这个PID会怎么样呢？
+设计者们早就考虑过这个问题，他们通过一个自己设计的“PID的延迟重用的算法”来预防这种情况的出现
+PID=0，是一个scheduler">
+<meta property="og:updated_time" content="2016-03-20T14:45:59.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="了解CPU">
-<meta name="twitter:description" content="32位CPU时代，Intel的 x86 占主导地位，而AMD生产 x86 兼容芯片
-在64位CPU出现之后，Intel为了抢占市场，发出了64位CPU IA-64，但是IA-64（IA即Intel Architecture，Intel系列）不兼容32位CPU
-后来AMD推出了 AMD64 兼容了 IA-32 ，其更受市场欢迎，Intel迫于无奈又发布了与 AMD64 兼容的 EM64T ，后来更名">
+<meta name="twitter:title" content="《APUE》读书笔记（八）">
+<meta name="twitter:description" content="Chapter8 Process ControlProcess IdentifiersPID会唯一的标识一个进程
+但是假设当一个进程突然退出了，如果另一个进程刚好打开，然后用了那个之前退出的进程的PID，这时一个不知情的用户仍然傻呆呆的使用这个PID会怎么样呢？
+设计者们早就考虑过这个问题，他们通过一个自己设计的“PID的延迟重用的算法”来预防这种情况的出现
+PID=0，是一个scheduler">
 
 
 
@@ -87,7 +90,7 @@
   };
 </script>
 
-  <title> 了解CPU | 0byjwzsf's Space </title>
+  <title> 《APUE》读书笔记（八） | 0byjwzsf's Space </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -282,7 +285,7 @@
             
             
               
-                了解CPU
+                《APUE》读书笔记（八）
               
             
           </h1>
@@ -291,8 +294,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-12-14T14:12:16+08:00" content="2015-12-14">
-              2015-12-14
+            <time itemprop="dateCreated" datetime="2016-03-20T22:42:00+08:00" content="2016-03-20">
+              2016-03-20
             </time>
           </span>
 
@@ -301,8 +304,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Reverse/" itemprop="url" rel="index">
-                    <span itemprop="name">Reverse</span>
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
                   </a>
                 </span>
 
@@ -317,8 +320,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/12/14/cpu-os/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/14/cpu-os/" itemprop="commentsCount"></span>
+              <a href="/2016/03/20/Chap8-Process-Control/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/03/20/Chap8-Process-Control/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -337,48 +340,16 @@
       
 
       
-        <span itemprop="articleBody"><p>32位CPU时代，<strong>Intel</strong>的 <em>x86</em> 占主导地位，而<strong>AMD</strong>生产 <em>x86</em> 兼容芯片</p>
-<p>在64位CPU出现之后，<strong>Intel</strong>为了抢占市场，发出了64位CPU <em>IA-64</em>，但是<em>IA-64</em>（<em>IA</em>即<strong>Intel Architecture</strong>，<strong>Intel系列</strong>）不兼容32位CPU</p>
-<p>后来<strong>AMD</strong>推出了 <em>AMD64</em> 兼容了 <em>IA-32</em> ，其更受市场欢迎，Intel迫于无奈又发布了与 <em>AMD64</em> 兼容的 <em>EM64T</em> ，后来更名为 <em>Intel64</em></p>
-<a id="more"></a>
-<p>现在<strong>Intel</strong>推出的 <em>Core 2 Duo</em> 、<em>i7/i5/i3</em> 等CPU就是 <em>Intel64</em> 系列的。</p>
-<p>而通常说的 <em>x64</em> 是 <em>AMD64</em> 与 <em>Intel64</em> 的合称，指的是与现有 <em>x86</em>（ <em>IA-32</em> ）兼容的64位CPU，主要用于普通PC和Server</p>
-<p>如上文所述， <em>IA-64</em> 是和 <em>x64</em> 形态完全不同，主要用于大型服务器和超级计算机</p>
-<table>
-<thead>
-<tr>
-<th>术语</th>
-<th style="text-align:center">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><em>AMD64</em></td>
-<td style="text-align:center">AMD研制的64位芯片，向下兼容x86</td>
-</tr>
-<tr>
-<td><em>EM64T</em></td>
-<td style="text-align:center">Intel研制的兼容AMD64的CPU</td>
-</tr>
-<tr>
-<td><em>Intel64</em></td>
-<td style="text-align:center">EM64T的新名称</td>
-</tr>
-<tr>
-<td><em>IA-64</em></td>
-<td style="text-align:center">INtel研制的64位CPU，不向下兼容</td>
-</tr>
-<tr>
-<td><em>x86</em></td>
-<td style="text-align:center">Intel的IA-32、IA-16、IA-8系列的CPU</td>
-</tr>
-<tr>
-<td><em>x64</em></td>
-<td style="text-align:center">AMD64 &amp; Intel64</td>
-</tr>
-</tbody>
-</table>
-</span>
+        <span itemprop="articleBody"><h1 id="Chapter8_Process_Control">Chapter8 Process Control</h1><h2 id="Process_Identifiers">Process Identifiers</h2><p>PID会唯一的标识一个进程</p>
+<p>但是假设当一个进程突然退出了，如果另一个进程刚好打开，然后用了那个之前退出的进程的PID，这时一个不知情的用户仍然傻呆呆的使用这个PID会怎么样呢？</p>
+<p>设计者们早就考虑过这个问题，他们通过一个自己设计的“PID的延迟重用的算法”来预防这种情况的出现</p>
+<p>PID=0，是一个<strong><em>scheduler process</em></strong>，也叫作 <strong><em>swapper</em></strong> ，是一个系统进程，感觉屌屌的:)</p>
+<p>PID=1，<strong><em>init</em></strong>进程，圣母:)，喂，我可没说它是系统进程啊哈哈哈</p>
+<p>PID=2，<strong><em>pagedamon</em></strong>，它主要负责虚拟内存分页的实现</p>
+<h2 id="fork()和vfork()">fork()和vfork()</h2><p>fork，英文的意思是叉子，调用fork的时候可以想象成是“把别人的食物用叉子抢到自己的盘子里”</p>
+<p>也就是说，当调用fork函数的时候，子进程会做一份父进程定义的变量，还有进程权限等的<strong><em>拷贝</em></strong>，然后为自己所用</p>
+<p>与之不同的，vfork()更加霸道，会直接抢父进程的东西（变量的地址空间）用:)</p>
+<h2 id="进程间的同步(Synchronized)">进程间的同步(Synchronized)</h2></span>
       
     </div>
 
@@ -386,7 +357,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/CPU/" rel="tag">#CPU</a>
+            <a href="/tags/UNIX/" rel="tag">#UNIX</a>
+          
+            <a href="/tags/系统/" rel="tag">#系统</a>
+          
+            <a href="/tags/读书/" rel="tag">#读书</a>
           
         </div>
       
@@ -395,17 +370,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/12/08/stack-frame/" rel="next" title="栈帧（Win32）">
-                <i class="fa fa-chevron-left"></i> 栈帧（Win32）
+              <a href="/2016/03/20/Chap7-Process-Environment/" rel="next" title="《APUE》读书笔记（七）">
+                <i class="fa fa-chevron-left"></i> 《APUE》读书笔记（七）
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/12/21/Matplotlib/" rel="prev" title="Matplotlib初学">
-                Matplotlib初学 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -567,7 +538,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Chapter8_Process_Control"><span class="nav-number">1.</span> <span class="nav-text">Chapter8 Process Control</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Process_Identifiers"><span class="nav-number">1.1.</span> <span class="nav-text">Process Identifiers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fork()和vfork()"><span class="nav-number">1.2.</span> <span class="nav-text">fork()和vfork()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程间的同步(Synchronized)"><span class="nav-number">1.3.</span> <span class="nav-text">进程间的同步(Synchronized)</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -831,9 +802,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2015/12/14/cpu-os/';
-      var disqus_title = '了解CPU';
-      var disqus_url = 'http://0byjwzsf.me/2015/12/14/cpu-os/';
+      var disqus_identifier = '2016/03/20/Chap8-Process-Control/';
+      var disqus_title = '《APUE》读书笔记（八）';
+      var disqus_url = 'http://0byjwzsf.me/2016/03/20/Chap8-Process-Control/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

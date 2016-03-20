@@ -43,7 +43,7 @@
 <link href="/css/main.css?v=5.0.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="CPU," />
+  <meta name="keywords" content="UNIX,系统,读书," />
 
 
 
@@ -59,22 +59,22 @@
 
 
 
-<meta name="description" content="32位CPU时代，Intel的 x86 占主导地位，而AMD生产 x86 兼容芯片
-在64位CPU出现之后，Intel为了抢占市场，发出了64位CPU IA-64，但是IA-64（IA即Intel Architecture，Intel系列）不兼容32位CPU
-后来AMD推出了 AMD64 兼容了 IA-32 ，其更受市场欢迎，Intel迫于无奈又发布了与 AMD64 兼容的 EM64T ，后来更名">
+<meta name="description" content="Chapter7 Process EnvironmentC程序运行时的内存布局按照地址从低到高，分别有 text segment、initialized segment、uninitialized segment、heap、stack、 command-line arguments and environment variables，
+Text segment存放代码编译汇编后的机器指令
+Init">
 <meta property="og:type" content="article">
-<meta property="og:title" content="了解CPU">
-<meta property="og:url" content="http://0byjwzsf.me/2015/12/14/cpu-os/index.html">
+<meta property="og:title" content="《APUE》读书笔记（七）">
+<meta property="og:url" content="http://0byjwzsf.me/2016/03/20/Chap7-Process-Environment/index.html">
 <meta property="og:site_name" content="0byjwzsf's Space">
-<meta property="og:description" content="32位CPU时代，Intel的 x86 占主导地位，而AMD生产 x86 兼容芯片
-在64位CPU出现之后，Intel为了抢占市场，发出了64位CPU IA-64，但是IA-64（IA即Intel Architecture，Intel系列）不兼容32位CPU
-后来AMD推出了 AMD64 兼容了 IA-32 ，其更受市场欢迎，Intel迫于无奈又发布了与 AMD64 兼容的 EM64T ，后来更名">
-<meta property="og:updated_time" content="2015-12-14T06:39:00.000Z">
+<meta property="og:description" content="Chapter7 Process EnvironmentC程序运行时的内存布局按照地址从低到高，分别有 text segment、initialized segment、uninitialized segment、heap、stack、 command-line arguments and environment variables，
+Text segment存放代码编译汇编后的机器指令
+Init">
+<meta property="og:updated_time" content="2016-03-20T14:45:52.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="了解CPU">
-<meta name="twitter:description" content="32位CPU时代，Intel的 x86 占主导地位，而AMD生产 x86 兼容芯片
-在64位CPU出现之后，Intel为了抢占市场，发出了64位CPU IA-64，但是IA-64（IA即Intel Architecture，Intel系列）不兼容32位CPU
-后来AMD推出了 AMD64 兼容了 IA-32 ，其更受市场欢迎，Intel迫于无奈又发布了与 AMD64 兼容的 EM64T ，后来更名">
+<meta name="twitter:title" content="《APUE》读书笔记（七）">
+<meta name="twitter:description" content="Chapter7 Process EnvironmentC程序运行时的内存布局按照地址从低到高，分别有 text segment、initialized segment、uninitialized segment、heap、stack、 command-line arguments and environment variables，
+Text segment存放代码编译汇编后的机器指令
+Init">
 
 
 
@@ -87,7 +87,7 @@
   };
 </script>
 
-  <title> 了解CPU | 0byjwzsf's Space </title>
+  <title> 《APUE》读书笔记（七） | 0byjwzsf's Space </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -282,7 +282,7 @@
             
             
               
-                了解CPU
+                《APUE》读书笔记（七）
               
             
           </h1>
@@ -291,8 +291,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-12-14T14:12:16+08:00" content="2015-12-14">
-              2015-12-14
+            <time itemprop="dateCreated" datetime="2016-03-20T22:42:00+08:00" content="2016-03-20">
+              2016-03-20
             </time>
           </span>
 
@@ -301,8 +301,8 @@
               &nbsp; | &nbsp; 分类于
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Reverse/" itemprop="url" rel="index">
-                    <span itemprop="name">Reverse</span>
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
                   </a>
                 </span>
 
@@ -317,8 +317,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/12/14/cpu-os/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/14/cpu-os/" itemprop="commentsCount"></span>
+              <a href="/2016/03/20/Chap7-Process-Environment/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/03/20/Chap7-Process-Environment/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -337,47 +337,17 @@
       
 
       
-        <span itemprop="articleBody"><p>32位CPU时代，<strong>Intel</strong>的 <em>x86</em> 占主导地位，而<strong>AMD</strong>生产 <em>x86</em> 兼容芯片</p>
-<p>在64位CPU出现之后，<strong>Intel</strong>为了抢占市场，发出了64位CPU <em>IA-64</em>，但是<em>IA-64</em>（<em>IA</em>即<strong>Intel Architecture</strong>，<strong>Intel系列</strong>）不兼容32位CPU</p>
-<p>后来<strong>AMD</strong>推出了 <em>AMD64</em> 兼容了 <em>IA-32</em> ，其更受市场欢迎，Intel迫于无奈又发布了与 <em>AMD64</em> 兼容的 <em>EM64T</em> ，后来更名为 <em>Intel64</em></p>
-<a id="more"></a>
-<p>现在<strong>Intel</strong>推出的 <em>Core 2 Duo</em> 、<em>i7/i5/i3</em> 等CPU就是 <em>Intel64</em> 系列的。</p>
-<p>而通常说的 <em>x64</em> 是 <em>AMD64</em> 与 <em>Intel64</em> 的合称，指的是与现有 <em>x86</em>（ <em>IA-32</em> ）兼容的64位CPU，主要用于普通PC和Server</p>
-<p>如上文所述， <em>IA-64</em> 是和 <em>x64</em> 形态完全不同，主要用于大型服务器和超级计算机</p>
-<table>
-<thead>
-<tr>
-<th>术语</th>
-<th style="text-align:center">说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><em>AMD64</em></td>
-<td style="text-align:center">AMD研制的64位芯片，向下兼容x86</td>
-</tr>
-<tr>
-<td><em>EM64T</em></td>
-<td style="text-align:center">Intel研制的兼容AMD64的CPU</td>
-</tr>
-<tr>
-<td><em>Intel64</em></td>
-<td style="text-align:center">EM64T的新名称</td>
-</tr>
-<tr>
-<td><em>IA-64</em></td>
-<td style="text-align:center">INtel研制的64位CPU，不向下兼容</td>
-</tr>
-<tr>
-<td><em>x86</em></td>
-<td style="text-align:center">Intel的IA-32、IA-16、IA-8系列的CPU</td>
-</tr>
-<tr>
-<td><em>x64</em></td>
-<td style="text-align:center">AMD64 &amp; Intel64</td>
-</tr>
-</tbody>
-</table>
+        <span itemprop="articleBody"><h1 id="Chapter7_Process_Environment">Chapter7 Process Environment</h1><h2 id="C程序运行时的内存布局">C程序运行时的内存布局</h2><p>按照地址从低到高，分别有 <strong><em>text segment</em></strong>、<strong><em>initialized segment</em></strong>、<strong><em>uninitialized segment</em></strong>、<strong><em>heap</em></strong>、<strong><em>stack</em></strong>、 <strong><em>command-line arguments and environment variables</em></strong>，</p>
+<h3 id="Text_segment">Text segment</h3><p>存放代码编译汇编后的机器指令</p>
+<h3 id="Initialized_data_segment">Initialized data segment</h3><p>存放不在函数内声明，并且显示初始化的变量</p>
+<h3 id="Unintialized_data_segment（bss_segment）">Unintialized data segment（bss segment）</h3><p>存放不在函数内声明，并且没有初始化的变量</p>
+<h3 id="Stack">Stack</h3><p>这个就不需要多说了:)</p>
+<h3 id="Heap">Heap</h3><p>存放动态分配的变量</p>
+<p>关于动态分配，这里有几个trick</p>
+<ul>
+<li>事实上每次动态分配的时候，会特意多分配一些空间，因为程序要在你分配的空间的头和尾部在维护一些记录，例如这个block的大小，以及所指向的下一个block的地址，因此当你特意去破坏这些信息时，就会造成所谓的<em>Heap Corrupt</em></li>
+<li>当你free掉一块用malloc等函数创造的空间时，可能下一次malloc，程序又会把这块地址返回给你，因此被你free过的这个block仍然在malloc pool里待命！</li>
+</ul>
 </span>
       
     </div>
@@ -386,7 +356,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/CPU/" rel="tag">#CPU</a>
+            <a href="/tags/UNIX/" rel="tag">#UNIX</a>
+          
+            <a href="/tags/系统/" rel="tag">#系统</a>
+          
+            <a href="/tags/读书/" rel="tag">#读书</a>
           
         </div>
       
@@ -395,16 +369,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/12/08/stack-frame/" rel="next" title="栈帧（Win32）">
-                <i class="fa fa-chevron-left"></i> 栈帧（Win32）
+              <a href="/2015/12/22/books-list/" rel="next" title="期末，暂时的告别">
+                <i class="fa fa-chevron-left"></i> 期末，暂时的告别
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/12/21/Matplotlib/" rel="prev" title="Matplotlib初学">
-                Matplotlib初学 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/03/20/Chap8-Process-Control/" rel="prev" title="《APUE》读书笔记（八）">
+                《APUE》读书笔记（八） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -567,7 +541,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Chapter7_Process_Environment"><span class="nav-number">1.</span> <span class="nav-text">Chapter7 Process Environment</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#C程序运行时的内存布局"><span class="nav-number">1.1.</span> <span class="nav-text">C程序运行时的内存布局</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Text_segment"><span class="nav-number">1.1.1.</span> <span class="nav-text">Text segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Initialized_data_segment"><span class="nav-number">1.1.2.</span> <span class="nav-text">Initialized data segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Unintialized_data_segment（bss_segment）"><span class="nav-number">1.1.3.</span> <span class="nav-text">Unintialized data segment（bss segment）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stack"><span class="nav-number">1.1.4.</span> <span class="nav-text">Stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Heap"><span class="nav-number">1.1.5.</span> <span class="nav-text">Heap</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -831,9 +805,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2015/12/14/cpu-os/';
-      var disqus_title = '了解CPU';
-      var disqus_url = 'http://0byjwzsf.me/2015/12/14/cpu-os/';
+      var disqus_identifier = '2016/03/20/Chap7-Process-Environment/';
+      var disqus_title = '《APUE》读书笔记（七）';
+      var disqus_url = 'http://0byjwzsf.me/2016/03/20/Chap7-Process-Environment/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
