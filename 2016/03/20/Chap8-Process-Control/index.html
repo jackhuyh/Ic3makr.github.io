@@ -71,7 +71,9 @@ PID=0，是一个scheduler">
 但是假设当一个进程突然退出了，如果另一个进程刚好打开，然后用了那个之前退出的进程的PID，这时一个不知情的用户仍然傻呆呆的使用这个PID会怎么样呢？
 设计者们早就考虑过这个问题，他们通过一个自己设计的“PID的延迟重用的算法”来预防这种情况的出现
 PID=0，是一个scheduler">
-<meta property="og:updated_time" content="2016-03-20T14:45:59.000Z">
+<meta property="og:image" content="http://0byjwzsf.me/images/APUE-process-id.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/APUE-process.jpg">
+<meta property="og:updated_time" content="2016-03-25T09:04:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《APUE》读书笔记（八）">
 <meta name="twitter:description" content="Chapter8 Process ControlProcess IdentifiersPID会唯一的标识一个进程
@@ -349,7 +351,22 @@ PID=0，是一个scheduler">
 <h2 id="fork()和vfork()">fork()和vfork()</h2><p>fork，英文的意思是叉子，调用fork的时候可以想象成是“把别人的食物用叉子抢到自己的盘子里”</p>
 <p>也就是说，当调用fork函数的时候，子进程会做一份父进程定义的变量，还有进程权限等的<strong><em>拷贝</em></strong>，然后为自己所用</p>
 <p>与之不同的，vfork()更加霸道，会直接抢父进程的东西（变量的地址空间）用:)</p>
-<h2 id="进程间的同步(Synchronized)">进程间的同步(Synchronized)</h2></span>
+<h2 id="进程间的同步(Synchronized)">进程间的同步(Synchronized)</h2><h2 id="进程的UID，EUID，SUID">进程的UID，EUID，SUID</h2><p>对于一个进程，它拥有UserID，EffectiveUserID，SavedUserID</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setuid</span><span class="params">(uid_t uid)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">setgid</span><span class="params">(gid_t gid)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>一个进程的UserID指的是<strong><em>运行这个程序的用户的ID</em></strong>，只有拥有root权限的进程能够去改变这个值</p>
+<p>进程的EffectiveUserID，即为有效用户ID，<strong><em>它代表着这个进程所拥有的权限</em></strong>，它能够通过setuid函数改变，当uid参数为UserID或者SavedUserID当中一者时函数调用成功，此时仅EffectiveUserID将会被修改为uid</p>
+<p>进程的SavedUserID不太理解，还需要再琢磨一下，就我的理解来说，它主要是为了方便普通用户在使用setuid函数或者seteuid函数来切换EffectiveUserID，因为对于普通用户来说，它只能将EffectiveUserID设置为UserID或者SavedUserID（相当于是告诉系统，“我曾经也拥有过力量”，或者是“我曾经也只是一个普通人啊”</p>
+<p>其实附上书上的这张表格和图就很清晰了</p>
+<p><img src="/images/APUE-process-id.jpg" alt=""></p>
+<p><img src="/images/APUE-process.jpg" alt=""></p>
+<h2 id="脚本文件的执行">脚本文件的执行</h2><p>其实在运行一个脚本的时候，实际上运行的是对应的解释器，而不是脚本这个文本文件本身。</p>
+<p>其实际的流程是，exec函数运行文件，当判断它不是机器可执行文件后，exec函数就开始寻找一个解释器来运行这个文本文件，当碰到文件第一行的shebang，就会调用shebang所指的解释器，然后解释器得到运行文本文件时所传入的命令行参数，然后解释器开始运行</p>
+<h2 id="system函数">system函数</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">system</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *cmdstring)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>system函数能够执行shell命令</p>
+<p>由于system函数是通过调用fork，exec，wait函数实现的，若三者都成功执行，则返回值为shell的终止时返回的数</p>
+<p>调用system函数而不是exec或者fork函数的好处是，system函数会帮我们处理所有需要处理的error</p>
+<p>另外，调用fork和system等函数时，进程的ID都会被继承下去</p>
+</span>
       
     </div>
 
@@ -458,7 +475,7 @@ PID=0，是一个scheduler">
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
@@ -538,7 +555,7 @@ PID=0，是一个scheduler">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Chapter8_Process_Control"><span class="nav-number">1.</span> <span class="nav-text">Chapter8 Process Control</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Process_Identifiers"><span class="nav-number">1.1.</span> <span class="nav-text">Process Identifiers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fork()和vfork()"><span class="nav-number">1.2.</span> <span class="nav-text">fork()和vfork()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程间的同步(Synchronized)"><span class="nav-number">1.3.</span> <span class="nav-text">进程间的同步(Synchronized)</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Chapter8_Process_Control"><span class="nav-number">1.</span> <span class="nav-text">Chapter8 Process Control</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Process_Identifiers"><span class="nav-number">1.1.</span> <span class="nav-text">Process Identifiers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fork()和vfork()"><span class="nav-number">1.2.</span> <span class="nav-text">fork()和vfork()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程间的同步(Synchronized)"><span class="nav-number">1.3.</span> <span class="nav-text">进程间的同步(Synchronized)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程的UID，EUID，SUID"><span class="nav-number">1.4.</span> <span class="nav-text">进程的UID，EUID，SUID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本文件的执行"><span class="nav-number">1.5.</span> <span class="nav-text">脚本文件的执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#system函数"><span class="nav-number">1.6.</span> <span class="nav-text">system函数</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
