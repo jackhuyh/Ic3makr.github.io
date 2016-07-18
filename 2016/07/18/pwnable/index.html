@@ -67,7 +67,7 @@ exp如下，需要注意的点
 #include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pwnable writeup">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/17/pwnable/index.html">
+<meta property="og:url" content="http://0byjwzsf.me/2016/07/18/pwnable/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="input这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等
 exp如下，需要注意的点
@@ -75,7 +75,7 @@ exp如下，需要注意的点
 因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了
 
 #include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt">
-<meta property="og:updated_time" content="2016-07-17T15:29:14.000Z">
+<meta property="og:updated_time" content="2016-07-18T06:11:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable writeup">
 <meta name="twitter:description" content="input这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等
@@ -300,8 +300,8 @@ exp如下，需要注意的点
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-07-17T23:29:14+08:00" content="2016-07-17">
-              2016-07-17
+            <time itemprop="dateCreated" datetime="2016-07-18T14:11:11+08:00" content="2016-07-18">
+              2016-07-18
             </time>
           </span>
 
@@ -311,8 +311,8 @@ exp如下，需要注意的点
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/07/17/pwnable/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/17/pwnable/" itemprop="commentsCount"></span>
+              <a href="/2016/07/18/pwnable/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/18/pwnable/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -337,6 +337,11 @@ exp如下，需要注意的点
 <li>因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了</li>
 </ul>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/* stage 1 */</span></span><br><span class="line">    <span class="keyword">int</span>     i   = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span>     pid = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">char</span>    *my_argv[<span class="number">101</span>]; </span><br><span class="line">    <span class="keyword">char</span>    *my_env[<span class="number">2</span>]; </span><br><span class="line">    <span class="keyword">int</span>     pipe_fd0[<span class="number">2</span>]; </span><br><span class="line">    <span class="keyword">int</span>     pipe_fd2[<span class="number">2</span>]; </span><br><span class="line"></span><br><span class="line">    setenv(<span class="string">"PATH"</span>, <span class="string">"/home/ctf"</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">char</span> *path = (<span class="keyword">char</span> *)getenv(<span class="string">"PATH"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s"</span>, path);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pipe(pipe_fd0) &lt; <span class="number">0</span> || pipe(pipe_fd2) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"pipe0 create error\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (;i &lt; <span class="number">100</span>; i++)&#123;</span><br><span class="line">        my_argv[i] = <span class="string">"AAAA"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    my_argv[<span class="string">'A'</span>] = <span class="string">"\x00"</span>; </span><br><span class="line">    my_argv[<span class="string">'B'</span>] = <span class="string">"\x20\x0a\x0d"</span>; </span><br><span class="line">    my_argv[<span class="string">'C'</span>] = argv[<span class="number">1</span>]; </span><br><span class="line">    my_argv[<span class="number">100</span>] = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ((pid == fork()) &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">/* child */</span></span><br><span class="line">        close(pipe_fd0[<span class="number">1</span>]);</span><br><span class="line">        close(pipe_fd2[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        dup2(pipe_fd0[<span class="number">0</span>], <span class="number">0</span>);</span><br><span class="line">        dup2(pipe_fd2[<span class="number">0</span>], <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 3 */</span></span><br><span class="line">        my_env[<span class="number">0</span>] = <span class="string">"\xde\xad\xbe\xef=\xca\xfe\xba\xbe"</span>;</span><br><span class="line">        my_env[<span class="number">1</span>] = <span class="literal">NULL</span>;</span><br><span class="line">        execve(<span class="string">"/home/ctf/pwn/input"</span>, my_argv, my_env);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">/* parent */</span></span><br><span class="line">        <span class="comment">/* stage 2 */</span></span><br><span class="line">        close(pipe_fd0[<span class="number">0</span>]);</span><br><span class="line">        close(pipe_fd2[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">        write(pipe_fd0[<span class="number">1</span>], <span class="string">"\x00\x0a\x00\xff"</span>, <span class="number">4</span>);</span><br><span class="line">        write(pipe_fd2[<span class="number">1</span>], <span class="string">"\x00\x0a\x02\xff"</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 4 */</span></span><br><span class="line">        FILE *fp = fopen(<span class="string">"\x0a"</span>, <span class="string">"w"</span>);</span><br><span class="line">        fwrite(<span class="string">"\x00\x00\x00\x00"</span>, <span class="number">4</span>, <span class="number">1</span>, fp);</span><br><span class="line">        fclose(fp);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 5 */</span></span><br><span class="line">        <span class="keyword">struct</span> sockaddr_in  serv;</span><br><span class="line">        <span class="keyword">int</span>                 sd;</span><br><span class="line"></span><br><span class="line">        sleep(<span class="number">1</span>);</span><br><span class="line">        bzero(&amp;serv, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr_in));</span><br><span class="line">        serv.sin_family         = AF_INET;</span><br><span class="line">        serv.sin_port           = htons(atoi(argv[<span class="number">1</span>]));</span><br><span class="line">        serv.sin_addr.s_addr    = inet_addr(<span class="string">"127.0.0.1"</span>);</span><br><span class="line">        sd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">        connect(sd, (<span class="keyword">const</span> <span class="keyword">struct</span> sockaddr *)&amp;serv, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr));</span><br><span class="line">        send(sd, <span class="string">"\xde\xad\xbe\xef"</span>, <span class="number">4</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="leg">leg</h2><ul>
+<li>在执行指令I时，pc寄存器存放I+2指令的地址</li>
+<li>lr寄存器存放返回地址，即BL指令的下一条指令的地址</li>
+</ul>
+<p>key1 = 0x8ce4<br>key2 = 0x8d0c<br>key3 = 0x8d80</p>
 </span>
       
     </div>
@@ -487,7 +492,7 @@ exp如下，需要注意的点
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#input"><span class="nav-number">1.</span> <span class="nav-text">input</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#input"><span class="nav-number">1.</span> <span class="nav-text">input</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#leg"><span class="nav-number">2.</span> <span class="nav-text">leg</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -751,9 +756,9 @@ exp如下，需要注意的点
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/07/17/pwnable/';
+      var disqus_identifier = '2016/07/18/pwnable/';
       var disqus_title = 'pwnable writeup';
-      var disqus_url = 'http://0byjwzsf.me/2016/07/17/pwnable/';
+      var disqus_url = 'http://0byjwzsf.me/2016/07/18/pwnable/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
