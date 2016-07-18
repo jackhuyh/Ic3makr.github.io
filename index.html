@@ -304,7 +304,7 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-07-18T14:11:11+08:00" content="2016-07-18">
+            <time itemprop="dateCreated" datetime="2016-07-18T15:34:39+08:00" content="2016-07-18">
               2016-07-18
             </time>
           </span>
@@ -339,7 +339,7 @@
           <span itemprop="articleBody">
             
               <h2 id="input">input</h2><p>这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等</p>
-<p>exp如下，需要注意的点</p>
+<p>exp如下，需要注意</p>
 <ul>
 <li>因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了</li>
 </ul>
@@ -349,6 +349,7 @@
 <li>lr寄存器存放返回地址，即BL指令的下一条指令的地址</li>
 </ul>
 <p>key1 = 0x8ce4<br>key2 = 0x8d0c<br>key3 = 0x8d80</p>
+<h2 id="mistake">mistake</h2><p>运行程序的时候发现需要输入两次，但是代码里只用到了一处scanf<br>找了会儿后发现原因是误用mode_t参数导致open总是返回0，导致read函数总是从标准输入读取字符串到pw_buf<br>输入0123456789 1032547698<br>即可拿到flag</p>
 
             
           </span>
