@@ -88,7 +88,7 @@
 &amp;lt;: 指针-1
 &amp;gt;: 指针+1
 .: 读取指针指向的字节
-,: 往z指针指向的字节写入一个字节
+,: 往指针指向的字节写入一个字节
 
 利用思路
 修改putchar的got表内的地址为main首地址
@@ -96,7 +96,7 @@
 修改fgets的got表内的地址为system的地址
 利用.触发
 
-expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)">
+expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Pwnable.kr [Rookiss] writeups">
 <meta property="og:url" content="http://0byjwzsf.me/2016/07/24/pwnable-rookiss/index.html">
@@ -105,7 +105,7 @@ expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)">
 &amp;lt;: 指针-1
 &amp;gt;: 指针+1
 .: 读取指针指向的字节
-,: 往z指针指向的字节写入一个字节
+,: 往指针指向的字节写入一个字节
 
 利用思路
 修改putchar的got表内的地址为main首地址
@@ -113,15 +113,15 @@ expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)">
 修改fgets的got表内的地址为system的地址
 利用.触发
 
-expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)">
-<meta property="og:updated_time" content="2016-07-26T10:17:21.000Z">
+expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c">
+<meta property="og:updated_time" content="2016-07-26T10:23:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pwnable.kr [Rookiss] writeups">
 <meta name="twitter:description" content="bf
 &amp;lt;: 指针-1
 &amp;gt;: 指针+1
 .: 读取指针指向的字节
-,: 往z指针指向的字节写入一个字节
+,: 往指针指向的字节写入一个字节
 
 利用思路
 修改putchar的got表内的地址为main首地址
@@ -129,7 +129,7 @@ expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)">
 修改fgets的got表内的地址为system的地址
 利用.触发
 
-expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)">
+expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c">
 
 
 
@@ -382,7 +382,7 @@ expfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)">
 <li><code>&lt;</code>: 指针-1</li>
 <li><code>&gt;</code>: 指针+1</li>
 <li><code>.</code>: 读取指针指向的字节</li>
-<li><code>,</code>: 往z指针指向的字节写入一个字节</li>
+<li><code>,</code>: 往指针指向的字节写入一个字节</li>
 </ul>
 <h2 id="利用思路">利用思路</h2><ol>
 <li>修改<code>putchar</code>的got表内的地址为<code>main</code>首地址</li>
