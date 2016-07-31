@@ -84,22 +84,25 @@
 
 
 
-<meta name="description" content="alictf-qual-2016-vssConclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试，练习用
+<meta name="description" content="练习用
+alictf-qual-2016-vssConclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以Referance上放不了了)，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试
 Trick
-execve(&amp;#39;/bin/sh\x00&amp;#39;, 0, 0)，设置好rax=0x3b;rdi">
+execve(&amp;#39;/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="alictf-qual-2016">
 <meta property="og:url" content="http://0byjwzsf.me/2016/07/31/alictf-qual-2016/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="alictf-qual-2016-vssConclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试，练习用
+<meta property="og:description" content="练习用
+alictf-qual-2016-vssConclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以Referance上放不了了)，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试
 Trick
-execve(&amp;#39;/bin/sh\x00&amp;#39;, 0, 0)，设置好rax=0x3b;rdi">
-<meta property="og:updated_time" content="2016-07-31T04:35:32.000Z">
+execve(&amp;#39;/">
+<meta property="og:updated_time" content="2016-07-31T04:40:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="alictf-qual-2016">
-<meta name="twitter:description" content="alictf-qual-2016-vssConclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试，练习用
+<meta name="twitter:description" content="练习用
+alictf-qual-2016-vssConclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以Referance上放不了了)，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试
 Trick
-execve(&amp;#39;/bin/sh\x00&amp;#39;, 0, 0)，设置好rax=0x3b;rdi">
+execve(&amp;#39;/">
 
 
 
@@ -348,7 +351,8 @@ execve(&amp;#39;/bin/sh\x00&amp;#39;, 0, 0)，设置好rax=0x3b;rdi">
       
 
       
-        <h1 id="alictf-qual-2016-vss">alictf-qual-2016-vss</h1><h2 id="Conclusion">Conclusion</h2><p>之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是<code>open-read-write</code>的方式，后来比赛结束后看了网上发的writeup，才知道直接<code>ROP</code>系统调用即可，隔了几个月，重新自己做了下，本地测试，练习用</p>
+        <p>练习用</p>
+<h1 id="alictf-qual-2016-vss">alictf-qual-2016-vss</h1><h2 id="Conclusion">Conclusion</h2><p>之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是<code>open-read-write</code>的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以<strong>Referance</strong>上放不了了)，才知道直接<code>ROP</code>系统调用即可，隔了几个月，重新自己做了下，本地测试</p>
 <h2 id="Trick">Trick</h2><ul>
 <li><code>execve(&#39;/bin/sh\x00&#39;, 0, 0)</code>，设置好<code>rax=0x3b;rdi=&#39;/bin/sh\x00&#39;;rsi=0;rdx=0</code></li>
 <li>程序是静态链接，想要的gadgets基本上都能找到</li>
