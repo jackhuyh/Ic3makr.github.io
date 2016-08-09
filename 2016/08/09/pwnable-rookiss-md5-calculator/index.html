@@ -88,15 +88,15 @@
 这个程序的bug出在my_hash函数的返回值泄露了canary的信息，并且process_hash函数存在栈上的缓冲区溢出
 要泄露canary的信息，关键在于程序中的srand(time(0));。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的captcha来算出canary。关于服务器">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pwnable.kr rookiss md5-calculator">
+<meta property="og:title" content="pwnable.kr-rookiss-md5-calculator">
 <meta property="og:url" content="http://0byjwzsf.me/2016/08/09/pwnable-rookiss-md5-calculator/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="Conclusion之前第一次做没做出来，参考了@ihc童鞋的题解，今天又重新做了一次。
 这个程序的bug出在my_hash函数的返回值泄露了canary的信息，并且process_hash函数存在栈上的缓冲区溢出
 要泄露canary的信息，关键在于程序中的srand(time(0));。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的captcha来算出canary。关于服务器">
-<meta property="og:updated_time" content="2016-08-09T15:52:36.000Z">
+<meta property="og:updated_time" content="2016-08-09T16:00:30.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pwnable.kr rookiss md5-calculator">
+<meta name="twitter:title" content="pwnable.kr-rookiss-md5-calculator">
 <meta name="twitter:description" content="Conclusion之前第一次做没做出来，参考了@ihc童鞋的题解，今天又重新做了一次。
 这个程序的bug出在my_hash函数的返回值泄露了canary的信息，并且process_hash函数存在栈上的缓冲区溢出
 要泄露canary的信息，关键在于程序中的srand(time(0));。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的captcha来算出canary。关于服务器">
@@ -122,7 +122,7 @@
 
   <link rel="canonical" href="http://0byjwzsf.me/2016/08/09/pwnable-rookiss-md5-calculator/"/>
 
-  <title> pwnable.kr rookiss md5-calculator | Icemakr's Blog </title>
+  <title> pwnable.kr-rookiss-md5-calculator | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -292,7 +292,7 @@
             
             
               
-                pwnable.kr rookiss md5-calculator
+                pwnable.kr-rookiss-md5-calculator
               
             
           </h1>
@@ -666,7 +666,7 @@
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
       var disqus_identifier = '2016/08/09/pwnable-rookiss-md5-calculator/';
-      var disqus_title = "pwnable.kr rookiss md5-calculator";
+      var disqus_title = "pwnable.kr-rookiss-md5-calculator";
       var disqus_url = 'http://0byjwzsf.me/2016/08/09/pwnable-rookiss-md5-calculator/';
 
       function run_disqus_script(disqus_script){
