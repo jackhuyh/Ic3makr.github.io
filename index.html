@@ -360,6 +360,7 @@
           
             <h2 id="Trick">Trick</h2><ul>
 <li><del>利用fsb的<code>%_$n</code>时，如果栈上的空间不是直接可控的，可以试着在栈上寻找是否有栈地址存放在上面，如果找到了，可以利用<code>%_$n</code>写入，这样相当于在栈上实现<code>arbitrary write</code>，之后就按正常的套路即可</del></li>
+<li><code>dump binary memory text 0xffffb5b0 0xffffdcb0</code></li>
 </ul>
 <h2 id="Conclusion">Conclusion</h2><p><del>没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段</del></p>
 <p><del>等过段时间回来再写一次exp</del></p>
