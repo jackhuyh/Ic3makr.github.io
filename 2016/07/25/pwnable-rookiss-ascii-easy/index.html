@@ -86,23 +86,23 @@
 
 <meta name="description" content="Trickulimit -s unlimited 禁用aslr
 Conclusion没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下
-Exploit下次再补
-Referancehttp://blog.yiz96.com/archives/87">
+第二次来做，还是遇到了很多障碍，首先system的地址在计算出来后发现不是都是符合要求的字节，然后试了下execve发现也不符合，试了几个后最后试到了execlp终于是满足的了
+接下来就是找字符串，刚开始试了’">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pwnable.kr-rookiss-ascii-easy">
 <meta property="og:url" content="http://0byjwzsf.me/2016/07/25/pwnable-rookiss-ascii-easy/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="Trickulimit -s unlimited 禁用aslr
 Conclusion没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下
-Exploit下次再补
-Referancehttp://blog.yiz96.com/archives/87">
-<meta property="og:updated_time" content="2016-08-08T08:07:50.000Z">
+第二次来做，还是遇到了很多障碍，首先system的地址在计算出来后发现不是都是符合要求的字节，然后试了下execve发现也不符合，试了几个后最后试到了execlp终于是满足的了
+接下来就是找字符串，刚开始试了’">
+<meta property="og:updated_time" content="2016-08-10T17:17:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-ascii-easy">
 <meta name="twitter:description" content="Trickulimit -s unlimited 禁用aslr
 Conclusion没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下
-Exploit下次再补
-Referancehttp://blog.yiz96.com/archives/87">
+第二次来做，还是遇到了很多障碍，首先system的地址在计算出来后发现不是都是符合要求的字节，然后试了下execve发现也不符合，试了几个后最后试到了execlp终于是满足的了
+接下来就是找字符串，刚开始试了’">
 
 
 
@@ -362,9 +362,17 @@ Referancehttp://blog.yiz96.com/archives/87">
 
       
         <h2 id="Trick">Trick</h2><p><code>ulimit -s unlimited</code> 禁用<strong>aslr</strong></p>
-<h2 id="Conclusion">Conclusion</h2><p>没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下</p>
+<h2 id="Conclusion">Conclusion</h2><p><del>没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下</del></p>
+<p>第二次来做，还是遇到了很多障碍，首先<code>system</code>的地址在计算出来后发现不是都是符合要求的字节，然后试了下<code>execve</code>发现也不符合，试了几个后最后试到了<code>execlp</code>终于是满足的了</p>
+<p>接下来就是找字符串，刚开始试了’/bin/sh\x00’，都不符合要求。然后又试了’sh\x00’，也不符合要求，于是我就没辙了。再次求助google(即使是第二次来做也还是没做出来，心好累:(</p>
+<p>首先，<code>execlp</code>函数的原型为<code>int execlp(const char *file, const char *arg, ...);</code></p>
+<p>通过<code>man execv</code>，可以看到其中有一段对<code>execlp</code>函数的解释</p>
+<blockquote>
+<p>The execlp(), execvp(), and execvpe() functions duplicate the  actions  of  the  shell  in<br>searching  for  an  executable file if the specified filename does not contain a slash (/)<br>character.  The file is sought in the colon-separated list of directory  pathnames  speci-<br>fied  in  the  PATH  environment  variable.  If this variable isn’t defined, the path list<br>defaults to the current directory followed by the list of directories  returned  by  conf-<br>str(_CS_PATH).  (This confstr(3) call typically returns the value “/bin:/usr/bin”.)</p>
+</blockquote>
+<p>假使输入的<code>filename</code>不含<code>/</code>符号，就会采取和shell寻找可执行文件一样的方式去寻找这个文件，即遍历<strong>$PATH</strong>环境变量中的路径，在每个路径下尝试寻找<code>filename</code>文件</p>
 <h2 id="Exploit">Exploit</h2><p>下次再补</p>
-<h2 id="Referance">Referance</h2><p><a href="http://blog.yiz96.com/archives/87" target="_blank" rel="external">http://blog.yiz96.com/archives/87</a></p>
+<h2 id="Referance">Referance</h2><p><a href="http://werew.tk/article/12/ascii_easy-pwnablekr" target="_blank" rel="external">http://werew.tk/article/12/ascii_easy-pwnablekr</a></p>
 
       
     </div>
@@ -481,7 +489,7 @@ Referancehttp://blog.yiz96.com/archives/87">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
