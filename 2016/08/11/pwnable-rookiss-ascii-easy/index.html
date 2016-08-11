@@ -86,23 +86,23 @@
 
 <meta name="description" content="Trickulimit -s unlimited 禁用aslr
 Conclusion没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下
-第二次来做，还是遇到了很多障碍，首先system的地址在计算出来后发现不是都是符合要求的字节，然后试了下execve发现也不符合，试了几个后最后试到了execlp终于是满足的了
-接下来就是找字符串，刚开始试了&amp;">
+第二次来做，还是遇到了很多障碍，首先system的地址在计算出来后发现不是都是符合要求的字节，然后试了下execve发现可以
+接下来就是找字符串，刚开始试了&amp;#39;/bin/sh\x00&amp;#39;，都不符合要">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pwnable.kr-rookiss-ascii-easy">
 <meta property="og:url" content="http://0byjwzsf.me/2016/08/11/pwnable-rookiss-ascii-easy/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="Trickulimit -s unlimited 禁用aslr
 Conclusion没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下
-第二次来做，还是遇到了很多障碍，首先system的地址在计算出来后发现不是都是符合要求的字节，然后试了下execve发现也不符合，试了几个后最后试到了execlp终于是满足的了
-接下来就是找字符串，刚开始试了&amp;">
-<meta property="og:updated_time" content="2016-08-11T03:15:45.000Z">
+第二次来做，还是遇到了很多障碍，首先system的地址在计算出来后发现不是都是符合要求的字节，然后试了下execve发现可以
+接下来就是找字符串，刚开始试了&amp;#39;/bin/sh\x00&amp;#39;，都不符合要">
+<meta property="og:updated_time" content="2016-08-11T03:42:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-ascii-easy">
 <meta name="twitter:description" content="Trickulimit -s unlimited 禁用aslr
 Conclusion没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下
-第二次来做，还是遇到了很多障碍，首先system的地址在计算出来后发现不是都是符合要求的字节，然后试了下execve发现也不符合，试了几个后最后试到了execlp终于是满足的了
-接下来就是找字符串，刚开始试了&amp;">
+第二次来做，还是遇到了很多障碍，首先system的地址在计算出来后发现不是都是符合要求的字节，然后试了下execve发现可以
+接下来就是找字符串，刚开始试了&amp;#39;/bin/sh\x00&amp;#39;，都不符合要">
 
 
 
@@ -363,7 +363,7 @@ Conclusion没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Ch
       
         <h1 id="Trick">Trick</h1><p><code>ulimit -s unlimited</code> 禁用<strong>aslr</strong></p>
 <h1 id="Conclusion">Conclusion</h1><p><del>没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下</del></p>
-<p>第二次来做，还是遇到了很多障碍，首先<code>system</code>的地址在计算出来后发现不是都是符合要求的字节，然后试了下<code>execve</code>发现也不符合，试了几个后最后试到了<code>execlp</code>终于是满足的了</p>
+<p>第二次来做，还是遇到了很多障碍，首先<code>system</code>的地址在计算出来后发现不是都是符合要求的字节，然后试了下<code>execve</code>发现可以</p>
 <p>接下来就是找字符串，刚开始试了<code>&#39;/bin/sh\x00&#39;</code>，都不符合要求。然后又试了<code>&#39;sh\x00&#39;</code>，也不符合要求，于是我就没辙了。再次求助google(即使是第二次来做也还是没做出来，心好累:(</p>
 <p>首先，<code>execlp</code>函数的原型为<code>int execlp(const char *file, const char *arg, ...);</code></p>
 <p>通过<code>man execv</code>，可以看到其中有一段对<code>execlp</code>函数的解释</p>
