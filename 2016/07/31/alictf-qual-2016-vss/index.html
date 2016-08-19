@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable,练习," />
+  <meta name="keywords" content="Pwnable,stack-overflow,statically linked,syscall,x86-64,练习," />
 
 
 
@@ -96,7 +96,7 @@ execve(&amp;#39;/bin/sh\x00&amp;#39;, 0,">
 Conclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以Referance上放不了了)，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试
 Trick
 execve(&amp;#39;/bin/sh\x00&amp;#39;, 0,">
-<meta property="og:updated_time" content="2016-08-17T07:58:18.000Z">
+<meta property="og:updated_time" content="2016-08-19T07:29:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="alictf-qual-2016-vss">
 <meta name="twitter:description" content="练习用
@@ -403,6 +403,14 @@ execve(&amp;#39;/bin/sh\x00&amp;#39;, 0,">
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
+            <a href="/tags/stack-overflow/" rel="tag">#stack-overflow</a>
+          
+            <a href="/tags/statically-linked/" rel="tag">#statically linked</a>
+          
+            <a href="/tags/syscall/" rel="tag">#syscall</a>
+          
+            <a href="/tags/x86-64/" rel="tag">#x86-64</a>
+          
             <a href="/tags/练习/" rel="tag">#练习</a>
           
         </div>
@@ -412,16 +420,16 @@ execve(&amp;#39;/bin/sh\x00&amp;#39;, 0,">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/31/alictf-qual-2016-fb/" rel="next" title="alictf-qual-2016-fb">
-                <i class="fa fa-chevron-left"></i> alictf-qual-2016-fb
+              <a href="/2016/07/28/pwnable-rookiss-dragon/" rel="next" title="pwnable.kr-rookiss-dragon">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-dragon
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/08/02/pwnable-rookiss-rsa-calculator/" rel="prev" title="pwnable.kr-rookiss-rsa-calculator">
-                pwnable.kr-rookiss-rsa-calculator <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/31/alictf-qual-2016-fb/" rel="prev" title="alictf-qual-2016-fb">
+                alictf-qual-2016-fb <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -494,7 +502,7 @@ execve(&amp;#39;/bin/sh\x00&amp;#39;, 0,">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -511,7 +519,7 @@ execve(&amp;#39;/bin/sh\x00&amp;#39;, 0,">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

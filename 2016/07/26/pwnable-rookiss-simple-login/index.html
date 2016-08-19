@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable," />
+  <meta name="keywords" content="Pwnable,stack-pivot," />
 
 
 
@@ -98,7 +98,7 @@ Expl">
 
 Conclusion解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的EBP，这样就可以通过控制EBP的值来转移ESP到数据段上的payload处，之后的ret指令会跳转到payload上的地址，即我们已经构造好的correct函数的地址，从而拿到shell
 Expl">
-<meta property="og:updated_time" content="2016-08-08T08:08:51.000Z">
+<meta property="og:updated_time" content="2016-08-19T07:39:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-simple-login">
 <meta name="twitter:description" content="Trick
@@ -403,6 +403,8 @@ Expl">
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
+            <a href="/tags/stack-pivot/" rel="tag">#stack-pivot</a>
+          
         </div>
       
 
@@ -410,8 +412,8 @@ Expl">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/25/pwnable-rookiss-echo1/" rel="next" title="pwnable.kr-rookiss-echo1">
-                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-echo1
+              <a href="/2016/07/25/pwnable-rookiss-echo2/" rel="next" title="pwnable.kr-rookiss-echo2">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-echo2
               </a>
             
           </div>
@@ -492,7 +494,7 @@ Expl">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -509,7 +511,7 @@ Expl">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

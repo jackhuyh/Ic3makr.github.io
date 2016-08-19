@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable," />
+  <meta name="keywords" content="Pwnable,brute-force,x86," />
 
 
 
@@ -98,7 +98,7 @@ select_menu()函数是递归调用自身的，并且函数开始都会分配一�
 exit服务会进行ret，即程序会一直ret到main函数，在这过程中，只要我们劫持了栈上保存的任意某个$eip值，程序流就可以控制了
 
 劫持的方法就显得比较暴力了，我们可以先通过不断调用某个函数，把栈先进行扩充（栈的扩充这个行为叫做auto">
-<meta property="og:updated_time" content="2016-08-08T08:08:22.000Z">
+<meta property="og:updated_time" content="2016-08-19T07:37:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-note">
 <meta name="twitter:description" content="Conclusion
@@ -410,6 +410,10 @@ exit服务会进行ret，即程序会一直ret到main函数，在这过程中，
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
+            <a href="/tags/brute-force/" rel="tag">#brute-force</a>
+          
+            <a href="/tags/x86/" rel="tag">#x86</a>
+          
         </div>
       
 
@@ -499,7 +503,7 @@ exit服务会进行ret，即程序会一直ret到main函数，在这过程中，
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -516,7 +520,7 @@ exit服务会进行ret，即程序会一直ret到main函数，在这过程中，
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

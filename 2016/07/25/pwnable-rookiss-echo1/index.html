@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable," />
+  <meta name="keywords" content="Pwnable,shellcode,stack-overflow,x86-64," />
 
 
 
@@ -92,7 +92,7 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="Trick没有开NX，又是简单的栈溢出，利用jmp esp来执行栈上的shellcode
 from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./echo1&apos;target  = (&apos;pwnable.kr&apos;, 9010)io      = zio(target, print_">
-<meta property="og:updated_time" content="2016-08-08T08:08:04.000Z">
+<meta property="og:updated_time" content="2016-08-19T07:34:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-echo1">
 <meta name="twitter:description" content="Trick没有开NX，又是简单的栈溢出，利用jmp esp来执行栈上的shellcode
@@ -391,6 +391,12 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
+            <a href="/tags/shellcode/" rel="tag">#shellcode</a>
+          
+            <a href="/tags/stack-overflow/" rel="tag">#stack-overflow</a>
+          
+            <a href="/tags/x86-64/" rel="tag">#x86-64</a>
+          
         </div>
       
 
@@ -398,16 +404,16 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/25/pwnable-rookiss-echo2/" rel="next" title="pwnable.kr-rookiss-echo2">
-                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-echo2
+              <a href="/2016/07/24/pwnable-rookiss-brainfuck/" rel="next" title="pwnable.kr-rookiss-bf">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-bf
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/07/26/pwnable-rookiss-simple-login/" rel="prev" title="pwnable.kr-rookiss-simple-login">
-                pwnable.kr-rookiss-simple-login <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/25/pwnable-rookiss-echo2/" rel="prev" title="pwnable.kr-rookiss-echo2">
+                pwnable.kr-rookiss-echo2 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -480,7 +486,7 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -497,7 +503,7 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

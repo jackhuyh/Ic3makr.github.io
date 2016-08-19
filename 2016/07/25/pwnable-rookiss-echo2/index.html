@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable," />
+  <meta name="keywords" content="Pwnable,fsb,uaf,x86-64," />
 
 
 
@@ -108,7 +108,7 @@ Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思�
 %6$lx: 栈上的第一个QWORD
 
 Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思路又错了QAQ，刚开始没有想到注意到这题也是没有开NX的，思路就歪了，看到fsb首先做的是泄露libc地址，然后想通过uaf实现ret2libc，但是">
-<meta property="og:updated_time" content="2016-08-08T08:08:08.000Z">
+<meta property="og:updated_time" content="2016-08-19T07:34:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-echo2">
 <meta name="twitter:description" content="Trick对于x64fsb
@@ -427,6 +427,12 @@ Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思�
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
+            <a href="/tags/fsb/" rel="tag">#fsb</a>
+          
+            <a href="/tags/uaf/" rel="tag">#uaf</a>
+          
+            <a href="/tags/x86-64/" rel="tag">#x86-64</a>
+          
         </div>
       
 
@@ -434,16 +440,16 @@ Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/24/pwnable-rookiss-brainfuck/" rel="next" title="pwnable.kr-rookiss-bf">
-                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-bf
+              <a href="/2016/07/25/pwnable-rookiss-echo1/" rel="next" title="pwnable.kr-rookiss-echo1">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-echo1
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/07/25/pwnable-rookiss-echo1/" rel="prev" title="pwnable.kr-rookiss-echo1">
-                pwnable.kr-rookiss-echo1 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/07/26/pwnable-rookiss-simple-login/" rel="prev" title="pwnable.kr-rookiss-simple-login">
+                pwnable.kr-rookiss-simple-login <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -516,7 +522,7 @@ Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -533,7 +539,7 @@ Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思�
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

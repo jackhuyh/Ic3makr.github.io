@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable," />
+  <meta name="keywords" content="Pwnable,canary,pseudo-random,x86," />
 
 
 
@@ -94,7 +94,7 @@
 <meta property="og:description" content="Conclusion之前第一次做没做出来，参考了@ihc童鞋的题解，今天又重新做了一次。
 这个程序的bug出在my_hash函数的返回值泄露了canary的信息，并且process_hash函数存在栈上的缓冲区溢出
 要泄露canary的信息，关键在于程序中的srand(time(0));。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的captcha来算出canary。关于服务器">
-<meta property="og:updated_time" content="2016-08-09T16:00:30.000Z">
+<meta property="og:updated_time" content="2016-08-19T07:37:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-md5-calculator">
 <meta name="twitter:description" content="Conclusion之前第一次做没做出来，参考了@ihc童鞋的题解，今天又重新做了一次。
@@ -403,6 +403,12 @@
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
+            <a href="/tags/canary/" rel="tag">#canary</a>
+          
+            <a href="/tags/pseudo-random/" rel="tag">#pseudo-random</a>
+          
+            <a href="/tags/x86/" rel="tag">#x86</a>
+          
         </div>
       
 
@@ -492,7 +498,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -509,7 +515,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

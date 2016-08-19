@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable," />
+  <meta name="keywords" content="Pwnable,fsb,x86," />
 
 
 
@@ -98,7 +98,7 @@ Trick
 system(junk+”/bin/sh\x00”);
 
 Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
-<meta property="og:updated_time" content="2016-08-08T08:08:40.000Z">
+<meta property="og:updated_time" content="2016-08-19T07:38:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-rsa-calculator">
 <meta name="twitter:description" content="Conclusion这道题的bug在RSA_decrypt函数里的printf(g_pbuf)，即典型的fsb漏洞，我的利用方法是覆盖got表里的printf和putchar分别为system和fsb发生所在的地址处
@@ -403,6 +403,10 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
+            <a href="/tags/fsb/" rel="tag">#fsb</a>
+          
+            <a href="/tags/x86/" rel="tag">#x86</a>
+          
         </div>
       
 
@@ -410,8 +414,8 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/31/alictf-qual-2016-vss/" rel="next" title="alictf-qual-2016-vss">
-                <i class="fa fa-chevron-left"></i> alictf-qual-2016-vss
+              <a href="/2016/07/31/alictf-qual-2016-fb/" rel="next" title="alictf-qual-2016-fb">
+                <i class="fa fa-chevron-left"></i> alictf-qual-2016-fb
               </a>
             
           </div>
@@ -492,7 +496,7 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -509,7 +513,7 @@ Exploitfrom zio import *target  = &apos;./rsa_calculator&apos;targ">
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
