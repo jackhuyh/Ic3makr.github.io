@@ -623,7 +623,9 @@
       
         
           
-            <p>练习用</p>
+            <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_amd64</p>
+</blockquote>
 <h2 id="Conclusion">Conclusion</h2><p>练习用，第一次做<code>poison-null-byte</code>的题目，实现unlink后没有思路了，因为<code>show_message</code>没有实现，没有想到如何泄露libc，后来看了<strong>@flappypig</strong>战队的writeup，学到了一个用<code>printf</code>来泄露栈上的<code>libc_start_main_ret</code>的思路</p>
 <h2 id="Trick">Trick</h2><ul>
 <li><code>poison-null-byte</code> + <code>unlink</code></li>
@@ -750,7 +752,9 @@
       
         
           
-            <p>练习用</p>
+            <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
+</blockquote>
 <h2 id="Conclusion">Conclusion</h2><p>之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是<code>open-read-write</code>的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以<strong>Referance</strong>上放不了了)，才知道直接<code>ROP</code>系统调用即可，隔了几个月，重新自己做了下，本地测试</p>
 <h2 id="Trick">Trick</h2><ul>
 <li><code>execve(&#39;/bin/sh\x00&#39;, 0, 0)</code>，设置好<code>rax=0x3b;rdi=&#39;/bin/sh\x00&#39;;rsi=0;rdx=0</code></li>

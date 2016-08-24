@@ -84,25 +84,25 @@
 
 
 
-<meta name="description" content="练习用
-Conclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以Referance上放不了了)，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试
-Trick
-execve(&amp;#39;/bin/sh\x00&amp;#39;, 0,">
+<meta name="description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+
+Conclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以Referance上放不了了)，才知道直接ROP系统调用即可，隔了几个月，重新自">
 <meta property="og:type" content="article">
 <meta property="og:title" content="alictf-qual-2016-vss">
 <meta property="og:url" content="http://0byjwzsf.me/2016/07/31/alictf-qual-2016-vss/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="练习用
-Conclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以Referance上放不了了)，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试
-Trick
-execve(&amp;#39;/bin/sh\x00&amp;#39;, 0,">
-<meta property="og:updated_time" content="2016-08-19T07:50:39.000Z">
+<meta property="og:description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+
+Conclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以Referance上放不了了)，才知道直接ROP系统调用即可，隔了几个月，重新自">
+<meta property="og:updated_time" content="2016-08-24T07:45:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="alictf-qual-2016-vss">
-<meta name="twitter:description" content="练习用
-Conclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以Referance上放不了了)，才知道直接ROP系统调用即可，隔了几个月，重新自己做了下，本地测试
-Trick
-execve(&amp;#39;/bin/sh\x00&amp;#39;, 0,">
+<meta name="twitter:description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+
+Conclusion之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是open-read-write的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以Referance上放不了了)，才知道直接ROP系统调用即可，隔了几个月，重新自">
 
 
 
@@ -371,7 +371,9 @@ execve(&amp;#39;/bin/sh\x00&amp;#39;, 0,">
       
 
       
-        <p>练习用</p>
+        <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
+</blockquote>
 <h2 id="Conclusion">Conclusion</h2><p>之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是<code>open-read-write</code>的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以<strong>Referance</strong>上放不了了)，才知道直接<code>ROP</code>系统调用即可，隔了几个月，重新自己做了下，本地测试</p>
 <h2 id="Trick">Trick</h2><ul>
 <li><code>execve(&#39;/bin/sh\x00&#39;, 0, 0)</code>，设置好<code>rax=0x3b;rdi=&#39;/bin/sh\x00&#39;;rsi=0;rdx=0</code></li>
@@ -561,7 +563,7 @@ execve(&amp;#39;/bin/sh\x00&amp;#39;, 0,">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">2.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Environment"><span class="nav-number">1.</span> <span class="nav-text">Environment</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.2.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">1.3.</span> <span class="nav-text">Exploit</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

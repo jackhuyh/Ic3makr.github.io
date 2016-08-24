@@ -84,28 +84,25 @@
 
 
 
-<meta name="description" content="练习用
-Conclusion练习用，第一次做poison-null-byte的题目，实现unlink后没有思路了，因为show_message没有实现，没有想到如何泄露libc，后来看了@flappypig战队的writeup，学到了一个用printf来泄露栈上的libc_start_main_ret的思路
-Trick
-poison-null-byte + unlink
-替换got表free函数地">
+<meta name="description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_amd64
+
+Conclusion练习用，第一次做poison-null-byte的题目，实现unlink后没有思路了，因为show_message没有实现，没有想到如何泄露libc，后来看了@flappypig战队的writeup，学到了一个用printf来泄露栈上的libc_start_main_re">
 <meta property="og:type" content="article">
 <meta property="og:title" content="alictf-qual-2016-fb">
 <meta property="og:url" content="http://0byjwzsf.me/2016/07/31/alictf-qual-2016-fb/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="练习用
-Conclusion练习用，第一次做poison-null-byte的题目，实现unlink后没有思路了，因为show_message没有实现，没有想到如何泄露libc，后来看了@flappypig战队的writeup，学到了一个用printf来泄露栈上的libc_start_main_ret的思路
-Trick
-poison-null-byte + unlink
-替换got表free函数地">
-<meta property="og:updated_time" content="2016-08-24T02:53:03.000Z">
+<meta property="og:description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_amd64
+
+Conclusion练习用，第一次做poison-null-byte的题目，实现unlink后没有思路了，因为show_message没有实现，没有想到如何泄露libc，后来看了@flappypig战队的writeup，学到了一个用printf来泄露栈上的libc_start_main_re">
+<meta property="og:updated_time" content="2016-08-24T07:45:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="alictf-qual-2016-fb">
-<meta name="twitter:description" content="练习用
-Conclusion练习用，第一次做poison-null-byte的题目，实现unlink后没有思路了，因为show_message没有实现，没有想到如何泄露libc，后来看了@flappypig战队的writeup，学到了一个用printf来泄露栈上的libc_start_main_ret的思路
-Trick
-poison-null-byte + unlink
-替换got表free函数地">
+<meta name="twitter:description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_amd64
+
+Conclusion练习用，第一次做poison-null-byte的题目，实现unlink后没有思路了，因为show_message没有实现，没有想到如何泄露libc，后来看了@flappypig战队的writeup，学到了一个用printf来泄露栈上的libc_start_main_re">
 
 
 
@@ -374,7 +371,9 @@ poison-null-byte + unlink
       
 
       
-        <p>练习用</p>
+        <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_amd64</p>
+</blockquote>
 <h2 id="Conclusion">Conclusion</h2><p>练习用，第一次做<code>poison-null-byte</code>的题目，实现unlink后没有思路了，因为<code>show_message</code>没有实现，没有想到如何泄露libc，后来看了<strong>@flappypig</strong>战队的writeup，学到了一个用<code>printf</code>来泄露栈上的<code>libc_start_main_ret</code>的思路</p>
 <h2 id="Trick">Trick</h2><ul>
 <li><code>poison-null-byte</code> + <code>unlink</code></li>
@@ -562,7 +561,7 @@ poison-null-byte + unlink
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">2.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Environment"><span class="nav-number">1.</span> <span class="nav-text">Environment</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.1.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.2.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">1.3.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">1.4.</span> <span class="nav-text">Reference</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
