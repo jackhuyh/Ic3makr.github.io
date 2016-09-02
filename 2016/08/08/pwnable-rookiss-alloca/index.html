@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://0byjwzsf.me/2016/08/08/pwnable-rookiss-alloca/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="Conclusion0x08048779 &amp;#60;+417&amp;#62;:&amp;#9;call   0x8048560 &amp;#60;check_canary&amp;#62;&amp;#10;0x0804877e &amp;#60;+422&amp;#62;:&amp;#9;mov    eax,0x0&amp;#10;0x08048783 &amp;#60;+427&amp;#62;:&amp;#9;mov    ecx,DWORD PTR [ebp-0x4]&amp;#10;0x">
-<meta property="og:updated_time" content="2016-08-24T02:53:22.000Z">
+<meta property="og:updated_time" content="2016-09-02T15:58:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-alloca">
 <meta name="twitter:description" content="Conclusion0x08048779 &amp;#60;+417&amp;#62;:&amp;#9;call   0x8048560 &amp;#60;check_canary&amp;#62;&amp;#10;0x0804877e &amp;#60;+422&amp;#62;:&amp;#9;mov    eax,0x0&amp;#10;0x08048783 &amp;#60;+427&amp;#62;:&amp;#9;mov    ecx,DWORD PTR [ebp-0x4]&amp;#10;0x">
@@ -366,8 +366,7 @@
 <p>可以看到，0x8048783~0x8048787处的指令的作用相当于调整<code>$esp</code>为<code>$ebp-4</code>指向的内存里的值，只要能劫持<code>$ebp-4</code>处的值，即可控制<code>$esp</code>，之后的<code>ret</code>指令就可以跳转到<code>$esp</code>处存的值所指向的内存，即控制了<code>$eip</code></p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">check_canary</span><span class="params">(<span class="keyword">int</span> canary)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result = canary ^ g_canary;</span><br><span class="line">	<span class="keyword">int</span> canary_after = canary;</span><br><span class="line">	<span class="keyword">int</span> canary_before = g_canary;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里会发现，result，canary_after，canary_before都会存在栈上。于是我们可以选取合适的<code>g_canary</code>，利用这个函数，覆盖<code>$ebp-4</code>处的值</p>
-<p>我想到了这里接下去就想不出了，纠结了很久，后来在github上发现了韩国的一位童鞋<a href="https://github.com/Qwaz/solved-hacking-problem/blob/master/pwnable.kr/alloca/payload.py" target="_blank" rel="external"><strong>@Yechan Bae</strong></a>写的exp，才意识到这个是本地利用，可以通过<code>ulimit -s unlimited</code>固定libc加载的地址，再通过<code>export LD_PRELOAD=</code>设置环境变量，来存我们的payload。这两个trick实在没想到，折腾了好久。</p>
-<p>只想到了通过alloca来调整<strong>$esp</strong>，使得</p>
+<p>只想到了通过alloca来调整<strong>$esp</strong>，之后纠结了很久没有思路，后来在github上发现了韩国的一位童鞋<a href="https://github.com/Qwaz/solved-hacking-problem/blob/master/pwnable.kr/alloca/payload.py" target="_blank" rel="external"><strong>@Yechan Bae</strong></a>写的exp，才意识到这个是本地利用，可以通过<code>ulimit -s unlimited</code>固定libc加载的地址，再通过<code>export LD_PRELOAD=</code>设置环境变量，来存我们的payload。这两个trick实在没想到，折腾了好久。</p>
 <h1 id="Trick">Trick</h1><ul>
 <li><code>ulimit -s unlimited</code> 对于32位程序可以使<strong>shared object</strong>加载地址固定，但是<strong>stack</strong>的地址仍然是随机的</li>
 <li><code>export PRELOAD=AAAA</code> 程序会去加载名字为AAAA的共享库</li>

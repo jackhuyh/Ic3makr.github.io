@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable,stack-pivot," />
+  <meta name="keywords" content="Pwnable,stack-pivoting," />
 
 
 
@@ -98,7 +98,7 @@ Expl">
 
 Conclusion解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的EBP，这样就可以通过控制EBP的值来转移ESP到数据段上的payload处，之后的ret指令会跳转到payload上的地址，即我们已经构造好的correct函数的地址，从而拿到shell
 Expl">
-<meta property="og:updated_time" content="2016-08-19T07:39:06.000Z">
+<meta property="og:updated_time" content="2016-09-02T16:01:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-simple-login">
 <meta name="twitter:description" content="Trick
@@ -403,7 +403,7 @@ Expl">
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
-            <a href="/tags/stack-pivot/" rel="tag">#stack-pivot</a>
+            <a href="/tags/stack-pivoting/" rel="tag">#stack-pivoting</a>
           
         </div>
       
