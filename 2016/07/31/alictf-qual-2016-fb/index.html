@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable,heap,poison-null-byte,return-to-libc,x86-64,练习," />
+  <meta name="keywords" content="Pwnable,heap,off-by-one,poison-null-byte,return-to-libc,x86-64,练习," />
 
 
 
@@ -96,7 +96,7 @@ Conclusion练习用，第一次做poison-null-byte的题目，实现unlink后没
 LocalLibc  : libc6_2.19-0ubuntu6.6_amd64
 
 Conclusion练习用，第一次做poison-null-byte的题目，实现unlink后没有思路了，因为show_message没有实现，没有想到如何泄露libc，后来看了@flappypig战队的writeup，学到了一个用printf来泄露栈上的libc_start_main_re">
-<meta property="og:updated_time" content="2016-08-24T07:47:34.000Z">
+<meta property="og:updated_time" content="2016-09-02T12:38:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="alictf-qual-2016-fb">
 <meta name="twitter:description" content="Environment
@@ -406,6 +406,8 @@ Conclusion练习用，第一次做poison-null-byte的题目，实现unlink后没
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
             <a href="/tags/heap/" rel="tag">#heap</a>
+          
+            <a href="/tags/off-by-one/" rel="tag">#off-by-one</a>
           
             <a href="/tags/poison-null-byte/" rel="tag">#poison-null-byte</a>
           
