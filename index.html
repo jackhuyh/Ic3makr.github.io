@@ -384,10 +384,10 @@
 <li>转入C代码的<em>main function</em> (<a href="https://github.com/torvalds/linux/blob/master/arch/x86/boot/main.c#L135" target="_blank" rel="external">arch/x86/boot/main.c</a>)</li>
 </ol>
 <h1 id="0x1_First_steps_in_the_kernel_setup">0x1 First steps in the kernel setup</h1><p>prepare to move to <strong><em>proctected mode</em></strong></p>
-<h2 id="0x11_Protected_mode（保护模式）">0x11 Protected mode（保护模式）</h2><p><strong><em>Protected mode</em></strong>拥有更大的内存空间，并且适用于多进程的环境(防止进程间对彼此内存区域互相干扰)</p>
+<h2 id="0x10_Protected_mode（保护模式）">0x10 Protected mode（保护模式）</h2><p><strong><em>Protected mode</em></strong>拥有更大的内存空间，并且适用于多进程的环境(防止进程间对彼此内存区域互相干扰)</p>
 <h3 id="segmentation（内存分段）">segmentation（内存分段）</h3><p>每个<em>segment</em>（分段）的<em>segment descriptor（段描述符）</em>存放在<em>Global descriptor table (GDT)</em>中，这个表的地址存放在<em>GDTR寄存器</em>中</p>
 <p>在保护模式下寻找物理地址，首先要根据对应的段寄存器的index值来从GDT中找到对应的段描述符，段描述符中的base值即为基址，然后在根据该虚拟地址在该段终端偏移，两者相加即可得到线性地址，对于线性地址转换为实际物理地址，与分页机制有关，是后面的内容</p>
-<h2 id="0x12_ohter">0x12 ohter</h2><ol>
+<h2 id="0x11_ohter">0x11 ohter</h2><ol>
 <li>Copying boot parameters into the “zeropage”</li>
 <li>Console initialization</li>
 <li>Heap initialization</li>
@@ -397,7 +397,7 @@
 <li>Querying</li>
 </ol>
 <p>这些过程均在<a href="https://github.com/torvalds/linux/blob/master/arch/x86/boot/main.c#L135" target="_blank" rel="external">/arch/x86/boot/main.c</a>中可以找到</p>
-<h2 id="0x13_FAQ">0x13 FAQ</h2><p>Q: BIOS和kernel的区别是什么？<br>A: <a href="https://www.quora.com/What-is-the-difference-between-BIOS-and-kernel" target="_blank" rel="external">https://www.quora.com/What-is-the-difference-between-BIOS-and-kernel</a></p>
+<h2 id="0x12_FAQ">0x12 FAQ</h2><p>Q: BIOS和kernel的区别是什么？<br>A: <a href="https://www.quora.com/What-is-the-difference-between-BIOS-and-kernel" target="_blank" rel="external">https://www.quora.com/What-is-the-difference-between-BIOS-and-kernel</a></p>
 <h1 id="Source">Source</h1><p><a href="https://www.gitbook.com/book/0xax/linux-insides/details" target="_blank" rel="external">Linux Inside</a></p>
 
           
