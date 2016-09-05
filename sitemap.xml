@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://0byjwzsf.me/2016/09/03/ssctf-qual-2016-pwn2/</loc>
+    <loc>http://0byjwzsf.me/2016/07/31/alictf-qual-2016-vss/</loc>
     
-    <lastmod>2016-09-03T09:04:13.000Z</lastmod>
+    <lastmod>2016-09-05T02:55:47.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://0byjwzsf.me/2016/09/03/linux-inside/</loc>
+    <loc>http://0byjwzsf.me/2016/09/05/rctf-qual-2015-welpwn/</loc>
     
-    <lastmod>2016-09-03T02:32:33.000Z</lastmod>
+    <lastmod>2016-09-05T02:55:28.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://0byjwzsf.me/2016/09/03/ssctf-qual-2016-pwn2/</loc>
+    
+    <lastmod>2016-09-03T09:04:13.000Z</lastmod>
     
   </url>
   
@@ -26,13 +33,6 @@
     <loc>http://0byjwzsf.me/2016/08/17/xdctf-qual-2015-pwn200/</loc>
     
     <lastmod>2016-09-02T16:12:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://0byjwzsf.me/2016/07/31/alictf-qual-2016-vss/</loc>
-    
-    <lastmod>2016-09-02T16:05:33.000Z</lastmod>
     
   </url>
   
