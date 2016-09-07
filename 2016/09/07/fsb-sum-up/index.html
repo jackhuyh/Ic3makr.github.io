@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable,fsb,heap," />
+  <meta name="keywords" content="Pwnable,fsb," />
 
 
 
@@ -85,24 +85,21 @@
 
 
 <meta name="description" content="因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。
-使用注：这里仅以printf函数为例
-32位读‘%{}$x’.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节‘%{}$p’.format(index)           // 同上面‘${}$s’.format(index)
-写‘%{}$">
+0x1 使用注：这里仅以printf函数为例
+32位读&apos;%&amp;#123;&amp;#125;$x&apos;.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节&apos;%&amp;#123;&amp;#125;$p&apos;.format(index)           // 同上面&apos;$&amp;#">
 <meta property="og:type" content="article">
 <meta property="og:title" content="格式化字符串漏洞总结">
 <meta property="og:url" content="http://0byjwzsf.me/2016/09/07/fsb-sum-up/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。
-使用注：这里仅以printf函数为例
-32位读‘%{}$x’.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节‘%{}$p’.format(index)           // 同上面‘${}$s’.format(index)
-写‘%{}$">
-<meta property="og:updated_time" content="2016-09-07T12:54:25.000Z">
+0x1 使用注：这里仅以printf函数为例
+32位读&apos;%&amp;#123;&amp;#125;$x&apos;.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节&apos;%&amp;#123;&amp;#125;$p&apos;.format(index)           // 同上面&apos;$&amp;#">
+<meta property="og:updated_time" content="2016-09-07T13:01:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="格式化字符串漏洞总结">
 <meta name="twitter:description" content="因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。
-使用注：这里仅以printf函数为例
-32位读‘%{}$x’.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节‘%{}$p’.format(index)           // 同上面‘${}$s’.format(index)
-写‘%{}$">
+0x1 使用注：这里仅以printf函数为例
+32位读&apos;%&amp;#123;&amp;#125;$x&apos;.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节&apos;%&amp;#123;&amp;#125;$p&apos;.format(index)           // 同上面&apos;$&amp;#">
 
 
 
@@ -372,12 +369,11 @@
 
       
         <p>因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。</p>
-<h1 id="使用">使用</h1><p>注：这里仅以<code>printf</code>函数为例</p>
-<h2 id="32位">32位</h2><h3 id="读">读</h3><p>‘%{}$x’.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节<br>‘%{}$p’.format(index)           // 同上面<br>‘${}$s’.format(index)</p>
-<h3 id="写">写</h3><p>‘%{}$n’.format(index)           // 往偏移为index<em>4的地址所指向的内存写入四个字节<br>‘%{}$hn’.format(index)          // 往偏移为index</em>4的地址所指向的内存写入两个字节<br>‘%{}$hhn’.format(index)         // 往偏移为index<em>4的地址所指向的内存写入一个字节<br>‘%{}$lln’.format(index)         // 往偏移为index</em>4的地址所指向的内存写入八个字节</p>
-<h2 id="64位">64位</h2><h3 id="读-1">读</h3><p>‘%{}$x’.format(index, num)      // 会在距离调用printf前esp所指向地址偏移index<em>4的位置处读4个字节<br>‘%{}$lx’.format(index, num)     // 会在距离调用printf前esp所指向地址偏移index</em>4的位置处读8个字节<br>‘%{}$p’.format(index)           // 同上面<br>‘${}$s’.format(index)</p>
-<h3 id="写-1">写</h3><p>‘%{}$n’.format(index)           // 往偏移为index<em>8的地址所指向的内存写入四个字节<br>‘%{}$hn’.format(index)          // 往偏移为index</em>8的地址所指向的内存写入两个字节<br>‘%{}$hhn’.format(index)         // 往偏移为index<em>8的地址所指向的内存写入一个字节<br>‘%{}$lln’.format(index)         // 往偏移为index</em>8的地址所指向的内存写入八个字节</p>
-<p>对于x86-64 <strong>fsb</strong></p>
+<h1 id="0x1_使用">0x1 使用</h1><p>注：这里仅以<code>printf</code>函数为例</p>
+<h2 id="32位">32位</h2><h3 id="读">读</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$x'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>      <span class="comment">// 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$p'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 同上面</span></span><br><span class="line"><span class="string">'$&#123;&#125;$s'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="写">写</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$n'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 解引用，写入四个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>          <span class="comment">// 解引用，写入两个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hhn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入一个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lln'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入八个字节</span></span><br></pre></td></tr></table></figure>
+<h2 id="64位">64位</h2><h3 id="读-1">读</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$x'</span>.<span class="function"><span class="title">format</span><span class="params">(index, num)</span></span>      <span class="comment">// 读4个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lx'</span>.<span class="function"><span class="title">format</span><span class="params">(index, num)</span></span>     <span class="comment">// 读8个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$p'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 读8个字节</span></span><br><span class="line"><span class="string">'$&#123;&#125;$s'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="写-1">写</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$n'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 解引用，写入四个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>          <span class="comment">// 解引用，写入两个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hhn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入一个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lln'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入八个字节</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li><code>%1$lx</code>: RSI</li>
 <li><code>%2$lx</code>: RDX</li>
@@ -386,7 +382,7 @@
 <li><code>%5$lx</code>: R9</li>
 <li><code>%6$lx</code>: 栈上的第一个QWORD</li>
 </ul>
-<h1 id="技巧">技巧</h1><ol>
+<h1 id="0x2_技巧">0x2 技巧</h1><ol>
 <li>可以泄露栈的地址</li>
 <li>泄露__libc_start_main基址 （在堆利用中遇到过一次，alictf-qual-2016-fb）</li>
 <li>泄露canary</li>
@@ -417,8 +413,6 @@
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
             <a href="/tags/fsb/" rel="tag">#fsb</a>
-          
-            <a href="/tags/heap/" rel="tag">#heap</a>
           
         </div>
       
@@ -562,7 +556,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-number">1.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#32位"><span class="nav-number">1.1.</span> <span class="nav-text">32位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读"><span class="nav-number">1.1.1.</span> <span class="nav-text">读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写"><span class="nav-number">1.1.2.</span> <span class="nav-text">写</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#64位"><span class="nav-number">1.2.</span> <span class="nav-text">64位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">写</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#技巧"><span class="nav-number">2.</span> <span class="nav-text">技巧</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x1_使用"><span class="nav-number">1.</span> <span class="nav-text">0x1 使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#32位"><span class="nav-number">1.1.</span> <span class="nav-text">32位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读"><span class="nav-number">1.1.1.</span> <span class="nav-text">读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写"><span class="nav-number">1.1.2.</span> <span class="nav-text">写</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#64位"><span class="nav-number">1.2.</span> <span class="nav-text">64位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">写</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x2_技巧"><span class="nav-number">2.</span> <span class="nav-text">0x2 技巧</span></a></li></ol></div>
             
           </div>
         </section>
