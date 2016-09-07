@@ -86,7 +86,7 @@
 
 <meta name="description" content="Trick对于x64fsb
 
-%1%lx: RDI
+%1%lx: RSI
 %2%lx: RDX
 %3%lx: RCX
 %4%lx: R8
@@ -100,7 +100,7 @@ Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思�
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="Trick对于x64fsb
 
-%1%lx: RDI
+%1%lx: RSI
 %2%lx: RDX
 %3%lx: RCX
 %4%lx: R8
@@ -108,12 +108,12 @@ Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思�
 %6$lx: 栈上的第一个QWORD
 
 Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思路又错了QAQ，刚开始没有想到注意到这题也是没有开NX的，思路就歪了，看到fsb首先做的是泄露libc地址，然后想通过uaf实现ret2libc，但是">
-<meta property="og:updated_time" content="2016-08-24T13:30:01.000Z">
+<meta property="og:updated_time" content="2016-09-06T06:46:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnable.kr-rookiss-echo2">
 <meta name="twitter:description" content="Trick对于x64fsb
 
-%1%lx: RDI
+%1%lx: RSI
 %2%lx: RDX
 %3%lx: RCX
 %4%lx: R8
@@ -391,7 +391,7 @@ Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思�
       
         <h2 id="Trick">Trick</h2><p>对于x64<strong>fsb</strong></p>
 <ul>
-<li><code>%1%lx</code>: RDI</li>
+<li><code>%1%lx</code>: RSI</li>
 <li><code>%2%lx</code>: RDX</li>
 <li><code>%3%lx</code>: RCX</li>
 <li><code>%4%lx</code>: R8</li>
@@ -524,7 +524,7 @@ Conclusion虽然这题看起来很常规，既有fsb也有uaf，但是我的思�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

