@@ -86,20 +86,23 @@
 
 <meta name="description" content="因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。
 0x1 使用注：这里仅以printf函数为例
-32位读&apos;%&amp;#123;&amp;#125;$x&apos;.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节&apos;%&amp;#123;&amp;#125;$p&apos;.format(index)           // 同上面&apos;$&amp;#">
+32位读&apos;%&amp;#123;&amp;#125;$x&apos;.format(index)           // 读4个字节&apos;%&amp;#123;&amp;#125;$p&apos;.format(index)           // 同上面&apos;$&amp;#123;&amp;#125;$s&apos;.format(index)
+写">
 <meta property="og:type" content="article">
 <meta property="og:title" content="格式化字符串漏洞总结">
 <meta property="og:url" content="http://0byjwzsf.me/2016/09/07/fsb-sum-up/index.html">
 <meta property="og:site_name" content="Icemakr's Blog">
 <meta property="og:description" content="因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。
 0x1 使用注：这里仅以printf函数为例
-32位读&apos;%&amp;#123;&amp;#125;$x&apos;.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节&apos;%&amp;#123;&amp;#125;$p&apos;.format(index)           // 同上面&apos;$&amp;#">
-<meta property="og:updated_time" content="2016-09-07T13:01:23.000Z">
+32位读&apos;%&amp;#123;&amp;#125;$x&apos;.format(index)           // 读4个字节&apos;%&amp;#123;&amp;#125;$p&apos;.format(index)           // 同上面&apos;$&amp;#123;&amp;#125;$s&apos;.format(index)
+写">
+<meta property="og:updated_time" content="2016-09-07T13:04:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="格式化字符串漏洞总结">
 <meta name="twitter:description" content="因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。
 0x1 使用注：这里仅以printf函数为例
-32位读&apos;%&amp;#123;&amp;#125;$x&apos;.format(index)      // 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节&apos;%&amp;#123;&amp;#125;$p&apos;.format(index)           // 同上面&apos;$&amp;#">
+32位读&apos;%&amp;#123;&amp;#125;$x&apos;.format(index)           // 读4个字节&apos;%&amp;#123;&amp;#125;$p&apos;.format(index)           // 同上面&apos;$&amp;#123;&amp;#125;$s&apos;.format(index)
+写">
 
 
 
@@ -370,7 +373,7 @@
       
         <p>因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。</p>
 <h1 id="0x1_使用">0x1 使用</h1><p>注：这里仅以<code>printf</code>函数为例</p>
-<h2 id="32位">32位</h2><h3 id="读">读</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$x'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>      <span class="comment">// 会在距离调用printf前esp所指向地址偏移index*4的位置处读4个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$p'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 同上面</span></span><br><span class="line"><span class="string">'$&#123;&#125;$s'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="32位">32位</h2><h3 id="读">读</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$x'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 读4个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$p'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 同上面</span></span><br><span class="line"><span class="string">'$&#123;&#125;$s'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span></span><br></pre></td></tr></table></figure>
 <h3 id="写">写</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$n'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 解引用，写入四个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>          <span class="comment">// 解引用，写入两个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hhn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入一个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lln'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入八个字节</span></span><br></pre></td></tr></table></figure>
 <h2 id="64位">64位</h2><h3 id="读-1">读</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$x'</span>.<span class="function"><span class="title">format</span><span class="params">(index, num)</span></span>      <span class="comment">// 读4个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lx'</span>.<span class="function"><span class="title">format</span><span class="params">(index, num)</span></span>     <span class="comment">// 读8个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$p'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 读8个字节</span></span><br><span class="line"><span class="string">'$&#123;&#125;$s'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span></span><br></pre></td></tr></table></figure>
 <h3 id="写-1">写</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$n'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 解引用，写入四个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>          <span class="comment">// 解引用，写入两个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hhn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入一个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lln'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入八个字节</span></span><br></pre></td></tr></table></figure>
@@ -428,6 +431,10 @@
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/08/rctf-qual-2015-shaxian/" rel="prev" title="rctf-qual-2015-shaxian">
+                rctf-qual-2015-shaxian <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -499,7 +506,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -516,7 +523,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
