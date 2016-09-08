@@ -96,7 +96,7 @@ Bug这里s和v2两部分是相连的，看到下面的print_name，猜测会有�
 LocalLibc  : libc6_2.19-0ubuntu6.6_i386
 
 Bug这里s和v2两部分是相连的，看到下面的print_name，猜测会有内存泄露，试了下的确会泄露出malloc出来的指针，即可得到heap的地址int sub_80487A1()&amp;#123;  char s; // [sp+1Ch] [bp-5Ch]@1  char *v2; // [sp">
-<meta property="og:updated_time" content="2016-09-08T15:18:20.000Z">
+<meta property="og:updated_time" content="2016-09-08T15:19:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bctf-qual-2016-bcloud">
 <meta name="twitter:description" content="Environment
@@ -380,7 +380,7 @@ Bug这里s和v2两部分是相连的，看到下面的print_name，猜测会有�
 <h2 id="house_of_force">house of force</h2><h3 id="条件">条件</h3><p>能够修改<strong><em>top_chunk.size</em></strong>，能够控制malloc的size，泄露出heap的地址。</p>
 <h3 id="原理">原理</h3><p>在<a href="https://github.com/bminor/glibc/blob/glibc-2.24/malloc/malloc.c#L3830" target="_blank" rel="external">/malloc/malloc.c</a>中可以找到如下代码，在满足<code>size &gt;= nb + MINSIZE)</code>的条件下，只要控制nb为一个很大的数，能够实现将<code>av-&gt;top</code>移到任意地址，之后只要再malloc一次，即可实现任意地址写</p>
 <figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> ((<span class="keyword">unsigned</span> <span class="keyword">long</span>) (size) &gt;= (<span class="keyword">unsigned</span> <span class="keyword">long</span>) (nb + MI<span class="built_in">NSIZE</span>))</span><br><span class="line">&#123;</span><br><span class="line">    remainder_size = size - nb;</span><br><span class="line">    remainder = chunk_at_offset (victim, nb);</span><br><span class="line">    av-&gt;top = remainder;</span><br><span class="line">    </span><br><span class="line">    ... ...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="具体利用步骤">具体利用步骤</h2><ol>
+<h2 id="利用步骤">利用步骤</h2><ol>
 <li>修改<strong><em>top_chunk.size</em></strong>为<code>0xffffffff</code></li>
 <li>申请一块合适大小的内存，使得<code>av-&gt;top</code>落在<code>0x804b0a0</code></li>
 <li>申请一块0x100的内存，这次申请将得到<code>0x804b0a0</code>处的内存</li>
@@ -563,7 +563,7 @@ Bug这里s和v2两部分是相连的，看到下面的print_name，猜测会有�
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Environment"><span class="nav-number">1.</span> <span class="nav-text">Environment</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bug"><span class="nav-number">2.</span> <span class="nav-text">Bug</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">3.</span> <span class="nav-text">Conclusion</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#house_of_force"><span class="nav-number">3.1.</span> <span class="nav-text">house of force</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#条件"><span class="nav-number">3.1.1.</span> <span class="nav-text">条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">3.1.2.</span> <span class="nav-text">原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体利用步骤"><span class="nav-number">3.2.</span> <span class="nav-text">具体利用步骤</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exploit"><span class="nav-number">4.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Environment"><span class="nav-number">1.</span> <span class="nav-text">Environment</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bug"><span class="nav-number">2.</span> <span class="nav-text">Bug</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">3.</span> <span class="nav-text">Conclusion</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#house_of_force"><span class="nav-number">3.1.</span> <span class="nav-text">house of force</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#条件"><span class="nav-number">3.1.1.</span> <span class="nav-text">条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">3.1.2.</span> <span class="nav-text">原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用步骤"><span class="nav-number">3.2.</span> <span class="nav-text">利用步骤</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exploit"><span class="nav-number">4.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
             
           </div>
         </section>

@@ -377,7 +377,7 @@
 <h2 id="house_of_force">house of force</h2><h3 id="条件">条件</h3><p>能够修改<strong><em>top_chunk.size</em></strong>，能够控制malloc的size，泄露出heap的地址。</p>
 <h3 id="原理">原理</h3><p>在<a href="https://github.com/bminor/glibc/blob/glibc-2.24/malloc/malloc.c#L3830" target="_blank" rel="external">/malloc/malloc.c</a>中可以找到如下代码，在满足<code>size &gt;= nb + MINSIZE)</code>的条件下，只要控制nb为一个很大的数，能够实现将<code>av-&gt;top</code>移到任意地址，之后只要再malloc一次，即可实现任意地址写</p>
 <figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> ((<span class="keyword">unsigned</span> <span class="keyword">long</span>) (size) &gt;= (<span class="keyword">unsigned</span> <span class="keyword">long</span>) (nb + MI<span class="built_in">NSIZE</span>))</span><br><span class="line">&#123;</span><br><span class="line">    remainder_size = size - nb;</span><br><span class="line">    remainder = chunk_at_offset (victim, nb);</span><br><span class="line">    av-&gt;top = remainder;</span><br><span class="line">    </span><br><span class="line">    ... ...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="具体利用步骤">具体利用步骤</h2><ol>
+<h2 id="利用步骤">利用步骤</h2><ol>
 <li>修改<strong><em>top_chunk.size</em></strong>为<code>0xffffffff</code></li>
 <li>申请一块合适大小的内存，使得<code>av-&gt;top</code>落在<code>0x804b0a0</code></li>
 <li>申请一块0x100的内存，这次申请将得到<code>0x804b0a0</code>处的内存</li>
