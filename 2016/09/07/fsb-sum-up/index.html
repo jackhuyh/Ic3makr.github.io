@@ -96,7 +96,7 @@
 0x1 使用注：这里仅以printf函数为例
 32位读&apos;%&amp;#123;&amp;#125;$x&apos;.format(index)           // 读4个字节&apos;%&amp;#123;&amp;#125;$p&apos;.format(index)           // 同上面&apos;$&amp;#123;&amp;#125;$s&apos;.format(index)
 写">
-<meta property="og:updated_time" content="2016-09-07T13:04:27.000Z">
+<meta property="og:updated_time" content="2016-09-08T15:35:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="格式化字符串漏洞总结">
 <meta name="twitter:description" content="因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。
@@ -387,7 +387,7 @@
 </ul>
 <h1 id="0x2_技巧">0x2 技巧</h1><ol>
 <li>可以泄露栈的地址</li>
-<li>泄露__libc_start_main基址 （在堆利用中遇到过一次，alictf-qual-2016-fb）</li>
+<li>泄露__libc_start_main_ret （在堆利用中遇到过一次，alictf-qual-2016-fb, bctf-qual-2016-bcloud）</li>
 <li>泄露canary</li>
 <li>利用相邻ebp之间的引用关系，实现理论上的任意地址读写 (参考pwnable.kr-fsb 和 rctf-qual-2015-nobug，其实感觉不太好用，需要连着两次的fsb才行)</li>
 </ol>
@@ -424,16 +424,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/09/07/rctf-qual-2015-nobug/" rel="next" title="rctf-qual-2015-nobug">
-                <i class="fa fa-chevron-left"></i> rctf-qual-2015-nobug
+              <a href="/2016/09/05/rctf-qual-2015-welpwn/" rel="next" title="rctf-qual-2015-welpwn">
+                <i class="fa fa-chevron-left"></i> rctf-qual-2015-welpwn
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/09/08/rctf-qual-2015-shaxian/" rel="prev" title="rctf-qual-2015-shaxian">
-                rctf-qual-2015-shaxian <i class="fa fa-chevron-right"></i>
+              <a href="/2016/09/07/rctf-qual-2015-nobug/" rel="prev" title="rctf-qual-2015-nobug">
+                rctf-qual-2015-nobug <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -506,7 +506,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -514,7 +514,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -523,7 +523,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">37</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
