@@ -373,7 +373,7 @@
 <h1 id="正文">正文</h1><h2 id="0x00_说明">0x00 说明</h2><blockquote>
 <p>以x86-64为例<br>以寻找libc中函数为例</p>
 </blockquote>
-<h2 id="0x01_寻找ELF文件动态加载的基址">0x01 寻找ELF文件动态加载的基址</h2><p>首先看一下<a href="https://github.com/bminor/glibc/blob/master/elf/elf.h#L87" target="_blank" rel="external">ELF文件头</a>，文件头的第一个成员就是魔数(Magic)，其开头为<code>&quot;\x7fELF&quot;</code>，我们可以根据它来确定ELF加载的基址。</p>
+<h2 id="0x01_寻找ELF共享文件(libc)加载后的基址">0x01 寻找ELF共享文件(libc)加载后的基址</h2><p>首先看一下<a href="https://github.com/bminor/glibc/blob/master/elf/elf.h#L87" target="_blank" rel="external">ELF文件头</a>，文件头的第一个成员就是魔数(Magic)，其开头为<code>&quot;\x7fELF&quot;</code>，我们可以根据它来确定ELF加载的基址。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span>	e_ident[EI_NIDENT];	<span class="comment">/* Magic number and other info */</span></span><br><span class="line">  ... ...</span><br><span class="line">&#125; Elf64_Ehdr;</span><br></pre></td></tr></table></figure>
 <p>在寻找加载后基址前，我们首先要泄露出这个ELF文件加载入内存后其中的某个函数的地址。这个地址容易泄露，只要泄露<code>GOT表</code>中某个已经调用过的函数即可，这里我们选取<code>write</code>函数(0x7f048c08e860)</p>
 <p>然后舍弃泄露出来的地址的最后12位（ELF文件加载地址是页对齐的），得到<code>0x7f048c08e000</code>，对这个地址不断减0x1000，然后泄露其开始的4个字节，直到于Magic的头4个字节匹配为止。即可得到ELF文件加载的基址(0x7f048bfa3000)</p>
