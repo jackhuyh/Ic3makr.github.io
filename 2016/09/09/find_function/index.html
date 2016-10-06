@@ -96,7 +96,7 @@
 那题用DynELF写的时候遇到了不少麻烦，所以还是希望能理解一下DynELF寻找函数加载地址的原理，恰好前几天看到了一篇这篇文章[1]，理解了原理后，今天自己动手尝试了一下，顺便记录。
 正文0x00 说明
 以x86-64为例以寻找libc中函数为例">
-<meta property="og:updated_time" content="2016-09-29T12:57:35.000Z">
+<meta property="og:updated_time" content="2016-09-09T12:05:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="寻找ELF共享对象基址重置后内部函数的地址">
 <meta name="twitter:description" content="前言前几天写rctf-qual-2015-welpwn的时候用了DynELF模块。那时不用libc-database的原因是担心有时libc会找不到。
@@ -435,13 +435,17 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/09/08/bctf-qual-2016-bcloud/" rel="next" title="bctf-qual-2016-bcloud">
-                <i class="fa fa-chevron-left"></i> bctf-qual-2016-bcloud
+              <a href="/2016/09/08/rctf-qual-2015-shaxian/" rel="next" title="rctf-qual-2015-shaxian">
+                <i class="fa fa-chevron-left"></i> rctf-qual-2015-shaxian
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/06/L-ctf-2016-hidden-pwn/" rel="prev" title="L-ctf-2016-hidden-pwn">
+                L-ctf-2016-hidden-pwn <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -513,7 +517,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">39</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -530,7 +534,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -577,6 +581,10 @@
               
                 <li class="links-of-blogroll-item">
                   <a href="http://math1as.com" title="math1as" target="_blank">math1as</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://http://o0xmuhe.me" title="muhe" target="_blank">muhe</a>
                 </li>
               
             </ul>

